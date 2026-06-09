@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Lexer.Tokens;
+namespace Compilateur.Core.Lexical.Tokens;
 
 public enum TokenType
 {

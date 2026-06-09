@@ -1,6 +1,6 @@
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Lexer.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public record CommentMultiLineRule : ITokenRule
 {

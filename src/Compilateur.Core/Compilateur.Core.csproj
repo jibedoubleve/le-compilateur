@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Parser\" />
+    <Folder Include="Syntactic\" />
   </ItemGroup>
 
 </Project>

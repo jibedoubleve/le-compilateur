@@ -1,8 +1,9 @@
 using System.Text;
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Lexical;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Lexer.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public record CommentSingleLineRule : ITokenRule
 {

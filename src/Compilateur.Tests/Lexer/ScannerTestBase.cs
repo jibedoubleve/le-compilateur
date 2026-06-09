@@ -1,6 +1,5 @@
-using Compilateur.Core;
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Lexer;
+using Compilateur.Core.Lexical;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;

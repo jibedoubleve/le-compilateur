@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Compilateur.Core.Lexer;
+namespace Compilateur.Core.Lexical;
 
 public class SyntaxErrorCollection : IEnumerable<SyntaxError>
 {

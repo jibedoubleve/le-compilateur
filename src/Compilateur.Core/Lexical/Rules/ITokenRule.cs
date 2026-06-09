@@ -1,6 +1,7 @@
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexer.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public interface ITokenRule
 {

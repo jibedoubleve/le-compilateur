@@ -1,5 +1,5 @@
 using System.Text;
-using Compilateur.Core.Lexer;
+using Compilateur.Core.Lexical;
 
 namespace Compilateur.Core.Extensions;
 

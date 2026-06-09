@@ -1,4 +1,4 @@
-using Compilateur.Core.Lexer;
+using Compilateur.Core.Lexical;
 using Shouldly;
 using Xunit.Abstractions;
 

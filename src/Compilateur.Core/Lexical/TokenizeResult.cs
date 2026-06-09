@@ -1,6 +1,6 @@
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Lexer;
+namespace Compilateur.Core.Lexical;
 
 public sealed record TokenizeResult
 {

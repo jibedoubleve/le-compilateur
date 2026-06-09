@@ -1,6 +1,6 @@
 using System.Reflection;
-using Compilateur.Core.Lexer;
-using Compilateur.Core.Lexer.Rules;
+using Compilateur.Core.Lexical.Rules;
+using Compilateur.Core.Lexical;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

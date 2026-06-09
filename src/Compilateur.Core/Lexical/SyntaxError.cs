@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Lexer;
+namespace Compilateur.Core.Lexical;
 
 public sealed record SyntaxError
 {

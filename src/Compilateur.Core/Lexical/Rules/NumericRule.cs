@@ -1,8 +1,9 @@
 using System.Globalization;
 using System.Text;
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexer.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public sealed record NumericRule : ITokenRule
 {

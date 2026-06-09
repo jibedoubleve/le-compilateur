@@ -1,5 +1,5 @@
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
 using Shouldly;
 using Xunit.Abstractions;
 

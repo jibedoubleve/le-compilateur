@@ -1,9 +1,9 @@
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Lexer.Rules;
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Rules;
+using Compilateur.Core.Lexical.Tokens;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Lexer;
+namespace Compilateur.Core.Lexical;
 
 public class Scanner
 {
