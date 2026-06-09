@@ -27,9 +27,9 @@ public class Scanner
 
     #region Methods
 
-    private void AddEmptyRuleError(CodeStream stream, SyntaxErrorCollection errors)
+    private void AddEmptyRuleError(CodeCursor cursor, SyntaxErrorCollection errors)
     {
-        var lexeme = stream.Consume();
+        var lexeme = cursor.Consume();
         var errorMsg = $"Character '{lexeme.Char}' is not supported";
         errors.Add(new SyntaxError
         {
@@ -44,9 +44,9 @@ public class Scanner
     {
         var errors = new SyntaxErrorCollection();
         var tokens = new List<Token>();
-        var stream = new CodeStream(source);
+        var stream = new CodeCursor(source);
 
-        while (!stream.IsEof)
+        while (!stream.IsAtEnd)
         {
             var rule = _rules.Where(r => r.Matches(stream))
                              .OrderByDescending(r => r.Weight)

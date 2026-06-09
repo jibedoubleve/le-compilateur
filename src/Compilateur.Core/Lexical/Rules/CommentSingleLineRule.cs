@@ -30,38 +30,38 @@ public record CommentSingleLineRule : ITokenRule
 
     #region Methods
 
-    private bool IsEndOfLine(CodeStream codeStream)
+    private bool IsEndOfLine(CodeCursor codeCursor)
     {
-        var current = codeStream.Peek().Char;
+        var current = codeCursor.Peek().Char;
         return current.HasValue
                && _deadChars.Contains(current.Value);
     }
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        if (codeStream.IsEof) return false;
+        if (codeCursor.IsAtEnd) return false;
 
-        var current = $"{codeStream.Peek()}{codeStream.PeekNext()}";
+        var current = $"{codeCursor.Peek()}{codeCursor.PeekNext()}";
         return current == "//";
     }
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        if (codeStream.IsEof) return null;
+        if (codeCursor.IsAtEnd) return null;
 
         var strBuilder = new StringBuilder();
-        strBuilder.Append(codeStream.Consume()); // Consume '/'
-        strBuilder.Append(codeStream.Consume()); // Consume second '/'
+        strBuilder.Append(codeCursor.Consume()); // Consume '/'
+        strBuilder.Append(codeCursor.Consume()); // Consume second '/'
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeStream.IsEof || IsEndOfLine(codeStream))
+            if (codeCursor.IsAtEnd || IsEndOfLine(codeCursor))
             {
                 _logger.LogDebug("Scanned comments:\n{Comments}", strBuilder.ToString());
                 return null;
             }
 
-            var current = codeStream.Consume();
+            var current = codeCursor.Consume();
 
             _logger.LogTrace("{Current}", current);
 

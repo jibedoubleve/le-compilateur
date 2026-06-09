@@ -1,6 +1,6 @@
 namespace Compilateur.Core.Lexical;
 
-public sealed class CodeStream
+public sealed class CodeCursor : ICursor<CodeChar>
 {
     #region Fields
 
@@ -16,14 +16,14 @@ public sealed class CodeStream
 
     #region Constructors
 
-    public CodeStream(string source) => _source = source;
+    public CodeCursor(string source) => _source = source;
 
     #endregion
 
     #region Properties
 
     private bool IsNextEof => _currentIndex + 1 >= _source.Length;
-    public bool IsEof => _currentIndex >= _source.Length;
+    public bool IsAtEnd => _currentIndex >= _source.Length;
 
     #endregion
 
@@ -83,7 +83,10 @@ public sealed class CodeStream
 
     public CodeChar Consume()
     {
-        if (IsEof) return CodeChar.Empty;
+        if (IsAtEnd)
+        {
+            return CodeChar.Empty;
+        }
 
         var readValue = Peek();
 

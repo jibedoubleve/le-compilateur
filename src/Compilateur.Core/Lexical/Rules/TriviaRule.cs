@@ -19,9 +19,9 @@ public sealed record TriviaRule : ITokenRule
 
     #region Methods
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        var current = codeStream.Peek().Char;
+        var current = codeCursor.Peek().Char;
         if (!current.HasValue) return true;
 
         return _deadChars.Contains(
@@ -29,9 +29,9 @@ public sealed record TriviaRule : ITokenRule
         );
     }
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        codeStream.Consume();
+        codeCursor.Consume();
         return null;
     }
 

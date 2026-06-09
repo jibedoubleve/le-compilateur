@@ -13,9 +13,9 @@ public interface ITokenRule
 
     #region Methods
 
-    public bool Matches(CodeStream codeStream);
+    public bool Matches(CodeCursor codeCursor);
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null);
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null);
 
     #endregion
 }

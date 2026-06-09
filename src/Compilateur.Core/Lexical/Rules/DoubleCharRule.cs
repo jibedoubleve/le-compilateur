@@ -36,16 +36,16 @@ public abstract record DoubleCharRule : ITokenRule
 
     #region Methods
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        var current = $"{codeStream.Peek()}{codeStream.PeekNext()}";
+        var current = $"{codeCursor.Peek()}{codeCursor.PeekNext()}";
         return _lexeme == current;
     }
 
-    public Token Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeStream.Consume();
-        var second = codeStream.Consume();
+        var first = codeCursor.Consume();
+        var second = codeCursor.Consume();
 
         return new Token
         {

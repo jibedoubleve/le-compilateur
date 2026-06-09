@@ -23,14 +23,14 @@ public sealed record NumericRule : ITokenRule
 
     #region Methods
 
-    private static bool IsEndOfScan(CodeStream codeStream)
+    private static bool IsEndOfScan(CodeCursor codeCursor)
     {
-        if (codeStream.IsEof)
+        if (codeCursor.IsAtEnd)
         {
             return true;
         }
 
-        var codeChar = codeStream.Peek();
+        var codeChar = codeCursor.Peek();
         return !IsValidChar(codeChar);
     }
 
@@ -39,21 +39,21 @@ public sealed record NumericRule : ITokenRule
                                                         Separators.Contains(codeChar.Value));
 
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        var current = codeStream.Peek();
+        var current = codeCursor.Peek();
         return !current.IsEmpty && char.IsAsciiDigit(current.Char!.Value);
     }
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
         var strBuilder = new StringBuilder();
-        var first = codeStream.Peek();
+        var first = codeCursor.Peek();
         var decimalCounter = 0;
 
-        while (!IsEndOfScan(codeStream))
+        while (!IsEndOfScan(codeCursor))
         {
-            var current = codeStream.Consume();
+            var current = codeCursor.Consume();
 
             if (current.Char.HasValue && Separators.Contains(current.Char.Value))
             {

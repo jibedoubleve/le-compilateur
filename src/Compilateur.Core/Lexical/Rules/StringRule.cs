@@ -20,16 +20,16 @@ public sealed record StringRule : ITokenRule
 
     #region Methods
 
-    public bool Matches(CodeStream codeStream) => codeStream.Peek() == '"';
+    public bool Matches(CodeCursor codeCursor) => codeCursor.Peek() == '"';
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeStream.Consume();
+        var first = codeCursor.Consume();
         var strBuilder = new StringBuilder();
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeStream.IsEof)
+            if (codeCursor.IsAtEnd)
             {
                 errors?.Add(new SyntaxError
                 {
@@ -40,9 +40,9 @@ public sealed record StringRule : ITokenRule
                 return null;
             }
 
-            if (codeStream.Peek() == '"')
+            if (codeCursor.Peek() == '"')
             {
-                codeStream.Consume();
+                codeCursor.Consume();
                 var lexeme = strBuilder.ToString();
                 return new Token
                 {
@@ -54,7 +54,7 @@ public sealed record StringRule : ITokenRule
                 };
             }
 
-            var next = codeStream.Consume();
+            var next = codeCursor.Consume();
             strBuilder.Append(next.Char);
         }
 

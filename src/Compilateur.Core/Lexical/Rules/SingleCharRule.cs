@@ -30,11 +30,11 @@ public abstract record SingleCharRule : ITokenRule
 
     #region Methods
 
-    public bool Matches(CodeStream codeStream) => codeStream.Peek() == _lexeme;
+    public bool Matches(CodeCursor codeCursor) => codeCursor.Peek() == _lexeme;
 
-    public Token Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        var consumed = codeStream.Consume();
+        var consumed = codeCursor.Consume();
         if (consumed.Char is null) throw new InvalidOperationException("Consumed empty lexeme");
 
         return new Token

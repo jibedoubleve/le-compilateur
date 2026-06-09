@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexer;
 
-public class CodeStreamTest
+public class CodeCursorTest
 {
     #region Fields
 
@@ -14,7 +14,7 @@ public class CodeStreamTest
 
     #region Constructors
 
-    public CodeStreamTest(ITestOutputHelper output) => _output = output;
+    public CodeCursorTest(ITestOutputHelper output) => _output = output;
 
     #endregion
 
@@ -27,14 +27,14 @@ public class CodeStreamTest
     [InlineData("aaa", 3)]
     public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
     {
-        var stream = new CodeStream(code);
+        var stream = new CodeCursor(code);
         for (var i = 0; i < index; i++)
         {
-            stream.IsEof.ShouldBeFalse();
+            stream.IsAtEnd.ShouldBeFalse();
             stream.Consume();
         }
 
-        stream.IsEof.ShouldBeTrue();
+        stream.IsAtEnd.ShouldBeTrue();
     }
 
     [Theory]
@@ -44,7 +44,7 @@ public class CodeStreamTest
     public void When_Code_New_Line_Then_Jump_NewLine(string code)
     {
         // ARRANGE
-        var stream = new CodeStream(code);
+        var stream = new CodeCursor(code);
 
         // ACT
         var char1 = stream.Consume();
@@ -74,7 +74,7 @@ public class CodeStreamTest
                             3
                             4
                             """;
-        var stream = new CodeStream(code);
+        var stream = new CodeCursor(code);
 
         // ACT
         var line1 = stream.Consume();
@@ -116,7 +116,7 @@ public class CodeStreamTest
     public void When_Peek_Then_No_Index_Update()
     {
         const string code = "ab";
-        var stream = new CodeStream(code);
+        var stream = new CodeCursor(code);
 
         for (var i = 0; i < 5; i++)
             Assert.Multiple(

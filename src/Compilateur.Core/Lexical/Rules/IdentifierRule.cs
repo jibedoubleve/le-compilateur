@@ -41,34 +41,34 @@ public sealed record IdentifierRule : ITokenRule
 
     #region Methods
 
-    private bool IsValidChar(CodeStream codeStream)
+    private bool IsValidChar(CodeCursor codeCursor)
     {
-        if (codeStream.IsEof) return false;
+        if (codeCursor.IsAtEnd) return false;
 
-        char? character = codeStream.Peek();
+        char? character = codeCursor.Peek();
         return character.HasValue &&
                (char.IsAsciiLetterOrDigit(character.Value) || character == '_');
     }
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        if (codeStream.IsEof) return false;
+        if (codeCursor.IsAtEnd) return false;
 
-        char? character = codeStream.Peek();
+        char? character = codeCursor.Peek();
         return character.HasValue &&
                (char.IsAsciiLetter(character.Value) || character == '_');
     }
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeStream.Consume();
+        var first = codeCursor.Consume();
 
         var strBuilder = new StringBuilder();
         strBuilder.Append(first.Char);
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (!IsValidChar(codeStream))
+            if (!IsValidChar(codeCursor))
             {
                 var lexeme = strBuilder.ToString();
                 if (_keywords.TryGetValue(lexeme, out var type))
@@ -90,7 +90,7 @@ public sealed record IdentifierRule : ITokenRule
                 };
             }
 
-            var next = codeStream.Consume();
+            var next = codeCursor.Consume();
             strBuilder.Append(next.Char);
         }
 

@@ -18,27 +18,27 @@ public record CommentMultiLineRule : ITokenRule
 
     #region Methods
 
-    private bool EndOfComments(CodeStream codeStream)
+    private bool EndOfComments(CodeCursor codeCursor)
     {
-        var current = $"{codeStream.Peek()}{codeStream.PeekNext()}";
+        var current = $"{codeCursor.Peek()}{codeCursor.PeekNext()}";
         return current == "*/";
     }
 
-    public bool Matches(CodeStream codeStream)
+    public bool Matches(CodeCursor codeCursor)
     {
-        if (codeStream.IsEof) return false;
+        if (codeCursor.IsAtEnd) return false;
 
-        return $"{codeStream.Peek()}{codeStream.PeekNext()}" == "/*";
+        return $"{codeCursor.Peek()}{codeCursor.PeekNext()}" == "/*";
     }
 
-    public Token? Scan(CodeStream codeStream, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeStream.Consume(); // Consume '/'
-        codeStream.Consume(); // Consume '*'
+        var first = codeCursor.Consume(); // Consume '/'
+        codeCursor.Consume(); // Consume '*'
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeStream.IsEof)
+            if (codeCursor.IsAtEnd)
             {
                 errors?.Add(new SyntaxError
                 {
@@ -49,14 +49,14 @@ public record CommentMultiLineRule : ITokenRule
                 return null;
             }
 
-            if (EndOfComments(codeStream))
+            if (EndOfComments(codeCursor))
             {
-                codeStream.Consume(); // Consume '*'
-                codeStream.Consume(); // Consume '/'
+                codeCursor.Consume(); // Consume '*'
+                codeCursor.Consume(); // Consume '/'
                 return null;
             }
 
-            codeStream.Consume();
+            codeCursor.Consume();
         }
 
         errors?.Add(new SyntaxError
