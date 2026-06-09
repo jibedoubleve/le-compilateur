@@ -1,0 +1,457 @@
+﻿[
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 2,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: android,
+    Line: 2,
+    Type: Identifier,
+    Value: android
+  },
+  {
+    Column: 13,
+    Lexeme: =,
+    Line: 2,
+    Type: Assignment
+  },
+  {
+    Column: 15,
+    Lexeme: 42,
+    Line: 2,
+    Type: Numeric,
+    Value: 42.0
+  },
+  {
+    Column: 17,
+    Lexeme: ;,
+    Line: 2,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 4,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: pi,
+    Line: 4,
+    Type: Identifier,
+    Value: pi
+  },
+  {
+    Column: 8,
+    Lexeme: =,
+    Line: 4,
+    Type: Assignment
+  },
+  {
+    Column: 10,
+    Lexeme: 3.14,
+    Line: 4,
+    Type: Numeric,
+    Value: 3.14
+  },
+  {
+    Column: 14,
+    Lexeme: ;,
+    Line: 4,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 5,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: name,
+    Line: 5,
+    Type: Identifier,
+    Value: name
+  },
+  {
+    Column: 10,
+    Lexeme: =,
+    Line: 5,
+    Type: Assignment
+  },
+  {
+    Column: 12,
+    Lexeme: "hello world",
+    Line: 5,
+    Type: String,
+    Value: hello world
+  },
+  {
+    Column: 25,
+    Lexeme: ;,
+    Line: 5,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 6,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: flag,
+    Line: 6,
+    Type: Identifier,
+    Value: flag
+  },
+  {
+    Column: 10,
+    Lexeme: =,
+    Line: 6,
+    Type: Assignment
+  },
+  {
+    Column: 12,
+    Lexeme: true,
+    Line: 6,
+    Type: True
+  },
+  {
+    Column: 16,
+    Lexeme: ;,
+    Line: 6,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 7,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: nothing,
+    Line: 7,
+    Type: Identifier,
+    Value: nothing
+  },
+  {
+    Column: 13,
+    Lexeme: =,
+    Line: 7,
+    Type: Assignment
+  },
+  {
+    Column: 15,
+    Lexeme: nil,
+    Line: 7,
+    Type: Nil
+  },
+  {
+    Column: 18,
+    Lexeme: ;,
+    Line: 7,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: if,
+    Line: 10,
+    Type: If
+  },
+  {
+    Column: 4,
+    Lexeme: (,
+    Line: 10,
+    Type: OpenParenthesis
+  },
+  {
+    Column: 5,
+    Lexeme: android,
+    Line: 10,
+    Type: Identifier,
+    Value: android
+  },
+  {
+    Column: 13,
+    Lexeme: >=,
+    Line: 10,
+    Type: GreaterOrEqual
+  },
+  {
+    Column: 16,
+    Lexeme: 10,
+    Line: 10,
+    Type: Numeric,
+    Value: 10.0
+  },
+  {
+    Column: 19,
+    Lexeme: and,
+    Line: 10,
+    Type: And
+  },
+  {
+    Column: 23,
+    Lexeme: flag,
+    Line: 10,
+    Type: Identifier,
+    Value: flag
+  },
+  {
+    Column: 27,
+    Lexeme: ),
+    Line: 10,
+    Type: CloseParenthesis
+  },
+  {
+    Column: 29,
+    Lexeme: {,
+    Line: 10,
+    Type: OpenCurlyBracket
+  },
+  {
+    Column: 5,
+    Lexeme: print,
+    Line: 11,
+    Type: Print
+  },
+  {
+    Column: 11,
+    Lexeme: android,
+    Line: 11,
+    Type: Identifier,
+    Value: android
+  },
+  {
+    Column: 19,
+    Lexeme: +,
+    Line: 11,
+    Type: Plus
+  },
+  {
+    Column: 21,
+    Lexeme: pi,
+    Line: 11,
+    Type: Identifier,
+    Value: pi
+  },
+  {
+    Column: 23,
+    Lexeme: ;,
+    Line: 11,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: },
+    Line: 12,
+    Type: ClosingCurlyBracket
+  },
+  {
+    Column: 3,
+    Lexeme: else,
+    Line: 12,
+    Type: Else
+  },
+  {
+    Column: 8,
+    Lexeme: {,
+    Line: 12,
+    Type: OpenCurlyBracket
+  },
+  {
+    Column: 5,
+    Lexeme: print,
+    Line: 13,
+    Type: Print
+  },
+  {
+    Column: 11,
+    Lexeme: name,
+    Line: 13,
+    Type: Identifier,
+    Value: name
+  },
+  {
+    Column: 15,
+    Lexeme: ;,
+    Line: 13,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: },
+    Line: 14,
+    Type: ClosingCurlyBracket
+  },
+  {
+    Column: 1,
+    Lexeme: fun,
+    Line: 18,
+    Type: Fun
+  },
+  {
+    Column: 5,
+    Lexeme: greet,
+    Line: 18,
+    Type: Identifier,
+    Value: greet
+  },
+  {
+    Column: 10,
+    Lexeme: (,
+    Line: 18,
+    Type: OpenParenthesis
+  },
+  {
+    Column: 11,
+    Lexeme: who,
+    Line: 18,
+    Type: Identifier,
+    Value: who
+  },
+  {
+    Column: 14,
+    Lexeme: ),
+    Line: 18,
+    Type: CloseParenthesis
+  },
+  {
+    Column: 16,
+    Lexeme: {,
+    Line: 18,
+    Type: OpenCurlyBracket
+  },
+  {
+    Column: 5,
+    Lexeme: return,
+    Line: 19,
+    Type: Return
+  },
+  {
+    Column: 12,
+    Lexeme: "hi ",
+    Line: 19,
+    Type: String,
+    Value: hi 
+  },
+  {
+    Column: 18,
+    Lexeme: +,
+    Line: 19,
+    Type: Plus
+  },
+  {
+    Column: 20,
+    Lexeme: who,
+    Line: 19,
+    Type: Identifier,
+    Value: who
+  },
+  {
+    Column: 23,
+    Lexeme: ;,
+    Line: 19,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: },
+    Line: 20,
+    Type: ClosingCurlyBracket
+  },
+  {
+    Column: 1,
+    Lexeme: var,
+    Line: 22,
+    Type: Var
+  },
+  {
+    Column: 5,
+    Lexeme: result,
+    Line: 22,
+    Type: Identifier,
+    Value: result
+  },
+  {
+    Column: 12,
+    Lexeme: =,
+    Line: 22,
+    Type: Assignment
+  },
+  {
+    Column: 14,
+    Lexeme: greet,
+    Line: 22,
+    Type: Identifier,
+    Value: greet
+  },
+  {
+    Column: 19,
+    Lexeme: (,
+    Line: 22,
+    Type: OpenParenthesis
+  },
+  {
+    Column: 20,
+    Lexeme: name,
+    Line: 22,
+    Type: Identifier,
+    Value: name
+  },
+  {
+    Column: 24,
+    Lexeme: ),
+    Line: 22,
+    Type: CloseParenthesis
+  },
+  {
+    Column: 25,
+    Lexeme: ;,
+    Line: 22,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: print,
+    Line: 23,
+    Type: Print
+  },
+  {
+    Column: 7,
+    Lexeme: result,
+    Line: 23,
+    Type: Identifier,
+    Value: result
+  },
+  {
+    Column: 14,
+    Lexeme: !=,
+    Line: 23,
+    Type: Inequality
+  },
+  {
+    Column: 17,
+    Lexeme: "bye",
+    Line: 23,
+    Type: String,
+    Value: bye
+  },
+  {
+    Column: 22,
+    Lexeme: ;,
+    Line: 23,
+    Type: Semicolon
+  },
+  {
+    Column: 1,
+    Lexeme: EOF,
+    Line: 24,
+    Type: Eof
+  }
+]
