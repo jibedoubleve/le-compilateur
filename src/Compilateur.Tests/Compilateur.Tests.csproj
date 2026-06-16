@@ -24,7 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Parser\" />
+    <Compile Update="Syntactic\ExpressionTexts.Primary.cs">
+      <DependentUpon>ExpressionTests.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Syntactic\ExpressionTexts.Call.cs">
+      <DependentUpon>ExpressionTests.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

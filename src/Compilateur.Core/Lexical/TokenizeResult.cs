@@ -1,6 +1,7 @@
+using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Lexical;
+namespace Compilateur.Core.Errors;
 
 public sealed record TokenizeResult
 {

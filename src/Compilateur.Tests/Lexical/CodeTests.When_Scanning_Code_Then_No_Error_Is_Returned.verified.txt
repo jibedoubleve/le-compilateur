@@ -250,7 +250,7 @@
     Column: 1,
     Lexeme: },
     Line: 12,
-    Type: ClosingCurlyBracket
+    Type: CloseCurlyBracket
   },
   {
     Column: 3,
@@ -287,7 +287,7 @@
     Column: 1,
     Lexeme: },
     Line: 14,
-    Type: ClosingCurlyBracket
+    Type: CloseCurlyBracket
   },
   {
     Column: 1,
@@ -363,7 +363,7 @@
     Column: 1,
     Lexeme: },
     Line: 20,
-    Type: ClosingCurlyBracket
+    Type: CloseCurlyBracket
   },
   {
     Column: 1,

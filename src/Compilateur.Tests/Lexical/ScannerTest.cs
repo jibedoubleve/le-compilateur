@@ -1,9 +1,9 @@
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Errors.Tokens;
 using Shouldly;
 using Xunit.Abstractions;
 
-namespace Compilateur.Tests.Lexer;
+namespace Compilateur.Tests.Lexical;
 
 public class ScannerTest : ScannerTestBase
 {
@@ -69,7 +69,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData("(", TokenType.OpenParenthesis)]
     [InlineData(")", TokenType.CloseParenthesis)]
     [InlineData("{", TokenType.OpenCurlyBracket)]
-    [InlineData("}", TokenType.ClosingCurlyBracket)]
+    [InlineData("}", TokenType.CloseCurlyBracket)]
     [InlineData("!", TokenType.Bang)]
     [InlineData(">", TokenType.GreaterThan)]
     [InlineData("<", TokenType.LessThan)]

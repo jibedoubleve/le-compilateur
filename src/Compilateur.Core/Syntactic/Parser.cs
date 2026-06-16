@@ -1,4 +1,6 @@
-using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Errors;
+using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Rules.Expressions;
 using Microsoft.Extensions.Logging;
 
 namespace Compilateur.Core.Syntactic;
@@ -8,7 +10,6 @@ public class Parser
     #region Fields
 
     private readonly ILogger _logger;
-    private readonly IEnumerable<Token> _tokens;
 
     #endregion
 
@@ -20,7 +21,22 @@ public class Parser
 
     #region Methods
 
-    public object? Parse(IReadOnlyCollection<Token> tokens) => null;
+    public SyntaxNode Parse(ParsingContext context)
+    {
+        var errors = new SyntaxErrorCollection();
+        var nodes = new List<SyntaxNode>();
+
+        while (!context.Cursor.IsAtEnd)
+        {
+            var node = new DeclarationParser().Parse(context);
+            if (node is not null)
+            {
+                nodes.Add(node);
+            }
+        }
+
+        return new SyntaxNode(context.Cursor.Peek(), nodes.ToArray());
+    }
 
     #endregion
 }

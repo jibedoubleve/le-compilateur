@@ -1,7 +1,9 @@
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Errors;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public abstract record DoubleCharRule : ITokenRule
 {

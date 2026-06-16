@@ -1,8 +1,9 @@
 using System.Text;
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public sealed record StringRule : ITokenRule
 {
@@ -31,12 +32,7 @@ public sealed record StringRule : ITokenRule
         {
             if (codeCursor.IsAtEnd)
             {
-                errors?.Add(new SyntaxError
-                {
-                    Column = first.Column,
-                    Line = first.Line,
-                    Message = "Reached end of file before closing quotes (\")"
-                });
+                errors?.Add(new SyntaxError(first, "Reached end of file before closing quotes (\")"));
                 return null;
             }
 
@@ -58,16 +54,12 @@ public sealed record StringRule : ITokenRule
             strBuilder.Append(next.Char);
         }
 
-        errors?.Add(new SyntaxError
-        {
-            Column = first.Column,
-            Line = first.Line,
-            Message =
-                $"String starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
-                $"maximum length of {MaxSize} characters."
-        });
+        var msg =
+            $"String starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
+            $"maximum length of {MaxSize} characters.";
+        errors?.Add(new SyntaxError(first, msg));
         return null;
-    }
 
-    #endregion
+        #endregion
+    }
 }

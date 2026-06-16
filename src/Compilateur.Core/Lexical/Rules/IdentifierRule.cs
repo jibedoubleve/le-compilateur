@@ -1,8 +1,9 @@
 using System.Text;
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public sealed record IdentifierRule : ITokenRule
 {
@@ -43,7 +44,10 @@ public sealed record IdentifierRule : ITokenRule
 
     private bool IsValidChar(CodeCursor codeCursor)
     {
-        if (codeCursor.IsAtEnd) return false;
+        if (codeCursor.IsAtEnd)
+        {
+            return false;
+        }
 
         char? character = codeCursor.Peek();
         return character.HasValue &&
@@ -52,7 +56,10 @@ public sealed record IdentifierRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor)
     {
-        if (codeCursor.IsAtEnd) return false;
+        if (codeCursor.IsAtEnd)
+        {
+            return false;
+        }
 
         char? character = codeCursor.Peek();
         return character.HasValue &&
@@ -72,6 +79,7 @@ public sealed record IdentifierRule : ITokenRule
             {
                 var lexeme = strBuilder.ToString();
                 if (_keywords.TryGetValue(lexeme, out var type))
+                {
                     return new Token
                     {
                         Column = first.Column,
@@ -79,6 +87,7 @@ public sealed record IdentifierRule : ITokenRule
                         Lexeme = lexeme,
                         Type = type
                     };
+                }
 
                 return new Token
                 {
@@ -94,14 +103,9 @@ public sealed record IdentifierRule : ITokenRule
             strBuilder.Append(next.Char);
         }
 
-        errors?.Add(new SyntaxError
-        {
-            Column = first.Column,
-            Line = first.Line,
-            Message =
-                $"Identifier starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
-                $"maximum length of {MaxSize} characters."
-        });
+        var msg = $"Identifier starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
+                  $"maximum length of {MaxSize} characters.";
+        errors?.Add(new SyntaxError(first, msg));
         return null;
     }
 

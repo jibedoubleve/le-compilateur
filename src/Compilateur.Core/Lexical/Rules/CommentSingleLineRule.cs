@@ -1,9 +1,11 @@
 using System.Text;
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Errors;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public record CommentSingleLineRule : ITokenRule
 {

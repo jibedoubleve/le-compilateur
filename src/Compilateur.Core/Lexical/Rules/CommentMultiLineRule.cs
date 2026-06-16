@@ -1,6 +1,8 @@
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public record CommentMultiLineRule : ITokenRule
 {
@@ -26,7 +28,10 @@ public record CommentMultiLineRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor)
     {
-        if (codeCursor.IsAtEnd) return false;
+        if (codeCursor.IsAtEnd)
+        {
+            return false;
+        }
 
         return $"{codeCursor.Peek()}{codeCursor.PeekNext()}" == "/*";
     }
@@ -40,12 +45,7 @@ public record CommentMultiLineRule : ITokenRule
         {
             if (codeCursor.IsAtEnd)
             {
-                errors?.Add(new SyntaxError
-                {
-                    Column = first.Column,
-                    Line = first.Line,
-                    Message = "Unterminated block comment: missing '*/'"
-                });
+                errors?.Add(new SyntaxError(first, "Unterminated block comment: missing '*/'"));
                 return null;
             }
 
@@ -59,14 +59,11 @@ public record CommentMultiLineRule : ITokenRule
             codeCursor.Consume();
         }
 
-        errors?.Add(new SyntaxError
-        {
-            Column = first.Column,
-            Line = first.Line,
-            Message =
-                $"Comments starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
-                $"maximum length of {MaxSize} characters."
-        });
+        var msg =
+            $"Comments starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
+            $"maximum length of {MaxSize} characters.";
+
+        errors?.Add(new SyntaxError(first, msg));
         return null;
     }
 

@@ -1,8 +1,8 @@
-using Compilateur.Core.Lexical;
+using Compilateur.Core.Errors;
 using Shouldly;
 using Xunit.Abstractions;
 
-namespace Compilateur.Tests.Lexer;
+namespace Compilateur.Tests.Lexical;
 
 public class CodeCursorTest
 {

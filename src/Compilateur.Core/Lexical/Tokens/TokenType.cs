@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Lexical.Tokens;
+namespace Compilateur.Core.Errors.Tokens;
 
 public enum TokenType
 {
@@ -9,7 +9,7 @@ public enum TokenType
     OpenParenthesis,
     CloseParenthesis,
     OpenCurlyBracket,
-    ClosingCurlyBracket,
+    CloseCurlyBracket,
     Bang,
     GreaterThan,
     LessThan,

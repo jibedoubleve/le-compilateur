@@ -1,9 +1,10 @@
 using System.Globalization;
 using System.Text;
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public sealed record NumericRule : ITokenRule
 {
@@ -66,12 +67,7 @@ public sealed record NumericRule : ITokenRule
         var lexeme = strBuilder.ToString();
         if (decimalCounter > 1)
         {
-            errors?.Add(new SyntaxError
-            {
-                Column = first.Column,
-                Line = first.Line,
-                Message = $"Malformed number literal '{lexeme}': multiple decimal points."
-            });
+            errors?.Add(new SyntaxError(first, $"Malformed number literal '{lexeme}': multiple decimal points."));
             return null;
         }
 

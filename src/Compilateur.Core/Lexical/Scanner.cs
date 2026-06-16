@@ -1,9 +1,11 @@
+using Compilateur.Core.Errors.Rules;
+using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Lexical;
+namespace Compilateur.Core.Errors;
 
 public class Scanner
 {
@@ -29,14 +31,9 @@ public class Scanner
 
     private void AddEmptyRuleError(CodeCursor cursor, SyntaxErrorCollection errors)
     {
-        var lexeme = cursor.Consume();
-        var errorMsg = $"Character '{lexeme.Char}' is not supported";
-        errors.Add(new SyntaxError
-        {
-            Message = errorMsg,
-            Column = lexeme.Column,
-            Line = lexeme.Line
-        });
+        var codeChar = cursor.Consume();
+        var errorMsg = $"Character '{codeChar.Char}' is not supported";
+        errors.Add(new SyntaxError(codeChar, errorMsg));
         _logger.LogWarning(errorMsg);
     }
 

@@ -1,3 +1,4 @@
+using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Extensions;

@@ -1,11 +1,15 @@
 using System.Text;
-using Compilateur.Core.Lexical;
+using Compilateur.Core.Errors;
+using Compilateur.Core.Syntactic;
+using Compilateur.Core.Syntactic.Rules.Expressions;
 
 namespace Compilateur.Core.Extensions;
 
 public static class ErrorFormater
 {
     #region Methods
+
+    public static string FormatErrors(this ParsingContext context) => context.Errors.Format();
 
     public static string Format(this SyntaxErrorCollection errors)
     {

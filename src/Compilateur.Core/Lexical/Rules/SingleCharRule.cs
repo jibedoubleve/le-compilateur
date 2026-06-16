@@ -1,7 +1,9 @@
+using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Errors;
+using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Lexical;
 
-namespace Compilateur.Core.Lexical.Rules;
+namespace Compilateur.Core.Errors.Rules;
 
 public abstract record SingleCharRule : ITokenRule
 {
@@ -65,7 +67,7 @@ public sealed record ClosingBracketRule() : SingleCharRule(')', TokenType.CloseP
 
 public sealed record OpenCurlyBracketRule() : SingleCharRule('{', TokenType.OpenCurlyBracket);
 
-public sealed record ClosingCurlyBracketRule() : SingleCharRule('}', TokenType.ClosingCurlyBracket);
+public sealed record ClosingCurlyBracketRule() : SingleCharRule('}', TokenType.CloseCurlyBracket);
 
 public sealed record BangRule() : SingleCharRule('!', TokenType.Bang);
 

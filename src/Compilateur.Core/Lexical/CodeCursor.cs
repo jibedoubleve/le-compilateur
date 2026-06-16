@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Lexical;
+namespace Compilateur.Core.Errors;
 
 public sealed class CodeCursor : ICursor<CodeChar>
 {
