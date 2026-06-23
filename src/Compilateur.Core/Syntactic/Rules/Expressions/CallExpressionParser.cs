@@ -6,14 +6,9 @@ internal class CallExpressionParser : PrecedenceParser<PrimaryExpressionParser>
 {
     #region Methods
 
-    private IEnumerable<SyntaxNode> GetSubNodes(ParsingContext context)
+    private static SyntaxNode[] GetSubNodes(ParsingContext context)
     {
-        var children = new List<SyntaxNode>
-        {
-            new(context.Cursor.Consume())
-        };
-
-        context.Cursor.Consume(); // Drop the '('
+        var children = new List<SyntaxNode>();
 
         while (!context.Cursor.IsAtEnd && context.Cursor.Peek().Type != TokenType.CloseParenthesis)
         {
@@ -31,25 +26,29 @@ internal class CallExpressionParser : PrecedenceParser<PrimaryExpressionParser>
                 children.Add(node);
             }
         }
-
-        context.Cursor.Consume(); // Drop the ')'
-        return children;
+        if(!context.Cursor.IsAtEnd)
+        {
+            context.Cursor.Consume(); // Drop the ')'
+        }
+        return [.. children];
     }
 
-    protected override bool MatchesCurrent(ParsingContext context) => true;
+    protected override bool MatchesCurrent(ParsingContext context) => false;
 
     public override SyntaxNode? Parse(ParsingContext context)
     {
-        var next = context.Cursor.PeekNext();
-        if (next is null)
+        var node = InnerExpression.Parse(context);
+        var current = context.Cursor.Peek();
+        if (node is not null && current.Type == TokenType.OpenParenthesis)
         {
-            context.AddError("Unexpected end of input.");
-            return null;
+            context.Cursor.Consume();
+            return new SyntaxNode(
+                node.Token,
+                GetSubNodes(context)
+            );
         }
 
-        return next.Type == TokenType.OpenParenthesis
-            ? new SyntaxNode(next, GetSubNodes(context))
-            : InnerExpression.Parse(context);
+        return node;
     }
 
     #endregion

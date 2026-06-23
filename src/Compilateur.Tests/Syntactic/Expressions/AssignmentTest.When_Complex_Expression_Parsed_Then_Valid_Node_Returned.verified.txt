@@ -1,0 +1,36 @@
+﻿{
+  Children: [
+    {
+      Token: {
+        Lexeme: myVar,
+        Type: Identifier
+      }
+    },
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: 1,
+            Type: Numeric,
+            Value: 1.0
+          }
+        },
+        {
+          Token: {
+            Lexeme: 6,
+            Type: Numeric,
+            Value: 6.0
+          }
+        }
+      ],
+      Token: {
+        Lexeme: +,
+        Type: Plus
+      }
+    }
+  ],
+  Token: {
+    Lexeme: =,
+    Type: Assignment
+  }
+}

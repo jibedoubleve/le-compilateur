@@ -6,10 +6,12 @@ public record SyntaxNode
 {
     #region Constructors
 
-    public SyntaxNode(Token token, IEnumerable<SyntaxNode>? children = null)
+    public SyntaxNode(Token token, params SyntaxNode?[] children)
     {
         Token = token;
-        Children = children ?? [];
+        
+        Children = children.Where(c => c is not null)
+                           .Select(child => child!);
     }
 
     #endregion

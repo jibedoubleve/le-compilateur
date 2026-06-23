@@ -2,7 +2,7 @@ using Compilateur.Core.Errors.Tokens;
 
 namespace Compilateur.Core.Syntactic.Rules.Expressions;
 
-internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
+internal class ComparisonExpressionParser : PrecedenceParser<TermExpressionParser>
 {
     #region Methods
 
@@ -10,7 +10,8 @@ internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
     {
         if (!Matches(context)) { return accumulator; }
 
-        return Parse(context,
+        return Parse(
+            context,
             new SyntaxNode(
                 context.Cursor.Consume(),
                 accumulator,
@@ -23,14 +24,19 @@ internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
         var token = context.Cursor.Peek();
         return token.Type switch
         {
-            TokenType.Plus  => true,
-            TokenType.Minus => true,
-            _               => false
+            TokenType.GreaterThan        => true,
+            TokenType.GreaterThanOrEqual => true,
+            TokenType.LessThan           => true,
+            TokenType.LessThanOrEqual    => true,
+            _                            => false
         };
     }
 
     public override SyntaxNode? Parse(ParsingContext context)
-        => Parse(context, InnerExpression.Parse(context));
+        => Parse(
+            context,
+            InnerExpression.Parse(context)
+        );
 
     #endregion
 }

@@ -2,7 +2,7 @@ using Compilateur.Core.Errors.Tokens;
 
 namespace Compilateur.Core.Syntactic.Rules.Expressions;
 
-internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
+internal class EqualityExpressionParser : PrecedenceParser<ComparisonExpressionParser>
 {
     #region Methods
 
@@ -23,14 +23,17 @@ internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
         var token = context.Cursor.Peek();
         return token.Type switch
         {
-            TokenType.Plus  => true,
-            TokenType.Minus => true,
-            _               => false
+            TokenType.Equality   => true,
+            TokenType.Inequality => true,
+            _                    => false
         };
     }
 
     public override SyntaxNode? Parse(ParsingContext context)
-        => Parse(context, InnerExpression.Parse(context));
+        => Parse(
+            context,
+            InnerExpression.Parse(context)
+        );
 
     #endregion
 }

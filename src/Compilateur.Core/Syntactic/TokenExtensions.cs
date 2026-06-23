@@ -19,14 +19,14 @@ public static class TokenExtensions
     public static SyntaxNode? BuildFactor(this ParsingContext context) =>
         context.Cursor.Peek().Type switch
         {
-            TokenType.Multiply or TokenType.Divided => new FactorParser().Parse(context),
+            TokenType.Multiply or TokenType.Divided => new FactorExpressionParser().Parse(context),
             _                                       => null
         };
 
     public static SyntaxNode? BuildTerm(this ParsingContext context) =>
         context.Cursor.Peek().Type switch
         {
-            TokenType.Plus or TokenType.Minus => new TermParser().Parse(context),
+            TokenType.Plus or TokenType.Minus => new TermExpressionParser().Parse(context),
             _                                 => null
         };
 

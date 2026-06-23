@@ -52,7 +52,7 @@ public class TokenCursor : ICursor<Token>
         foreach (var token in _tokens)
         {
             builder.Append(token.Lexeme);
-
+            builder.Append(' ');
         }
         builder.AppendLine();
 

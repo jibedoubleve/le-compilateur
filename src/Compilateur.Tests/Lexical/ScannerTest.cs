@@ -81,7 +81,7 @@ public class ScannerTest : ScannerTestBase
     // Double chars
     [InlineData("||", TokenType.Or)]
     [InlineData("&&", TokenType.And)]
-    [InlineData(">=", TokenType.GreaterOrEqual)]
+    [InlineData(">=", TokenType.GreaterThanOrEqual)]
     [InlineData("<=", TokenType.LessThanOrEqual)]
     [InlineData("==", TokenType.Equality)]
     [InlineData("!=", TokenType.Inequality)]

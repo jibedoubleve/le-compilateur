@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using Compilateur.Core.Errors.Tokens;
 
 namespace Compilateur.Core.Lexical.Tokens;
 
+[DebuggerDisplay("{Lexeme} [{Type}]")]
 public sealed record Token
 {
     #region Properties

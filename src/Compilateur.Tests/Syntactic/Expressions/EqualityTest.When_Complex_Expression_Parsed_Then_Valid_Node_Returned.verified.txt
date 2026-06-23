@@ -1,0 +1,82 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: 1,
+                Type: Numeric,
+                Value: 1.0
+              }
+            },
+            {
+              Token: {
+                Lexeme: 1,
+                Type: Numeric,
+                Value: 1.0
+              }
+            }
+          ],
+          Token: {
+            Lexeme: ==,
+            Type: Equality
+          }
+        },
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: 2,
+                Type: Numeric,
+                Value: 2.0
+              }
+            },
+            {
+              Token: {
+                Lexeme: 2,
+                Type: Numeric,
+                Value: 2.0
+              }
+            }
+          ],
+          Token: {
+            Lexeme: ==,
+            Type: Equality
+          }
+        }
+      ],
+      Token: {
+        Lexeme: !=,
+        Type: Inequality
+      }
+    },
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: 3,
+            Type: Numeric,
+            Value: 3.0
+          }
+        },
+        {
+          Token: {
+            Lexeme: 3,
+            Type: Numeric,
+            Value: 3.0
+          }
+        }
+      ],
+      Token: {
+        Lexeme: !=,
+        Type: Inequality
+      }
+    }
+  ],
+  Token: {
+    Lexeme: ==,
+    Type: Equality
+  }
+}

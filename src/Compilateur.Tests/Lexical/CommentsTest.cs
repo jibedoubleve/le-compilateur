@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
-public class CommentsTests : ScannerTestBase
+public class CommentsTest : ScannerTestBase
 {
     #region Fields
 
@@ -15,7 +15,7 @@ public class CommentsTests : ScannerTestBase
 
     #region Constructors
 
-    public CommentsTests(ITestOutputHelper output) : base(output) => _output = output;
+    public CommentsTest(ITestOutputHelper output) : base(output) => _output = output;
 
     #endregion
 

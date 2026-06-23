@@ -23,13 +23,4 @@
     <ProjectReference Include="..\Compilateur.Core\Compilateur.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Syntactic\ExpressionTexts.Primary.cs">
-      <DependentUpon>ExpressionTests.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Syntactic\ExpressionTexts.Call.cs">
-      <DependentUpon>ExpressionTests.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,37 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: 10,
+            Type: Numeric,
+            Value: 10.0
+          }
+        },
+        {
+          Token: {
+            Lexeme: 3,
+            Type: Numeric,
+            Value: 3.0
+          }
+        }
+      ],
+      Token: {
+        Lexeme: /,
+        Type: Divided
+      }
+    },
+    {
+      Token: {
+        Lexeme: 2,
+        Type: Numeric,
+        Value: 2.0
+      }
+    }
+  ],
+  Token: {
+    Lexeme: /,
+    Type: Divided
+  }
+}

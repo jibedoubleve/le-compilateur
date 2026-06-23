@@ -69,7 +69,7 @@ public sealed record AndRule() : DoubleCharRule("&&", TokenType.And);
 
 public sealed record OrRule() : DoubleCharRule("||", TokenType.Or);
 
-public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenType.GreaterOrEqual);
+public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenType.GreaterThanOrEqual);
 
 public sealed record LessThanOrEqualRule() : DoubleCharRule("<=", TokenType.LessThanOrEqual);
 

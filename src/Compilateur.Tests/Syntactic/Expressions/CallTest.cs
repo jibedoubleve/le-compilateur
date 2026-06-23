@@ -3,11 +3,24 @@ using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Rules.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
+using Xunit.Abstractions;
 
-namespace Compilateur.Tests.Syntactic;
+namespace Compilateur.Tests.Syntactic.Expressions;
 
-public partial class ExpressionTests
+public class CallTest
 {
+    #region Fields
+
+    private readonly ITestOutputHelper _output;
+
+    #endregion
+
+    #region Constructors
+
+    public CallTest(ITestOutputHelper output) => _output = output;
+
+    #endregion
+
     #region Methods
 
     public static IEnumerable<object[]> BuildInvalidCallExpressionTokens()
@@ -25,6 +38,51 @@ public partial class ExpressionTests
         yield return [new TokenCollectionBuilder().While().BuildParsingContext()];
         yield return [new TokenCollectionBuilder().For().BuildParsingContext()];
         yield return [new TokenCollectionBuilder().Return().BuildParsingContext()];
+    }
+
+    public static IEnumerable<object[]> BuildValidCallExpressionTokenWithTreeInformation()
+    {
+        const string foo = "foo";
+        const string a = "a";
+        const string b = "b";
+
+        // foo
+        yield return [new TokenCollectionBuilder().Identifier(foo).BuildParsingContext(), 0];
+        // foo()
+        yield return
+        [
+            new TokenCollectionBuilder().Identifier(foo)
+                                        .EmptyCall()
+                                        .Semicolon()
+                                        .BuildParsingContext(),
+            0
+        ];
+        // foo(a, b)
+        yield return
+        [
+            new TokenCollectionBuilder().Identifier(foo)
+                                        .BetweenParentheses(p => {
+                                            p.Identifier(a)
+                                             .Comma()
+                                             .Identifier(b);
+                                        })
+                                        .Semicolon()
+                                        .BuildParsingContext(),
+            2
+        ];
+        // foo(1 + 2)
+        yield return
+        [
+            new TokenCollectionBuilder().Identifier(foo)
+                                        .BetweenParentheses(p => {
+                                            p.Number(1)
+                                             .Plus()
+                                             .Number(2);
+                                        })
+                                        .Semicolon()
+                                        .BuildParsingContext(),
+            1
+        ];
     }
 
     public static IEnumerable<object[]> BuildValidCallExpressionTokens()
@@ -84,48 +142,6 @@ public partial class ExpressionTests
         ];
     }
 
-    public static IEnumerable<object[]> BuildValidCallExpressionTokenWithTreeInformation()
-    {
-        const string foo = "foo";
-        const string a = "a";
-        const string b = "b";
-
-        // foo
-        yield return [new TokenCollectionBuilder().Identifier(foo).BuildParsingContext(), 0];
-        // foo()
-        yield return
-        [
-            new TokenCollectionBuilder().Identifier(foo)
-                                        .EmptyCall()
-                                        .BuildParsingContext(),
-            1
-        ];
-        // foo(a, b)
-        yield return
-        [
-            new TokenCollectionBuilder().Identifier(foo)
-                                        .BetweenParentheses(p => {
-                                            p.Identifier(a)
-                                             .Comma()
-                                             .Identifier(b);
-                                        })
-                                        .BuildParsingContext(),
-            3
-        ];
-        // foo(1 + 2)
-        yield return
-        [
-            new TokenCollectionBuilder().Identifier(foo)
-                                        .BetweenParentheses(p => {
-                                            p.Number(1)
-                                             .Plus()
-                                             .Number(2);
-                                        })
-                                        .BuildParsingContext(),
-            2
-        ];
-    }
-
     [Theory]
     [MemberData(nameof(BuildValidCallExpressionTokenWithTreeInformation))]
     public void When_Parsing_CallExpression_Then_Expected_Node_Returned(ParsingContext context, int nodeCount)
@@ -133,14 +149,14 @@ public partial class ExpressionTests
         // arrange
         _output.WriteLine($"Output tokens: {context.Cursor}");
         var expression = new ExpressionParser();
+        _output.WriteCode(context);
 
         // act
         var node = expression.Parse(context);
+        _output.WriteSyntaxTree(node);
 
-        _output.WriteLine(context.Errors.Format());
-        
         // assert
-        node.ShouldNotBeNull();
+        node!.ShouldNotBeNull(context.FormatErrors());
         node!.Children.Count().ShouldBe(nodeCount);
     }
 
