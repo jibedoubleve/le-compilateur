@@ -1,20 +1,18 @@
 using System.Text;
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Errors;
-using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Errors.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public record CommentSingleLineRule : ITokenRule
 {
     #region Fields
 
+    private const int MaxSize = 10_000;
+
     private readonly IEnumerable<char> _deadChars = ['\r', '\n'];
     private readonly ILogger<CommentSingleLineRule> _logger;
-
-    private const int MaxSize = 10_000;
 
     #endregion
 
@@ -41,7 +39,10 @@ public record CommentSingleLineRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor)
     {
-        if (codeCursor.IsAtEnd) return false;
+        if (codeCursor.IsAtEnd)
+        {
+            return false;
+        }
 
         var current = $"{codeCursor.Peek()}{codeCursor.PeekNext()}";
         return current == "//";
@@ -49,7 +50,10 @@ public record CommentSingleLineRule : ITokenRule
 
     public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
-        if (codeCursor.IsAtEnd) return null;
+        if (codeCursor.IsAtEnd)
+        {
+            return null;
+        }
 
         var strBuilder = new StringBuilder();
         strBuilder.Append(codeCursor.Consume()); // Consume '/'

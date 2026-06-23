@@ -1,0 +1,51 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: c,
+            Type: Identifier
+          }
+        },
+        {
+          Token: {
+            Lexeme: d,
+            Type: Identifier
+          }
+        },
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: a,
+                Type: Identifier
+              }
+            },
+            {
+              Token: {
+                Lexeme: b,
+                Type: Identifier
+              }
+            }
+          ],
+          Role: Call,
+          Token: {
+            Lexeme: foo,
+            Type: Identifier
+          }
+        }
+      ],
+      Role: Call,
+      Token: {
+        Lexeme: (,
+        Type: OpenParenthesis
+      }
+    }
+  ],
+  Role: Call,
+  Token: {
+    Lexeme: (,
+    Type: OpenParenthesis
+  }
+}

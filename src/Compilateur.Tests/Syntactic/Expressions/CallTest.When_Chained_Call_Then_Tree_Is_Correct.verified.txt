@@ -1,0 +1,16 @@
+﻿{
+  Children: [
+    {
+      Role: Call,
+      Token: {
+        Lexeme: foo,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Call,
+  Token: {
+    Lexeme: (,
+    Type: OpenParenthesis
+  }
+}

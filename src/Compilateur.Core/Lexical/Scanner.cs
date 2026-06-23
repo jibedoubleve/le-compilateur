@@ -1,11 +1,10 @@
-using Compilateur.Core.Errors.Rules;
-using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 using Microsoft.Extensions.Logging;
 
-namespace Compilateur.Core.Errors;
+namespace Compilateur.Core.Lexical;
 
 public class Scanner
 {
@@ -43,7 +42,7 @@ public class Scanner
         var tokens = new List<Token>();
         var stream = new CodeCursor(source);
 
-        while (!stream.IsAtEnd)
+        do
         {
             var rule = _rules.Where(r => r.Matches(stream))
                              .OrderByDescending(r => r.Weight)
@@ -71,10 +70,10 @@ public class Scanner
                     );
                 }
             }
-        }
+        } while (!stream.IsAtEnd);
 
         tokens.AppendEof();
-        
+
         return new TokenizeResult
         {
             Tokens = tokens,

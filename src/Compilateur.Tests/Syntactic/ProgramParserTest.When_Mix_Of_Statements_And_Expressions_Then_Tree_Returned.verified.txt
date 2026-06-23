@@ -1,0 +1,38 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: 1,
+            Type: Numeric,
+            Value: 1.0
+          }
+        }
+      ],
+      Role: Var,
+      Token: {
+        Lexeme: foo,
+        Type: Identifier
+      }
+    },
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: hello_world,
+            Type: String
+          }
+        }
+      ],
+      Token: {
+        Lexeme: print,
+        Type: Print
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

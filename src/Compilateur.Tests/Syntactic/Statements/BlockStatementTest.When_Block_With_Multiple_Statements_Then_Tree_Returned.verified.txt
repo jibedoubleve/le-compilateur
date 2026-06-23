@@ -1,0 +1,67 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: foo,
+                Type: Identifier
+              }
+            },
+            {
+              Token: {
+                Lexeme: 5,
+                Type: Numeric,
+                Value: 5.0
+              }
+            }
+          ],
+          Token: {
+            Lexeme: +,
+            Type: Plus
+          }
+        },
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: Hello_World,
+                Type: String
+              }
+            }
+          ],
+          Token: {
+            Lexeme: print,
+            Type: Print
+          }
+        },
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: 12,
+                Type: Numeric,
+                Value: 12.0
+              }
+            }
+          ],
+          Role: Var,
+          Token: {
+            Lexeme: bar,
+            Type: Identifier
+          }
+        }
+      ],
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

@@ -1,0 +1,48 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Children: [
+                {
+                  Children: [
+                    {
+                      Token: {
+                        Lexeme: foo_far,
+                        Type: String
+                      }
+                    }
+                  ],
+                  Token: {
+                    Lexeme: print,
+                    Type: Print
+                  }
+                }
+              ],
+              Role: Body,
+              Token: {
+                Lexeme: {,
+                Type: OpenCurlyBracket
+              }
+            }
+          ],
+          Role: Function,
+          Token: {
+            Lexeme: foo,
+            Type: Identifier
+          }
+        }
+      ],
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

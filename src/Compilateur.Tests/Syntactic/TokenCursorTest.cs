@@ -19,7 +19,10 @@ public class TokenCursorTest
             TokenFactory.BuildCollection(length)
         );
 
-        for (var i = 0; i < length; i++) cursor.Consume();
+        for (var i = 0; i < length; i++)
+        {
+            cursor.Consume();
+        }
 
         cursor.IsAtEnd.ShouldBeTrue();
     }

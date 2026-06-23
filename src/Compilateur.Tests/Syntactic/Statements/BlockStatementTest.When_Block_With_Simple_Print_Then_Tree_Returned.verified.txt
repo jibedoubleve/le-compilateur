@@ -1,0 +1,30 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: Hello_World,
+                Type: String
+              }
+            }
+          ],
+          Token: {
+            Lexeme: print,
+            Type: Print
+          }
+        }
+      ],
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

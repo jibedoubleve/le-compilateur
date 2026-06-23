@@ -1,9 +1,7 @@
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Errors;
-using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Errors.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public sealed record TriviaRule : ITokenRule
 {
@@ -24,7 +22,10 @@ public sealed record TriviaRule : ITokenRule
     public bool Matches(CodeCursor codeCursor)
     {
         var current = codeCursor.Peek().Char;
-        if (!current.HasValue) return true;
+        if (!current.HasValue)
+        {
+            return true;
+        }
 
         return _deadChars.Contains(
             current.Value

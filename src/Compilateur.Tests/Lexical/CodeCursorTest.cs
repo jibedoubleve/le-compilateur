@@ -1,41 +1,11 @@
-using Compilateur.Core.Errors;
+using Compilateur.Core.Lexical;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
 public class CodeCursorTest
 {
-    #region Fields
-
-    private readonly ITestOutputHelper _output;
-
-    #endregion
-
-    #region Constructors
-
-    public CodeCursorTest(ITestOutputHelper output) => _output = output;
-
-    #endregion
-
     #region Methods
-
-    [Theory]
-    [InlineData("", 0)]
-    [InlineData("a", 1)]
-    [InlineData("aa", 2)]
-    [InlineData("aaa", 3)]
-    public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
-    {
-        var stream = new CodeCursor(code);
-        for (var i = 0; i < index; i++)
-        {
-            stream.IsAtEnd.ShouldBeFalse();
-            stream.Consume();
-        }
-
-        stream.IsAtEnd.ShouldBeTrue();
-    }
 
     [Theory]
     [InlineData("a\n\rb")]
@@ -64,6 +34,23 @@ public class CodeCursorTest
         );
     }
 
+    [Theory]
+    [InlineData("", 0)]
+    [InlineData("a", 1)]
+    [InlineData("aa", 2)]
+    [InlineData("aaa", 3)]
+    public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
+    {
+        var stream = new CodeCursor(code);
+        for (var i = 0; i < index; i++)
+        {
+            stream.IsAtEnd.ShouldBeFalse();
+            stream.Consume();
+        }
+
+        stream.IsAtEnd.ShouldBeTrue();
+    }
+
     [Fact]
     public void When_NewLine_Then_Line_Number_Is_Incremented()
     {
@@ -84,26 +71,23 @@ public class CodeCursorTest
         var line3 = stream.Consume();
         var nl3 = stream.Consume();
         var line4 = stream.Consume();
-        var nl4 = stream.Consume();
+        stream.Consume();
 
         // ASSERT
         Assert.Multiple(
             // line1
             () => line1.Line.ShouldBe(1),
             () => line1.Column.ShouldBe(1),
-            
             () => nl1.Line.ShouldBe(1),
             () => nl1.Column.ShouldBe(2),
             // line2
             () => line2.Line.ShouldBe(2),
             () => line2.Column.ShouldBe(1),
-            
             () => nl2.Line.ShouldBe(2),
             () => nl2.Column.ShouldBe(2),
             // line3
             () => line3.Line.ShouldBe(3),
             () => line3.Column.ShouldBe(1),
-            
             () => nl3.Line.ShouldBe(3),
             () => nl3.Column.ShouldBe(2),
             // line4
@@ -119,10 +103,12 @@ public class CodeCursorTest
         var stream = new CodeCursor(code);
 
         for (var i = 0; i < 5; i++)
+        {
             Assert.Multiple(
                 () => stream.PeekNext()!.IsEmpty.ShouldBeFalse(),
                 () => stream.PeekNext()!.Char.ShouldBe('b')
             );
+        }
     }
 
     #endregion

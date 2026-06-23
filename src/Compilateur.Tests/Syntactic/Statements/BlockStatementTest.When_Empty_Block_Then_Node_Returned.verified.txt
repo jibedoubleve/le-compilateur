@@ -1,0 +1,14 @@
+﻿{
+  Children: [
+    {
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

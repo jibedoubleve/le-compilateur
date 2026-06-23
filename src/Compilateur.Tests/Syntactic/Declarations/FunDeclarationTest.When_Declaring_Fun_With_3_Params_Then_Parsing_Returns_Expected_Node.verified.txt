@@ -1,0 +1,37 @@
+﻿{
+  Children: [
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: a,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: b,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: c,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Body,
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Role: Function,
+  Token: {
+    Lexeme: myFunc,
+    Type: Identifier
+  }
+}

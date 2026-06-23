@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Errors;
+namespace Compilateur.Core.Lexical;
 
 public sealed record CodeChar
 {
@@ -22,8 +22,9 @@ public sealed record CodeChar
 
     #region Methods
 
-    public static implicit operator char?(CodeChar codeChar) => codeChar.Char;
     public override string ToString() => Char?.ToString() ?? "";
+
+    public static implicit operator char?(CodeChar codeChar) => codeChar.Char;
 
     #endregion
 }

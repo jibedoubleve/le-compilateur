@@ -1,0 +1,76 @@
+﻿{
+  Children: [
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: a,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: b,
+        Type: Identifier
+      }
+    },
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: 6,
+                Type: Numeric,
+                Value: 6.0
+              }
+            },
+            {
+              Token: {
+                Lexeme: 5,
+                Type: Numeric,
+                Value: 5.0
+              }
+            }
+          ],
+          Token: {
+            Lexeme: +,
+            Type: Plus
+          }
+        },
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: 6,
+                Type: Numeric,
+                Value: 6.0
+              }
+            },
+            {
+              Token: {
+                Lexeme: 8,
+                Type: Numeric,
+                Value: 8.0
+              }
+            }
+          ],
+          Token: {
+            Lexeme: *,
+            Type: Multiply
+          }
+        }
+      ],
+      Role: Body,
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Role: Function,
+  Token: {
+    Lexeme: myFunc,
+    Type: Identifier
+  }
+}

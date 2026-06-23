@@ -1,16 +1,18 @@
-namespace Compilateur.Core.Errors;
+using Compilateur.Core.Errors;
+
+namespace Compilateur.Core.Lexical;
 
 public sealed class CodeCursor : ICursor<CodeChar>
 {
     #region Fields
+
+    private static readonly char?[] NewLines = ['\n', '\r'];
 
     private int _currentColumn = 1;
 
     private int _currentIndex;
     private int _currentLine = 1;
     private readonly string _source;
-
-    private static readonly char?[] NewLines = ['\n', '\r'];
 
     #endregion
 
@@ -47,21 +49,19 @@ public sealed class CodeCursor : ICursor<CodeChar>
             : (false, 1);
     }
 
-    private bool TryPeek(out CodeChar? value)
+    public CodeChar Peek()
     {
         if (_currentIndex < 0 || _currentIndex >= _source.Length)
         {
-            value = null;
-            return false;
+            return CodeChar.Empty;
         }
 
-        value = new CodeChar
+        return new CodeChar
         {
             Char = _source[_currentIndex],
             Column = _currentColumn,
             Line = _currentLine
         };
-        return true;
     }
 
     private bool TryPeekNext(out CodeChar? value)
@@ -103,15 +103,6 @@ public sealed class CodeCursor : ICursor<CodeChar>
 
         _currentIndex += isNewLine.Offset;
         return readValue;
-    }
-
-    public CodeChar Peek()
-    {
-        var read = TryPeek(out var value)
-            ? value
-            : throw new IndexOutOfRangeException(
-                $"Cannot peek at index {_currentIndex}: source length is {_source.Length}.");
-        return read!;
     }
 
     public CodeChar? PeekNext() =>

@@ -1,9 +1,7 @@
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Errors;
-using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Errors.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public abstract record DoubleCharRule : ITokenRule
 {
@@ -19,9 +17,11 @@ public abstract record DoubleCharRule : ITokenRule
     public DoubleCharRule(string lexeme, TokenType tokenType)
     {
         if (lexeme.Length != 2)
+        {
             throw new ArgumentOutOfRangeException(
                 $"The lexeme should have a length of 2 but length is {lexeme.Length}"
             );
+        }
 
         Weight = lexeme.Length;
         _lexeme = lexeme;
@@ -69,7 +69,7 @@ public sealed record AndRule() : DoubleCharRule("&&", TokenType.And);
 
 public sealed record OrRule() : DoubleCharRule("||", TokenType.Or);
 
-public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenType.GreaterOrEqual);
+public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenType.GreaterThanOrEqual);
 
 public sealed record LessThanOrEqualRule() : DoubleCharRule("<=", TokenType.LessThanOrEqual);
 

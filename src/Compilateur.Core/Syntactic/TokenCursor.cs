@@ -1,5 +1,4 @@
 using System.Text;
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic;
@@ -7,6 +6,9 @@ namespace Compilateur.Core.Syntactic;
 public class TokenCursor : ICursor<Token>
 {
     #region Fields
+
+    private static readonly TokenType[] NoSpaceTokens =
+        [TokenType.Dot, TokenType.OpenParenthesis, TokenType.Identifier];
 
     private int _currentIndex;
     private readonly IEnumerable<Token> _tokens;
@@ -23,28 +25,35 @@ public class TokenCursor : ICursor<Token>
 
     public bool IsAtEnd => Peek().Type == TokenType.Eof;
 
+    public bool IsEmpty => !_tokens.Any();
+
     #endregion
 
     #region Methods
 
     public Token Consume()
     {
-        if (IsAtEnd)
+        if (!TryConsume(out var token))
         {
             throw new InvalidOperationException(
                 $"Unexpected end of token stream at position {_currentIndex}.");
         }
 
-        var token = Peek();
-        _currentIndex++;
-        return token;
+        return token!;
     }
+
+    public bool IsPeekNextOfType(TokenType tokenType) => PeekNext()?.Type == tokenType;
+
+    public bool IsPeekOfType(TokenType tokenType) => Peek().Type == tokenType;
+    
+    public bool IsPeekOneOfType(params TokenType[] types) => types.Contains(Peek().Type);
 
     public Token Peek() => _tokens.ElementAt(_currentIndex);
 
-    public Token? PeekNext() => _currentIndex + 1 >= _tokens.Count()
-        ? null
-        : _tokens.ElementAt(_currentIndex + 1);
+    public Token? PeekNext() =>
+        _currentIndex + 1 >= _tokens.Count()
+            ? null
+            : _tokens.ElementAt(_currentIndex + 1);
 
     public override string ToString()
     {
@@ -53,10 +62,28 @@ public class TokenCursor : ICursor<Token>
         {
             builder.Append(token.Lexeme);
 
+            if (!NoSpaceTokens.Contains(token.Type))
+            {
+                builder.Append(' ');
+            }
         }
+
         builder.AppendLine();
 
         return builder.ToString();
+    }
+
+    public bool TryConsume(out Token? token)
+    {
+        if (IsAtEnd)
+        {
+            token = null;
+            return false;
+        }
+
+        token = Peek();
+        _currentIndex++;
+        return true;
     }
 
     #endregion
