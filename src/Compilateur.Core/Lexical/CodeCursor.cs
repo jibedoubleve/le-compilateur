@@ -4,13 +4,13 @@ public sealed class CodeCursor : ICursor<CodeChar>
 {
     #region Fields
 
+    private static readonly char?[] NewLines = ['\n', '\r'];
+
     private int _currentColumn = 1;
 
     private int _currentIndex;
     private int _currentLine = 1;
     private readonly string _source;
-
-    private static readonly char?[] NewLines = ['\n', '\r'];
 
     #endregion
 

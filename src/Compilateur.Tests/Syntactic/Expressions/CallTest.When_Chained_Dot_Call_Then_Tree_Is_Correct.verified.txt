@@ -1,0 +1,24 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: foo,
+            Type: Identifier
+          }
+        }
+      ],
+      Role: Get,
+      Token: {
+        Lexeme: bar,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Get,
+  Token: {
+    Lexeme: baz,
+    Type: Identifier
+  }
+}

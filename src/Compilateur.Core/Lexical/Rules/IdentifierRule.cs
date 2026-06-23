@@ -1,13 +1,14 @@
 using System.Text;
-using Compilateur.Core.Errors.Tokens;
-using Compilateur.Core.Lexical.Rules;
+using Compilateur.Core.Errors;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Errors.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public sealed record IdentifierRule : ITokenRule
 {
     #region Fields
+
+    private const int MaxSize = 10_000;
 
     private readonly Dictionary<string, TokenType> _keywords = new()
     {
@@ -28,9 +29,6 @@ public sealed record IdentifierRule : ITokenRule
         { "false", TokenType.False },
         { "print", TokenType.Print }
     };
-
-
-    private const int MaxSize = 10_000;
 
     #endregion
 

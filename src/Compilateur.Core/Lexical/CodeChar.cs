@@ -22,8 +22,9 @@ public sealed record CodeChar
 
     #region Methods
 
-    public static implicit operator char?(CodeChar codeChar) => codeChar.Char;
     public override string ToString() => Char?.ToString() ?? "";
+
+    public static implicit operator char?(CodeChar codeChar) => codeChar.Char;
 
     #endregion
 }

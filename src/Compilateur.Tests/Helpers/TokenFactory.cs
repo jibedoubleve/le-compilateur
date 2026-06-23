@@ -1,4 +1,3 @@
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Tests.Helpers;
@@ -21,12 +20,13 @@ public static class TokenFactory
                 Lexeme = ""
             });
         }
+
         list.Add(new Token
         {
             Type = TokenType.Eof,
             Line = 0,
             Column = 0,
-            Lexeme = ""
+            Lexeme = "$"
         });
 
         return list;

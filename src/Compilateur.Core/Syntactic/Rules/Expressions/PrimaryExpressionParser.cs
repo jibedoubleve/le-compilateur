@@ -1,4 +1,4 @@
-using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Rules.Expressions;
 
@@ -19,6 +19,8 @@ internal class PrimaryExpressionParser : IParser
             TokenType.True            => true,
             TokenType.False           => true,
             TokenType.Nil             => true,
+            TokenType.This            => true,
+            TokenType.Super           => true,
             _                         => false
         };
     }
@@ -27,20 +29,23 @@ internal class PrimaryExpressionParser : IParser
     {
         var current = context.Cursor.Consume();
 
-        /* Keep track we are in pending parenthesis. If it is the case, we
-         * have to consume the closing )
+        /* Keep track of pending parenthesis. If it is the case, we
+         * have to consume the closing ')'
          */
-        var isParenthesisPending = current.Type == TokenType.OpenParenthesis;
+        var isParenthesisPending = current.IsOfType(TokenType.OpenParenthesis);
         var token = isParenthesisPending
             ? new ExpressionParser().Parse(context)
-            : new SyntaxNode(current);
+            : SyntaxNode.Unspecified(current);
 
-        if (isParenthesisPending 
-            && context.Cursor.Peek().Type == TokenType.CloseParenthesis)
+        if (!isParenthesisPending) { return token; }
+
+        if (!context.Cursor.IsPeekOfType(TokenType.CloseParenthesis))
         {
-            context.Cursor.Consume();
+            context.AddError($"Expected ')' after expression but found '{context.Cursor.Peek().Lexeme}'.");
+            return null;
         }
 
+        context.Cursor.Consume();
         return token;
     }
 

@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Errors.Tokens;
+namespace Compilateur.Core.Lexical.Tokens;
 
 public enum TokenType
 {
@@ -22,7 +22,7 @@ public enum TokenType
     // Two char lexemes
     And,
     Or,
-    GreaterOrEqual,
+    GreaterThanOrEqual,
     LessThanOrEqual,
     Equality,
     Inequality,

@@ -1,0 +1,50 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Children: [
+                {
+                  Token: {
+                    Lexeme: 6,
+                    Type: Numeric,
+                    Value: 6.0
+                  }
+                },
+                {
+                  Token: {
+                    Lexeme: 5,
+                    Type: Numeric,
+                    Value: 5.0
+                  }
+                }
+              ],
+              Role: Declaration,
+              Token: {
+                Lexeme: +,
+                Type: Plus
+              }
+            }
+          ],
+          Role: Body,
+          Token: {
+            Lexeme: {,
+            Type: OpenCurlyBracket
+          }
+        }
+      ],
+      Role: Function,
+      Token: {
+        Lexeme: myFunc,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Class,
+  Token: {
+    Lexeme: MyClass,
+    Type: Identifier
+  }
+}

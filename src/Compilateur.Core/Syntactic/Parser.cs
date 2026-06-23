@@ -1,6 +1,6 @@
 using Compilateur.Core.Errors;
+using Compilateur.Core.Syntactic.Rules;
 using Compilateur.Core.Syntactic.Rules.Declarations;
-using Compilateur.Core.Syntactic.Rules.Expressions;
 using Microsoft.Extensions.Logging;
 
 namespace Compilateur.Core.Syntactic;
@@ -35,7 +35,7 @@ public class Parser
             }
         }
 
-        return new SyntaxNode(context.Cursor.Peek(), nodes.ToArray());
+        return SyntaxNode.Unspecified(context.Cursor.Peek(), nodes.ToArray());
     }
 
     #endregion
