@@ -1,61 +1,43 @@
+using Compilateur.Core.Errors.Tokens;
+
 namespace Compilateur.Core.Syntactic.Rules.Expressions;
 
-internal class TermParser : IParser
+internal class TermExpressionParser : PrecedenceParser<FactorExpressionParser>
 {
     #region Methods
 
-    public bool Matches(ParsingContext context)
+    private SyntaxNode? Parse(ParsingContext context, SyntaxNode? accumulator)
     {
-        if (context.Cursor.IsAtEnd) { return false; }
+        if (!MatchesCurrent(context)) { return accumulator; }
 
-        var current = context.Cursor.Peek();
-        var next = context.Cursor.PeekNext();
-
-        if (next is null)
+        var operation = context.Cursor.Consume();
+        var right = InnerExpression.Parse(context);
+        if (right == null)
         {
-            return false;
+            context.AddError("Missing term's right operand.");
+            return null;
         }
 
-        return current.IsNumeric() && next.IsTerm();
+        var parsed = Parse(
+            context,
+            SyntaxNode.Unspecified(operation, accumulator, right)
+        );
+        return parsed;
     }
 
-    public SyntaxNode? Parse(ParsingContext context)
+    protected override bool MatchesCurrent(ParsingContext context)
     {
-        var cursor = context.Cursor;
-        var left = cursor.Consume();
-        var operation = cursor.Consume();
-
-        if (cursor.IsAtEnd)
+        var token = context.Cursor.Peek();
+        return token.Type switch
         {
-            context.AddError(operation, "Unexpected end if file");
-            return null;
-        }
-
-        var right = cursor.Consume();
-        
-        if (cursor.IsAtEnd)
-        {
-            context.AddError(right, "Unexpected end if file");
-            return null;
-        }
-
-        if (!left.IsNumeric())
-        {
-            context.AddError(left, $"The left part of a '{left.Lexeme}' has to be numeric");
-            return null;
-        }
-
-        var rightNext = cursor.PeekNext();
-        if (right.IsNumeric() && rightNext.IsTerm()) { return context.BuildTerm(); }
-
-        if (right.IsNumeric() && rightNext.IsFactor()) { return context.BuildFactor(); }
-
-        if (right.IsNumeric()) { return new SyntaxNode(operation); }
-
-        context.AddError(left, "Incomplete operation");
-
-        return null;
+            TokenType.Plus  => true,
+            TokenType.Minus => true,
+            _               => false
+        };
     }
+
+    public override SyntaxNode? Parse(ParsingContext context)
+        => Parse(context, InnerExpression.Parse(context));
 
     #endregion
 }

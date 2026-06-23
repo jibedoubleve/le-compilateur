@@ -21,6 +21,7 @@ public static class TokenFactory
                 Lexeme = ""
             });
         }
+
         list.Add(new Token
         {
             Type = TokenType.Eof,

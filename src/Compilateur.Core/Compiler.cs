@@ -1,6 +1,3 @@
 ﻿namespace Compilateur.Core;
 
-public class Compiler
-{
-
-}
+public class Compiler { }

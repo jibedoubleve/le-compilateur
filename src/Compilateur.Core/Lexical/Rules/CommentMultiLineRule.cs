@@ -1,4 +1,3 @@
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 

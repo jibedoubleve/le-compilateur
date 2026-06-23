@@ -1,5 +1,4 @@
 using Compilateur.Core.Errors.Tokens;
-using Compilateur.Core.Errors;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 
@@ -37,7 +36,10 @@ public abstract record SingleCharRule : ITokenRule
     public Token Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
     {
         var consumed = codeCursor.Consume();
-        if (consumed.Char is null) throw new InvalidOperationException("Consumed empty lexeme");
+        if (consumed.Char is null)
+        {
+            throw new InvalidOperationException("Consumed empty lexeme");
+        }
 
         return new Token
         {

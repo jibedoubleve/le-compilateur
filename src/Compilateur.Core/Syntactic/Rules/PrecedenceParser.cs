@@ -1,4 +1,4 @@
-namespace Compilateur.Core.Syntactic.Rules.Expressions;
+namespace Compilateur.Core.Syntactic.Rules;
 
 internal abstract class PrecedenceParser<TChildParser> : IParser
     where TChildParser : IParser, new()

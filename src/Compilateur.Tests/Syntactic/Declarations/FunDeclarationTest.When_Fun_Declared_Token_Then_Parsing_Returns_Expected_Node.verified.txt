@@ -1,0 +1,23 @@
+﻿{
+  Children: [
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: a,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Argument,
+      Token: {
+        Lexeme: b,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Function,
+  Token: {
+    Lexeme: myFunc,
+    Type: Identifier
+  }
+}

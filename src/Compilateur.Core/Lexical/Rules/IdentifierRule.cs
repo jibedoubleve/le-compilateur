@@ -9,6 +9,8 @@ public sealed record IdentifierRule : ITokenRule
 {
     #region Fields
 
+    private const int MaxSize = 10_000;
+
     private readonly Dictionary<string, TokenType> _keywords = new()
     {
         { "and", TokenType.And },
@@ -28,9 +30,6 @@ public sealed record IdentifierRule : ITokenRule
         { "false", TokenType.False },
         { "print", TokenType.Print }
     };
-
-
-    private const int MaxSize = 10_000;
 
     #endregion
 

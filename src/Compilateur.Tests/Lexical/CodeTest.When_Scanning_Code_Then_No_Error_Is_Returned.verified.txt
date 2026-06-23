@@ -180,7 +180,7 @@
     Column: 13,
     Lexeme: >=,
     Line: 10,
-    Type: GreaterOrEqual
+    Type: GreaterThanOrEqual
   },
   {
     Column: 16,

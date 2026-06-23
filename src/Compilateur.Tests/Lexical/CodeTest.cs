@@ -1,11 +1,11 @@
-using Compilateur.Core.Extensions;
 using Compilateur.Core.Errors.Tokens;
+using Compilateur.Core.Extensions;
 using Shouldly;
 using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
-public class CodeTests : ScannerTestBase
+public class CodeTest : ScannerTestBase
 {
     #region Fields
 
@@ -15,7 +15,7 @@ public class CodeTests : ScannerTestBase
 
     #region Constructors
 
-    public CodeTests(ITestOutputHelper output) : base(output) => _output = output;
+    public CodeTest(ITestOutputHelper output) : base(output) => _output = output;
 
     #endregion
 
@@ -53,7 +53,7 @@ public class CodeTests : ScannerTestBase
         const string code = """
                             // One line comments
                             var android = 42;
-                            
+
                             var pi = 3.14;
                             var name = "hello world";
                             var flag = true;
@@ -75,7 +75,7 @@ public class CodeTests : ScannerTestBase
                             var result = greet(name);
                             print result != "bye";
                             """;
-        
+
         var res = Scanner.Tokenize(code);
 
         _output.WriteLine(res.Errors.Format());

@@ -21,23 +21,6 @@ public class CodeCursorTest
     #region Methods
 
     [Theory]
-    [InlineData("", 0)]
-    [InlineData("a", 1)]
-    [InlineData("aa", 2)]
-    [InlineData("aaa", 3)]
-    public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
-    {
-        var stream = new CodeCursor(code);
-        for (var i = 0; i < index; i++)
-        {
-            stream.IsAtEnd.ShouldBeFalse();
-            stream.Consume();
-        }
-
-        stream.IsAtEnd.ShouldBeTrue();
-    }
-
-    [Theory]
     [InlineData("a\n\rb")]
     [InlineData("a\nb")]
     [InlineData("a\rb")]
@@ -62,6 +45,23 @@ public class CodeCursorTest
             () => char2.Line.ShouldBe(2),
             () => char2.Column.ShouldBe(1)
         );
+    }
+
+    [Theory]
+    [InlineData("", 0)]
+    [InlineData("a", 1)]
+    [InlineData("aa", 2)]
+    [InlineData("aaa", 3)]
+    public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
+    {
+        var stream = new CodeCursor(code);
+        for (var i = 0; i < index; i++)
+        {
+            stream.IsAtEnd.ShouldBeFalse();
+            stream.Consume();
+        }
+
+        stream.IsAtEnd.ShouldBeTrue();
     }
 
     [Fact]
@@ -91,19 +91,16 @@ public class CodeCursorTest
             // line1
             () => line1.Line.ShouldBe(1),
             () => line1.Column.ShouldBe(1),
-            
             () => nl1.Line.ShouldBe(1),
             () => nl1.Column.ShouldBe(2),
             // line2
             () => line2.Line.ShouldBe(2),
             () => line2.Column.ShouldBe(1),
-            
             () => nl2.Line.ShouldBe(2),
             () => nl2.Column.ShouldBe(2),
             // line3
             () => line3.Line.ShouldBe(3),
             () => line3.Column.ShouldBe(1),
-            
             () => nl3.Line.ShouldBe(3),
             () => nl3.Column.ShouldBe(2),
             // line4
@@ -119,10 +116,12 @@ public class CodeCursorTest
         var stream = new CodeCursor(code);
 
         for (var i = 0; i < 5; i++)
+        {
             Assert.Multiple(
                 () => stream.PeekNext()!.IsEmpty.ShouldBeFalse(),
                 () => stream.PeekNext()!.Char.ShouldBe('b')
             );
+        }
     }
 
     #endregion

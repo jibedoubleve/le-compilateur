@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Text;
+using Compilateur.Core.Errors;
 using Compilateur.Core.Errors.Tokens;
-using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
 
-namespace Compilateur.Core.Errors.Rules;
+namespace Compilateur.Core.Lexical.Rules;
 
 public sealed record NumericRule : ITokenRule
 {

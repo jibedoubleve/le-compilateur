@@ -1,0 +1,22 @@
+﻿{
+  Children: [
+    {
+      Token: {
+        Lexeme: a,
+        Type: Identifier
+      }
+    },
+    {
+      Role: Declaration,
+      Token: {
+        Lexeme: a,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Function,
+  Token: {
+    Lexeme: myFunc,
+    Type: Identifier
+  }
+}

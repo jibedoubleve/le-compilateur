@@ -22,7 +22,7 @@ public enum TokenType
     // Two char lexemes
     And,
     Or,
-    GreaterOrEqual,
+    GreaterThanOrEqual,
     LessThanOrEqual,
     Equality,
     Inequality,

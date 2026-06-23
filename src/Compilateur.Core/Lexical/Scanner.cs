@@ -1,5 +1,3 @@
-using Compilateur.Core.Errors.Rules;
-using Compilateur.Core.Errors.Tokens;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
@@ -74,7 +72,7 @@ public class Scanner
         }
 
         tokens.AppendEof();
-        
+
         return new TokenizeResult
         {
             Tokens = tokens,
