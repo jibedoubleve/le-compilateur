@@ -1,0 +1,114 @@
+using Compilateur.Core.Errors;
+
+namespace Compilateur.Core.Lexical;
+
+public sealed class CodeCursor : ICursor<CodeChar>
+{
+    #region Fields
+
+    private static readonly char?[] NewLines = ['\n', '\r'];
+
+    private int _currentColumn = 1;
+
+    private int _currentIndex;
+    private int _currentLine = 1;
+    private readonly string _source;
+
+    #endregion
+
+    #region Constructors
+
+    public CodeCursor(string source) => _source = source;
+
+    #endregion
+
+    #region Properties
+
+    private bool IsNextEof => _currentIndex + 1 >= _source.Length;
+    public bool IsAtEnd => _currentIndex >= _source.Length;
+
+    #endregion
+
+    #region Methods
+
+    private (bool IsNewLine, int Offset) IsNextNewLine()
+    {
+        var current = Peek();
+        var hasNext = TryPeekNext(out var next);
+
+        if (hasNext)
+        {
+            if (current.Char == '\r' && next!.Char == '\n')
+            {
+                return (true, 2);
+            }
+        }
+
+        return NewLines.Contains(current.Char)
+            ? (true, 1)
+            : (false, 1);
+    }
+
+    public CodeChar Peek()
+    {
+        if (_currentIndex < 0 || _currentIndex >= _source.Length)
+        {
+            return CodeChar.Empty;
+        }
+
+        return new CodeChar
+        {
+            Char = _source[_currentIndex],
+            Column = _currentColumn,
+            Line = _currentLine
+        };
+    }
+
+    private bool TryPeekNext(out CodeChar? value)
+    {
+        if (IsNextEof)
+        {
+            value = null;
+            return false;
+        }
+
+        value = new CodeChar
+        {
+            Char = _source[_currentIndex + 1],
+            Line = _currentLine,
+            Column = _currentColumn
+        };
+        return true;
+    }
+
+    public CodeChar Consume()
+    {
+        if (IsAtEnd)
+        {
+            return CodeChar.Empty;
+        }
+
+        var readValue = Peek();
+
+        var isNewLine = IsNextNewLine();
+        if (isNewLine.IsNewLine)
+        {
+            _currentLine++;
+            _currentColumn = 1;
+        }
+        else
+        {
+            _currentColumn++;
+        }
+
+        _currentIndex += isNewLine.Offset;
+        return readValue;
+    }
+
+    public CodeChar? PeekNext() =>
+        TryPeekNext(out var value)
+            ? value
+            : CodeChar.Empty;
+
+    #endregion
+}

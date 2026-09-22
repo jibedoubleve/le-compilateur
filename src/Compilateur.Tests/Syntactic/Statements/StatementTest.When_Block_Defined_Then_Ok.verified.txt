@@ -1,0 +1,29 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: a,
+            Type: Identifier
+          }
+        },
+        {
+          Token: {
+            Lexeme: 14,
+            Type: Numeric,
+            Value: 14.0
+          }
+        }
+      ],
+      Token: {
+        Lexeme: =,
+        Type: Assignment
+      }
+    }
+  ],
+  Token: {
+    Lexeme: {,
+    Type: OpenCurlyBracket
+  }
+}

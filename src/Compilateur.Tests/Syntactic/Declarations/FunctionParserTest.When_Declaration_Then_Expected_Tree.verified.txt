@@ -1,0 +1,62 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Role: Argument,
+          Token: {
+            Lexeme: who,
+            Type: Identifier
+          }
+        },
+        {
+          Children: [
+            {
+              Children: [
+                {
+                  Children: [
+                    {
+                      Token: {
+                        Lexeme: Hi,
+                        Type: String
+                      }
+                    },
+                    {
+                      Token: {
+                        Lexeme: who,
+                        Type: Identifier
+                      }
+                    }
+                  ],
+                  Token: {
+                    Lexeme: +,
+                    Type: Plus
+                  }
+                }
+              ],
+              Role: Declaration,
+              Token: {
+                Lexeme: return,
+                Type: Return
+              }
+            }
+          ],
+          Role: Body,
+          Token: {
+            Lexeme: {,
+            Type: OpenCurlyBracket
+          }
+        }
+      ],
+      Role: Function,
+      Token: {
+        Lexeme: greet,
+        Type: Identifier
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}

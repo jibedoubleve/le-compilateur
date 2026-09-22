@@ -1,4 +1,4 @@
-using Compilateur.Core.Lexer.Tokens;
+using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Extensions;
 
@@ -17,7 +17,7 @@ public static class TokenListExtensions
             Column = 1,
             Line = lineNumber,
             Type = TokenType.Eof,
-            Lexeme = "EOF",
+            Lexeme = "$",
             Value = null
         });
     }

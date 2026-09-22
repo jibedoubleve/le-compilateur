@@ -1,0 +1,7 @@
+﻿{
+  Role: Class,
+  Token: {
+    Lexeme: MyClass,
+    Type: Identifier
+  }
+}

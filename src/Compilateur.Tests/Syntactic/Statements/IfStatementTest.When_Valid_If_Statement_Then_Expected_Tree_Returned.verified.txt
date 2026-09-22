@@ -1,0 +1,75 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: foo,
+            Type: Identifier
+          }
+        },
+        {
+          Token: {
+            Lexeme: 4,
+            Type: Numeric,
+            Value: 4.0
+          }
+        }
+      ],
+      Role: Condition,
+      Token: {
+        Lexeme: >,
+        Type: GreaterThan
+      }
+    },
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: foo,
+                Type: Identifier
+              }
+            },
+            {
+              Children: [
+                {
+                  Token: {
+                    Lexeme: 4,
+                    Type: Numeric,
+                    Value: 4.0
+                  }
+                },
+                {
+                  Token: {
+                    Lexeme: 7,
+                    Type: Numeric,
+                    Value: 7.0
+                  }
+                }
+              ],
+              Token: {
+                Lexeme: +,
+                Type: Plus
+              }
+            }
+          ],
+          Token: {
+            Lexeme: =,
+            Type: Assignment
+          }
+        }
+      ],
+      Role: Then,
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: if,
+    Type: If
+  }
+}

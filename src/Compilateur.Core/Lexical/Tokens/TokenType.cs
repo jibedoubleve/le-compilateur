@@ -1,0 +1,51 @@
+namespace Compilateur.Core.Lexical.Tokens;
+
+public enum TokenType
+{
+    // One char lexemes
+    Dot,
+    Comma,
+    Semicolon,
+    OpenParenthesis,
+    CloseParenthesis,
+    OpenCurlyBracket,
+    CloseCurlyBracket,
+    Bang,
+    GreaterThan,
+    LessThan,
+    Assignment,
+    Plus,
+    Minus,
+    Multiply,
+    Divided,
+
+    // Two char lexemes
+    And,
+    Or,
+    GreaterThanOrEqual,
+    LessThanOrEqual,
+    Equality,
+    Inequality,
+
+    // Multiple char lexemes
+    Identifier,
+    Numeric,
+    String,
+    True,
+    False,
+    Nil,
+    If,
+    Else,
+    While,
+    For,
+    Fun,
+    Return,
+    Class,
+    This,
+    Super,
+    Var,
+    Print,
+
+    // Special tokens
+    Eof
+}

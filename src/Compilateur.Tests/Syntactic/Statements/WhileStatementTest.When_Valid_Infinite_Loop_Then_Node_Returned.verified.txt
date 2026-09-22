@@ -1,0 +1,46 @@
+﻿{
+  Children: [
+    {
+      Role: Condition,
+      Token: {
+        Lexeme: true,
+        Type: True
+      }
+    },
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: a,
+                Type: Identifier
+              }
+            },
+            {
+              Token: {
+                Lexeme: 4,
+                Type: Numeric,
+                Value: 4.0
+              }
+            }
+          ],
+          Role: Declaration,
+          Token: {
+            Lexeme: =,
+            Type: Assignment
+          }
+        }
+      ],
+      Role: Body,
+      Token: {
+        Lexeme: {,
+        Type: OpenCurlyBracket
+      }
+    }
+  ],
+  Token: {
+    Lexeme: while,
+    Type: While
+  }
+}

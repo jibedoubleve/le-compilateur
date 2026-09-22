@@ -1,6 +1,6 @@
 namespace Compilateur.Tests;
 
-public class VerifyTest
+public class VerifyCheckTest
 {
     #region Methods
 

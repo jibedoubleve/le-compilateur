@@ -1,0 +1,78 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Children: [
+            {
+              Token: {
+                Lexeme: a,
+                Type: Identifier
+              }
+            },
+            {
+              Children: [
+                {
+                  Token: {
+                    Lexeme: b,
+                    Type: Identifier
+                  }
+                },
+                {
+                  Token: {
+                    Lexeme: c,
+                    Type: Identifier
+                  }
+                }
+              ],
+              Token: {
+                Lexeme: or,
+                Type: Or
+              }
+            }
+          ],
+          Token: {
+            Lexeme: or,
+            Type: Or
+          }
+        },
+        {
+          Token: {
+            Lexeme: d,
+            Type: Identifier
+          }
+        }
+      ],
+      Token: {
+        Lexeme: or,
+        Type: Or
+      }
+    },
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: 1,
+            Type: Numeric,
+            Value: 1.0
+          }
+        },
+        {
+          Token: {
+            Lexeme: 2,
+            Type: Numeric,
+            Value: 2.0
+          }
+        }
+      ],
+      Token: {
+        Lexeme: or,
+        Type: Or
+      }
+    }
+  ],
+  Token: {
+    Lexeme: or,
+    Type: Or
+  }
+}

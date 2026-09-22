@@ -1,0 +1,16 @@
+﻿{
+  Children: [
+    {
+      Role: Class,
+      Token: {
+        Lexeme: MySubClass,
+        Type: Identifier
+      }
+    }
+  ],
+  Role: Class,
+  Token: {
+    Lexeme: MyClass,
+    Type: Identifier
+  }
+}

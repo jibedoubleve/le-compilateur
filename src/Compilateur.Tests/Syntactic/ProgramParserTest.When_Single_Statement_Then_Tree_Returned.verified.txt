@@ -1,0 +1,22 @@
+﻿{
+  Children: [
+    {
+      Children: [
+        {
+          Token: {
+            Lexeme: hello_world,
+            Type: String
+          }
+        }
+      ],
+      Token: {
+        Lexeme: print,
+        Type: Print
+      }
+    }
+  ],
+  Token: {
+    Lexeme: $,
+    Type: Eof
+  }
+}
