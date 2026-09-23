@@ -1,6 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -147,5 +147,23 @@ public class FactorTest
         match.ShouldBeTrue();
     }
 
+    [Fact]
+    public Task When_Resolving_Factor_Then_Associativity_Resolved()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Number(1).Multiply()
+                      .Number(2).Multiply()
+                      .Number(3)
+                      .Semicolon()
+            .BuildParsingContext();
+        
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context,  node);
+
+        // assert
+        return Verify(node);
+    }
     #endregion
 }

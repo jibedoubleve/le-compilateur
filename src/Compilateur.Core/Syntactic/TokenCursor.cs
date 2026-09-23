@@ -7,9 +7,6 @@ public class TokenCursor : ICursor<Token>
 {
     #region Fields
 
-    private static readonly TokenType[] NoSpaceTokens =
-        [TokenType.Dot, TokenType.OpenParenthesis, TokenType.Identifier];
-
     private int _currentIndex;
     private readonly IEnumerable<Token> _tokens;
 
@@ -23,13 +20,26 @@ public class TokenCursor : ICursor<Token>
 
     #region Properties
 
-    public bool IsAtEnd => Peek().Type == TokenType.Eof;
+    public bool IsAtEnd => Peek().Kind == TokenKind.Eof;
 
     public bool IsEmpty => !_tokens.Any();
 
     #endregion
 
     #region Methods
+
+    private bool TryConsume(out Token? token)
+    {
+        if (IsAtEnd)
+        {
+            token = null;
+            return false;
+        }
+
+        token = Peek();
+        _currentIndex++;
+        return true;
+    }
 
     public Token Consume()
     {
@@ -41,12 +51,6 @@ public class TokenCursor : ICursor<Token>
 
         return token!;
     }
-
-    public bool IsPeekNextOfType(TokenType tokenType) => PeekNext()?.Type == tokenType;
-
-    public bool IsPeekOfType(TokenType tokenType) => Peek().Type == tokenType;
-    
-    public bool IsPeekOneOfType(params TokenType[] types) => types.Contains(Peek().Type);
 
     public Token Peek() => _tokens.ElementAt(_currentIndex);
 
@@ -62,28 +66,12 @@ public class TokenCursor : ICursor<Token>
         {
             builder.Append(token.Lexeme);
 
-            if (!NoSpaceTokens.Contains(token.Type))
-            {
-                builder.Append(' ');
-            }
+            builder.Append(' ');
         }
 
         builder.AppendLine();
 
         return builder.ToString();
-    }
-
-    public bool TryConsume(out Token? token)
-    {
-        if (IsAtEnd)
-        {
-            token = null;
-            return false;
-        }
-
-        token = Peek();
-        _currentIndex++;
-        return true;
     }
 
     #endregion

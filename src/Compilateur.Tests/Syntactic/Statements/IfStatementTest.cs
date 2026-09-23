@@ -1,5 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 
@@ -52,6 +51,24 @@ public class IfStatementTest
 
         // act
         var node = parser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Valid_If_Expression_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .If().BetweenParentheses(b => b.Identifier("foo"))
+                      .Print("Hello world")
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
         _output.WriteFullContext(context, node);
 
         // assert

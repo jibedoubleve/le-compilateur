@@ -1,8 +1,8 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Declarations;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -46,7 +46,7 @@ public class ClassDeclarationTest
         yield return
         [
             new TokenCollectionBuilder()
-                .Symbol(TokenType.Class)
+                .Symbol(TokenKind.Class)
                 .Identifier("EmptyNoCloseBracket")
                 .OpenCurlyBracket()
                 .BuildParsingContext()
@@ -54,7 +54,7 @@ public class ClassDeclarationTest
         yield return
         [
             new TokenCollectionBuilder()
-                .Symbol(TokenType.Class)
+                .Symbol(TokenKind.Class)
                 .Identifier("NoOpenBracket")
                 .Fun("MyFunOne", c => c.Number(6).Plus().Number(5))
                 .CloseCurlyBracket()
@@ -63,7 +63,7 @@ public class ClassDeclarationTest
         yield return // missing '{' 
         [
             new TokenCollectionBuilder()
-                .Symbol(TokenType.Class)
+                .Symbol(TokenKind.Class)
                 .Identifier("NoOpenBracketNorFunDefinition")
                 .Number(6).Plus().Number(5)
                 .Semicolon()
@@ -73,7 +73,7 @@ public class ClassDeclarationTest
         yield return // missing '}'
         [
             new TokenCollectionBuilder()
-                .Symbol(TokenType.Class)
+                .Symbol(TokenKind.Class)
                 .Identifier("MissingClosingBracket")
                 .OpenCurlyBracket()
                 .Identifier("myFunc")
@@ -251,11 +251,11 @@ public class ClassDeclarationTest
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Symbol(TokenType.Class)
+                      .Symbol(TokenKind.Class)
                       .Identifier("MyClass")
-                      .Symbol(TokenType.LessThan)
+                      .Symbol(TokenKind.LessThan)
                       .Identifier("MyClass1")
-                      .Symbol(TokenType.LessThan)
+                      .Symbol(TokenKind.LessThan)
                       .Identifier("MyClass2")
                       .BuildParsingContext();
         var parser = new DeclarationParser();

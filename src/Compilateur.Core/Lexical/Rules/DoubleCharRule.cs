@@ -8,13 +8,13 @@ public abstract record DoubleCharRule : ITokenRule
     #region Fields
 
     private readonly string _lexeme;
-    private readonly TokenType _tokenType;
+    private readonly TokenKind _tokenKind;
 
     #endregion
 
     #region Constructors
 
-    public DoubleCharRule(string lexeme, TokenType tokenType)
+    public DoubleCharRule(string lexeme, TokenKind tokenKind)
     {
         if (lexeme.Length != 2)
         {
@@ -25,7 +25,7 @@ public abstract record DoubleCharRule : ITokenRule
 
         Weight = lexeme.Length;
         _lexeme = lexeme;
-        _tokenType = tokenType;
+        _tokenKind = tokenKind;
     }
 
     #endregion
@@ -52,7 +52,7 @@ public abstract record DoubleCharRule : ITokenRule
         return new Token
         {
             Lexeme = $"{first.Char}{second.Char}",
-            Type = _tokenType,
+            Kind = _tokenKind,
             Value = null,
             Column = first.Column,
             Line = first.Line
@@ -65,14 +65,10 @@ public abstract record DoubleCharRule : ITokenRule
 /* =========================
  * Double char rules
  * ========================= */
-public sealed record AndRule() : DoubleCharRule("&&", TokenType.And);
+public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenKind.GreaterThanOrEqual);
 
-public sealed record OrRule() : DoubleCharRule("||", TokenType.Or);
+public sealed record LessThanOrEqualRule() : DoubleCharRule("<=", TokenKind.LessThanOrEqual);
 
-public sealed record GreaterOrEqualRule() : DoubleCharRule(">=", TokenType.GreaterThanOrEqual);
+public sealed record EqualityRule() : DoubleCharRule("==", TokenKind.Equality);
 
-public sealed record LessThanOrEqualRule() : DoubleCharRule("<=", TokenType.LessThanOrEqual);
-
-public sealed record EqualityRule() : DoubleCharRule("==", TokenType.Equality);
-
-public sealed record InequalityRule() : DoubleCharRule("!=", TokenType.Inequality);
+public sealed record InequalityRule() : DoubleCharRule("!=", TokenKind.Inequality);

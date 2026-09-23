@@ -1,4 +1,4 @@
-using Compilateur.Core.Syntactic;
+using Compilateur.Core.Syntactic.Nodes;
 using Shouldly;
 
 namespace Compilateur.Tests.Helpers;

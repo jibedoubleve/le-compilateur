@@ -1,5 +1,3 @@
-using Compilateur.Core.Errors;
-
 namespace Compilateur.Core.Lexical;
 
 public sealed class CodeCursor : ICursor<CodeChar>
@@ -49,21 +47,6 @@ public sealed class CodeCursor : ICursor<CodeChar>
             : (false, 1);
     }
 
-    public CodeChar Peek()
-    {
-        if (_currentIndex < 0 || _currentIndex >= _source.Length)
-        {
-            return CodeChar.Empty;
-        }
-
-        return new CodeChar
-        {
-            Char = _source[_currentIndex],
-            Column = _currentColumn,
-            Line = _currentLine
-        };
-    }
-
     private bool TryPeekNext(out CodeChar? value)
     {
         if (IsNextEof)
@@ -103,6 +86,21 @@ public sealed class CodeCursor : ICursor<CodeChar>
 
         _currentIndex += isNewLine.Offset;
         return readValue;
+    }
+
+    public CodeChar Peek()
+    {
+        if (_currentIndex < 0 || _currentIndex >= _source.Length)
+        {
+            return CodeChar.Empty;
+        }
+
+        return new CodeChar
+        {
+            Char = _source[_currentIndex],
+            Column = _currentColumn,
+            Line = _currentLine
+        };
     }
 
     public CodeChar? PeekNext() =>

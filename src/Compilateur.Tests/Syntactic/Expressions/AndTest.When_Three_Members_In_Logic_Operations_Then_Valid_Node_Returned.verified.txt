@@ -1,0 +1,44 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Left: {
+          Left: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: a
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: b
+            }
+          },
+          Token: {
+            Kind: And,
+            Lexeme: and
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: c
+          }
+        },
+        Token: {
+          Kind: Or,
+          Lexeme: or
+        }
+      },
+      Token: {
+        Kind: Or,
+        Lexeme: or
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

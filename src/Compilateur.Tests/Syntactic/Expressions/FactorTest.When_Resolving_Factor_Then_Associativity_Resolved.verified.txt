@@ -1,0 +1,47 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Left: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 1,
+              Value: 1.0
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 2,
+              Value: 2.0
+            }
+          },
+          Token: {
+            Kind: Multiply,
+            Lexeme: *
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 3,
+            Value: 3.0
+          }
+        },
+        Token: {
+          Kind: Multiply,
+          Lexeme: *
+        }
+      },
+      Token: {
+        Kind: Multiply,
+        Lexeme: *
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

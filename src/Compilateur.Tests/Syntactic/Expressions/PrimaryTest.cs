@@ -1,8 +1,8 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -42,7 +42,8 @@ public class PrimaryTest
                 .Number(1)
                 .CloseParenthesis()
                 .BuildParsingContext()
-        ];        yield return
+        ];
+        yield return
         [
             new TokenCollectionBuilder()
                 .OpenParenthesis()
@@ -101,15 +102,15 @@ public class PrimaryTest
     }
 
     [Theory]
-    [InlineData(TokenType.Numeric, 1)]
-    [InlineData(TokenType.True, true)]
-    [InlineData(TokenType.False, false)]
-    [InlineData(TokenType.Nil, null)]
-    [InlineData(TokenType.String, "Hello world")]
-    public void When_Parsing_PrimaryExpression_Has_Value_Then_Node_Returned(TokenType type, object? value)
+    [InlineData(TokenKind.Numeric, 1)]
+    [InlineData(TokenKind.True, true)]
+    [InlineData(TokenKind.False, false)]
+    [InlineData(TokenKind.Nil, null)]
+    [InlineData(TokenKind.String, "Hello world")]
+    public void When_Parsing_PrimaryExpression_Has_Value_Then_Node_Returned(TokenKind kind, object? value)
     {
         // arrange
-        var context = new TokenCollectionBuilder().Value(type, value)
+        var context = new TokenCollectionBuilder().Value(kind, value)
                                                   .Semicolon()
                                                   .BuildParsingContext();
         var parser = new ExpressionParser();
@@ -124,55 +125,55 @@ public class PrimaryTest
         Assert.Multiple(
             () => matched.ShouldBeTrue(),
             () => node.Children.Count().ShouldBe(0),
-            () => node.Token.Type.ShouldBe(type),
+            () => node.Token.Kind.ShouldBe(kind),
             () => node.Token.Value.ShouldBe(value)
         );
     }
 
     [Theory]
-    [InlineData(TokenType.Dot, false)]
-    [InlineData(TokenType.Comma, false)]
-    [InlineData(TokenType.Semicolon, false)]
-    [InlineData(TokenType.CloseParenthesis, false)]
-    [InlineData(TokenType.OpenCurlyBracket, false)]
-    [InlineData(TokenType.CloseCurlyBracket, false)]
-    [InlineData(TokenType.Bang, false)]
-    [InlineData(TokenType.GreaterThan, false)]
-    [InlineData(TokenType.LessThan, false)]
-    [InlineData(TokenType.Assignment, false)]
-    [InlineData(TokenType.Plus, false)]
-    [InlineData(TokenType.Minus, false)]
-    [InlineData(TokenType.Multiply, false)]
-    [InlineData(TokenType.Divided, false)]
-    [InlineData(TokenType.And, false)]
-    [InlineData(TokenType.Or, false)]
-    [InlineData(TokenType.GreaterThanOrEqual, false)]
-    [InlineData(TokenType.LessThanOrEqual, false)]
-    [InlineData(TokenType.Equality, false)]
-    [InlineData(TokenType.Inequality, false)]
-    [InlineData(TokenType.If, false)]
-    [InlineData(TokenType.Else, false)]
-    [InlineData(TokenType.While, false)]
-    [InlineData(TokenType.For, false)]
-    [InlineData(TokenType.Fun, false)]
-    [InlineData(TokenType.Return, false)]
-    [InlineData(TokenType.Class, false)]
-    [InlineData(TokenType.Var, false)]
-    [InlineData(TokenType.Print, false)]
-    [InlineData(TokenType.Eof, false)]
-    [InlineData(TokenType.This, true)]
-    [InlineData(TokenType.Super, true)]
-    [InlineData(TokenType.Numeric, true)]
-    [InlineData(TokenType.String, true)]
-    [InlineData(TokenType.True, true)]
-    [InlineData(TokenType.False, true)]
-    [InlineData(TokenType.Nil, true)]
-    [InlineData(TokenType.Identifier, true)]
-    [InlineData(TokenType.OpenParenthesis, true)]
-    public void When_Parsing_PrimaryExpression_Symbol_Then_Match_Accordingly(TokenType type, bool expected)
+    [InlineData(TokenKind.Dot, false)]
+    [InlineData(TokenKind.Comma, false)]
+    [InlineData(TokenKind.Semicolon, false)]
+    [InlineData(TokenKind.CloseParenthesis, false)]
+    [InlineData(TokenKind.OpenCurlyBracket, false)]
+    [InlineData(TokenKind.CloseCurlyBracket, false)]
+    [InlineData(TokenKind.Bang, false)]
+    [InlineData(TokenKind.GreaterThan, false)]
+    [InlineData(TokenKind.LessThan, false)]
+    [InlineData(TokenKind.Assignment, false)]
+    [InlineData(TokenKind.Plus, false)]
+    [InlineData(TokenKind.Minus, false)]
+    [InlineData(TokenKind.Multiply, false)]
+    [InlineData(TokenKind.Divided, false)]
+    [InlineData(TokenKind.And, false)]
+    [InlineData(TokenKind.Or, false)]
+    [InlineData(TokenKind.GreaterThanOrEqual, false)]
+    [InlineData(TokenKind.LessThanOrEqual, false)]
+    [InlineData(TokenKind.Equality, false)]
+    [InlineData(TokenKind.Inequality, false)]
+    [InlineData(TokenKind.If, false)]
+    [InlineData(TokenKind.Else, false)]
+    [InlineData(TokenKind.While, false)]
+    [InlineData(TokenKind.For, false)]
+    [InlineData(TokenKind.Fun, false)]
+    [InlineData(TokenKind.Return, false)]
+    [InlineData(TokenKind.Class, false)]
+    [InlineData(TokenKind.Var, false)]
+    [InlineData(TokenKind.Print, false)]
+    [InlineData(TokenKind.Eof, false)]
+    [InlineData(TokenKind.This, true)]
+    [InlineData(TokenKind.Super, true)]
+    [InlineData(TokenKind.Numeric, true)]
+    [InlineData(TokenKind.String, true)]
+    [InlineData(TokenKind.True, true)]
+    [InlineData(TokenKind.False, true)]
+    [InlineData(TokenKind.Nil, true)]
+    [InlineData(TokenKind.Identifier, true)]
+    [InlineData(TokenKind.OpenParenthesis, true)]
+    public void When_Parsing_PrimaryExpression_Symbol_Then_Match_Accordingly(TokenKind kind, bool expected)
     {
         // arrange
-        var context = new TokenCollectionBuilder().Symbol(type).BuildParsingContext();
+        var context = new TokenCollectionBuilder().Symbol(kind).BuildParsingContext();
         var parser = new PrimaryExpressionParser();
 
         // act
@@ -181,7 +182,7 @@ public class PrimaryTest
         // assert
         matched.ShouldBe(
             expected,
-            $"The type '{type}' should{(expected ? "" : " NOT")} be supported as an expression."
+            $"The type '{kind}' should{(expected ? "" : " NOT")} be supported as an expression."
         );
     }
 
@@ -205,7 +206,7 @@ public class PrimaryTest
          */
         node.ShouldNotBeNull(context.FormatErrors());
         Assert.Multiple(
-            () => node.Token.Type.ShouldBe(TokenType.Numeric),
+            () => node.Token.Kind.ShouldBe(TokenKind.Numeric),
             () => node.Token.Lexeme.ShouldBe("1")
         );
 

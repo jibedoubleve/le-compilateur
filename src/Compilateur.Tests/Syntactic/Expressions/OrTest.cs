@@ -1,5 +1,5 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 

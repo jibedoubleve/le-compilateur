@@ -1,7 +1,6 @@
 ﻿{
-  Role: Class,
   Token: {
-    Lexeme: MyClass,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: MyClass
   }
 }

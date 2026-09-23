@@ -1,67 +1,66 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
+      Statements: [
         {
-          Children: [
-            {
+          Expression: {
+            Left: {
               Token: {
-                Lexeme: foo,
-                Type: Identifier
+                Kind: Identifier,
+                Lexeme: foo
               }
             },
-            {
+            Right: {
               Token: {
+                Kind: Numeric,
                 Lexeme: 5,
-                Type: Numeric,
                 Value: 5.0
               }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
             }
-          ],
+          },
           Token: {
-            Lexeme: +,
-            Type: Plus
+            Kind: Plus,
+            Lexeme: +
           }
         },
         {
-          Children: [
-            {
-              Token: {
-                Lexeme: Hello_World,
-                Type: String
-              }
+          Value: {
+            Token: {
+              Kind: String,
+              Lexeme: Hello_World
             }
-          ],
+          },
           Token: {
-            Lexeme: print,
-            Type: Print
+            Kind: Print,
+            Lexeme: print
           }
         },
         {
-          Children: [
-            {
-              Token: {
-                Lexeme: 12,
-                Type: Numeric,
-                Value: 12.0
-              }
+          Initialiser: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 12,
+              Value: 12.0
             }
-          ],
-          Role: Var,
+          },
           Token: {
-            Lexeme: bar,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: bar
           }
         }
       ],
       Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
+        Kind: OpenCurlyBracket,
+        Lexeme: {
       }
     }
   ],
   Token: {
-    Lexeme: $,
-    Type: Eof
+    Kind: Eof,
+    Lexeme: $
   }
 }

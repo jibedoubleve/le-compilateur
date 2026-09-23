@@ -1,5 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 
@@ -39,11 +38,11 @@ public class AndTest
                       .BetweenParentheses(b => b.Number(1)
                                                 .And()
                                                 .Number(2))
+                      .Semicolon()
                       .BuildParsingContext();
-        var parser = new ExpressionParser();
-        
+
         // act
-        var node = parser.Parse(context);
+        var node = ProgramParser.Parse(context);
         _output.WriteFullContext(context, node);
 
         // assert
@@ -68,11 +67,32 @@ public class AndTest
                       .BetweenParentheses(b => b.Number(1)
                                                 .And()
                                                 .Number(2))
+                      .Semicolon()
                       .BuildParsingContext();
-        var parser = new ExpressionParser();
 
         // act
-        var node = parser.Parse(context);
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Three_Members_In_Logic_Operations_Then_Valid_Node_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .And()
+                      .Identifier("b")
+                      .Or()
+                      .Identifier("c")
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
         _output.WriteFullContext(context, node);
 
         // assert

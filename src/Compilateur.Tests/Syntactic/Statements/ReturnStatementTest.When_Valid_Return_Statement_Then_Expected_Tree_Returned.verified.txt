@@ -1,29 +1,25 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: foo,
-            Type: Identifier
-          }
-        },
-        {
-          Token: {
-            Lexeme: 4,
-            Type: Numeric,
-            Value: 4.0
-          }
-        }
-      ],
+  Expression: {
+    Left: {
       Token: {
-        Lexeme: >,
-        Type: GreaterThan
+        Kind: Identifier,
+        Lexeme: foo
       }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 4,
+        Value: 4.0
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
     }
-  ],
+  },
   Token: {
-    Lexeme: return,
-    Type: Return
+    Kind: Return,
+    Lexeme: return
   }
 }

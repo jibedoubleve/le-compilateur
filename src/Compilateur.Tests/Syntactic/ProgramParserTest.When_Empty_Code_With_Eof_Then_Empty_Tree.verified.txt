@@ -1,6 +1,6 @@
 ﻿{
   Token: {
-    Lexeme: $,
-    Type: Eof
+    Kind: Eof,
+    Lexeme: $
   }
 }

@@ -1,76 +1,80 @@
 ﻿{
-  Children: [
-    {
-      Role: Argument,
-      Token: {
-        Lexeme: a,
-        Type: Identifier
-      }
-    },
-    {
-      Role: Argument,
-      Token: {
-        Lexeme: b,
-        Type: Identifier
-      }
-    },
-    {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: 6,
-                Type: Numeric,
-                Value: 6.0
-              }
-            },
-            {
-              Token: {
-                Lexeme: 5,
-                Type: Numeric,
-                Value: 5.0
-              }
+  Body: {
+    Statements: [
+      {
+        Expression: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 6,
+              Value: 6.0
             }
-          ],
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 5,
+              Value: 5.0
+            }
+          },
           Token: {
-            Lexeme: +,
-            Type: Plus
+            Kind: Plus,
+            Lexeme: +
           }
         },
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: 6,
-                Type: Numeric,
-                Value: 6.0
-              }
-            },
-            {
-              Token: {
-                Lexeme: 8,
-                Type: Numeric,
-                Value: 8.0
-              }
-            }
-          ],
-          Token: {
-            Lexeme: *,
-            Type: Multiply
-          }
+        Token: {
+          Kind: Plus,
+          Lexeme: +
         }
-      ],
-      Role: Body,
+      },
+      {
+        Expression: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 6,
+              Value: 6.0
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 8,
+              Value: 8.0
+            }
+          },
+          Token: {
+            Kind: Multiply,
+            Lexeme: *
+          }
+        },
+        Token: {
+          Kind: Multiply,
+          Lexeme: *
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Parameters: [
+    {
       Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
+        Kind: Identifier,
+        Lexeme: a
+      }
+    },
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: b
       }
     }
   ],
-  Role: Function,
   Token: {
-    Lexeme: myFunc,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: myFunc
   }
 }

@@ -1,37 +1,33 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: 10,
-            Type: Numeric,
-            Value: 10.0
-          }
-        },
-        {
-          Token: {
-            Lexeme: 3,
-            Type: Numeric,
-            Value: 3.0
-          }
-        }
-      ],
+  Left: {
+    Left: {
       Token: {
-        Lexeme: -,
-        Type: Minus
+        Kind: Numeric,
+        Lexeme: 10,
+        Value: 10.0
       }
     },
-    {
+    Right: {
       Token: {
-        Lexeme: 2,
-        Type: Numeric,
-        Value: 2.0
+        Kind: Numeric,
+        Lexeme: 3,
+        Value: 3.0
       }
+    },
+    Token: {
+      Kind: Minus,
+      Lexeme: -
     }
-  ],
+  },
+  Right: {
+    Token: {
+      Kind: Numeric,
+      Lexeme: 2,
+      Value: 2.0
+    }
+  },
   Token: {
-    Lexeme: -,
-    Type: Minus
+    Kind: Minus,
+    Lexeme: -
   }
 }

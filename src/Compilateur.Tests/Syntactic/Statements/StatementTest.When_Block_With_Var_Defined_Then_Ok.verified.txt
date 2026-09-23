@@ -1,24 +1,21 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
-        {
-          Token: {
-            Lexeme: 14,
-            Type: Numeric,
-            Value: 14.0
-          }
+      Initialiser: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 14,
+          Value: 14.0
         }
-      ],
-      Role: Var,
+      },
       Token: {
-        Lexeme: a,
-        Type: Identifier
+        Kind: Identifier,
+        Lexeme: a
       }
     }
   ],
   Token: {
-    Lexeme: {,
-    Type: OpenCurlyBracket
+    Kind: OpenCurlyBracket,
+    Lexeme: {
   }
 }

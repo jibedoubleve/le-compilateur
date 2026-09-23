@@ -1,5 +1,8 @@
+using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
@@ -12,6 +15,18 @@ internal static class SyntaxNodeExtensions
     #endregion
 
     #region Methods
+
+    private static string Describe(SyntaxNode node)
+    {
+        string?[] strings =
+        [
+            node.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description,
+            GetTokenKind(node)
+        ];
+
+        var ret = string.Join(", ", strings.Where(x => !string.IsNullOrEmpty(x)));
+        return string.IsNullOrEmpty(ret) ? string.Empty : $"[{ret}]";
+    }
 
     private static string FormatHeader(int depth = 0)
     {
@@ -32,7 +47,7 @@ internal static class SyntaxNodeExtensions
         this SyntaxNode node, StringBuilder stringBuilder, int depth, string treeNode = "")
     {
         stringBuilder.AppendLine(
-            $"{FormatHeader(depth)}{treeNode} {node.Token.Lexeme} [{FormatType(node)}]"
+            $"{FormatHeader(depth)}{treeNode} {node.Token.Lexeme} {Describe(node)}"
         );
 
         var max = node.Children.Count();
@@ -56,17 +71,14 @@ internal static class SyntaxNodeExtensions
         return " └──";
     }
 
-    private static string FormatType(SyntaxNode node)
-    {
-        if (node.Role == SyntaxNodeRole.Unspecified)
+    private static string GetTokenKind(SyntaxNode node) =>
+        node.Token.Kind switch
         {
-            return $"{node.Token.Type}";
-        }
-
-        return node.IsOfType(TokenType.Identifier) && node.Role != SyntaxNodeRole.Unspecified
-            ? $"{node.Role}"
-            : $"{node.Token.Type}, {node.Role}";
-    }
+            TokenKind.Numeric => $"{node.Token.Kind}",
+            TokenKind.String  => $"{node.Token.Kind}",
+            TokenKind.Eof     => "EOF",
+            _                 => string.Empty
+        };
 
     public static string FormatTree(this SyntaxNode node)
     {

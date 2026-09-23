@@ -1,6 +1,5 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -37,7 +36,7 @@ public class WhileStatementTest
                 .Semicolon()
                 .BuildParsingContext()
         ];
-        
+
         yield return
         [
             new TokenCollectionBuilder()

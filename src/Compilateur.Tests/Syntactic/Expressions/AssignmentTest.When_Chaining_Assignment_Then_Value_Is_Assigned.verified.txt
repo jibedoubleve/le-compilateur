@@ -1,0 +1,57 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Target: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: a
+          }
+        },
+        Value: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: b
+            }
+          },
+          Value: {
+            Target: {
+              Token: {
+                Kind: Identifier,
+                Lexeme: c
+              }
+            },
+            Value: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 15,
+                Value: 15.0
+              }
+            },
+            Token: {
+              Kind: Assignment,
+              Lexeme: =
+            }
+          },
+          Token: {
+            Kind: Assignment,
+            Lexeme: =
+          }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
+        }
+      },
+      Token: {
+        Kind: Assignment,
+        Lexeme: =
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

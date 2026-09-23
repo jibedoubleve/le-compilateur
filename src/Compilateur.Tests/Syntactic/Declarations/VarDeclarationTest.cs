@@ -1,7 +1,6 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -23,17 +22,6 @@ public class VarDeclarationTest
     #endregion
 
     #region Methods
-
-    public static IEnumerable<object[]> Build_Var_Expressions()
-    {
-        const string name = "myVariable";
-        yield return
-        [
-            new TokenCollectionBuilder()
-                .Var(name, b => b.Bang())
-                .BuildParsingContext()
-        ];
-    }
 
     [Fact]
     public void When_Malformed_Var_Declared_And_Assigned_Token_Then_Parsing_Returns_Expected_Node()
@@ -86,9 +74,43 @@ public class VarDeclarationTest
         node.ShouldNotBeNull(context.FormatErrors());
         Assert.Multiple(
             () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Identifier),
+            () => node.Token.Kind.ShouldBe(TokenKind.Identifier),
             () => node.Children.Count().ShouldBe(1)
         );
+    }
+
+    [Fact]
+    public Task When_Var_Declared_In_Block_Then_Expected_Returns_Expected_Node()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .BetweenCurlyBracket(b => b.Var("foo")
+                                                 .Semicolon())
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Var_Declared_Then_Expected_Returns_Expected_Node()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Var("foo")
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
     }
 
     [Fact]
@@ -110,7 +132,7 @@ public class VarDeclarationTest
         node.ShouldNotBeNull();
         Assert.Multiple(
             () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Identifier)
+            () => node.Token.Kind.ShouldBe(TokenKind.Identifier)
         );
     }
 
@@ -137,15 +159,5 @@ public class VarDeclarationTest
         );
     }
 
-    [Fact]
-    public void When_Var_Declared_In_Program_Then_Parsing_Returns_Expected_Node()
-    {
-        
-    }
-    [Fact]
-    public void When_Var_Declared_In_Block_Then_Parsing_Returns_Expected_Node()
-    {
-        
-    }
     #endregion
 }

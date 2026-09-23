@@ -1,4 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -43,7 +43,7 @@ public class ProgramParserTest
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .BuildParsingContext();
+            .BuildParsingContext();
 
         // act
         var node = ProgramParser.Parse(context);

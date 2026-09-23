@@ -105,7 +105,7 @@ public class CommentsTest : ScannerTestBase
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
             () => res.Tokens.First().Lexeme.ShouldBe("var"),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Var)
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Var)
         );
     }
 

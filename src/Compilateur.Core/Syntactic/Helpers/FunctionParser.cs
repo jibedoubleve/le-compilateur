@@ -1,4 +1,7 @@
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
+using Compilateur.Core.Syntactic.Nodes.Declaration;
+using Compilateur.Core.Syntactic.Nodes.Statements;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
@@ -17,40 +20,40 @@ public static class FunctionParser
 
     #region Methods
 
-    private static IEnumerable<SyntaxNode>? ParseArguments(ParsingContext context)
+    private static IEnumerable<ParameterNode>? ParseParameters(ParsingContext context)
     {
-        if (context.Cursor.IsPeekOfType(TokenType.OpenParenthesis))
+        if (context.Cursor.IsPeekOfKind(TokenKind.OpenParenthesis))
         {
             context.Cursor.Consume(); // Consume '('
-            var arguments = new List<SyntaxNode>();
+            var parameters = new List<ParameterNode>();
 
             var current = context.Cursor.Peek();
-            switch (current.Type)
+            switch (current.Kind)
             {
-                case TokenType.CloseParenthesis:
+                case TokenKind.CloseParenthesis:
                     context.Cursor.Consume();
                     return [];
-                case TokenType.Identifier:
-                    arguments.Add(SyntaxNode.Argument(current));
+                case TokenKind.Identifier:
+                    parameters.Add(new ParameterNode(current));
                     context.Cursor.Consume();
                     break;
             }
 
-            while (current.Type != TokenType.Eof)
+            while (current.Kind != TokenKind.Eof)
             {
                 current = context.Cursor.Peek();
 
-                switch (current.Type)
+                switch (current.Kind)
                 {
-                    case TokenType.Comma:
+                    case TokenKind.Comma:
                         context.Cursor.Consume();
                         break;
-                    case TokenType.CloseParenthesis:
+                    case TokenKind.CloseParenthesis:
                         context.Cursor.Consume();
-                        return ValidateArguments(arguments, context);
-                    case TokenType.Identifier:
+                        return ValidateParameters(parameters, context);
+                    case TokenKind.Identifier:
                         context.Cursor.Consume();
-                        arguments.Add(SyntaxNode.Argument(current));
+                        parameters.Add(new ParameterNode(current));
                         break;
                     default:
                         context.AddError(
@@ -60,37 +63,38 @@ public static class FunctionParser
                 }
             }
 
-            return ValidateArguments(arguments, context);
+            return ValidateParameters(parameters, context);
         }
 
         context.AddError("Expected '(' after function name.");
         return null;
     }
 
-    private static IEnumerable<SyntaxNode>? ValidateArguments(IEnumerable<SyntaxNode> arguments, ParsingContext context)
+    private static IEnumerable<ParameterNode>? ValidateParameters(
+        IEnumerable<ParameterNode> parameters, ParsingContext context)
     {
-        var args = arguments as SyntaxNode[] ?? [.. arguments];
+        var args = parameters as ParameterNode[] ?? [.. parameters];
         if (args.Length <= MaxParams) { return args; }
 
         context.AddError($"Maximum number of {MaxParams} parameters exceeded.");
         return null;
     }
 
-    public static SyntaxNode? Parse(ParsingContext context)
+    public static FunctionDeclarationStatement? Parse(ParsingContext context)
     {
         var funcName = context.Cursor.Peek(); // Consume the identifier
-        if (funcName.Type != TokenType.Identifier)
+        if (funcName.Kind != TokenKind.Identifier)
         {
             context.AddError(
-                $"Expected a function identifier but found '{funcName.Lexeme}' [{funcName.Type}]"
+                $"Expected a function identifier, found '{funcName.Lexeme}' [{funcName.Kind}]"
             );
             return null;
         }
 
         context.Cursor.Consume(); // Consume the identifier
 
-        var arguments = ParseArguments(context);
-        if (arguments is null)
+        var parameters = ParseParameters(context);
+        if (parameters is null)
         {
             context.AddError(
                 $"Failed to parse arguments of function '{funcName.Lexeme}' - see the error above."
@@ -107,7 +111,7 @@ public static class FunctionParser
             return null;
         }
 
-        return SyntaxNode.Function(funcName, [.. arguments, SyntaxNode.Body(block)]);
+        return new FunctionDeclarationStatement(funcName, parameters ?? [], block);
     }
 
     #endregion

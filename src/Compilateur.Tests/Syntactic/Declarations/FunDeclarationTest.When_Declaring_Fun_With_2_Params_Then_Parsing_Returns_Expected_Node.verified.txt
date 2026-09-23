@@ -1,30 +1,26 @@
 ﻿{
-  Children: [
+  Body: {
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Parameters: [
     {
-      Role: Argument,
       Token: {
-        Lexeme: a,
-        Type: Identifier
+        Kind: Identifier,
+        Lexeme: a
       }
     },
     {
-      Role: Argument,
       Token: {
-        Lexeme: b,
-        Type: Identifier
-      }
-    },
-    {
-      Role: Body,
-      Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
+        Kind: Identifier,
+        Lexeme: b
       }
     }
   ],
-  Role: Function,
   Token: {
-    Lexeme: myFunc,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: myFunc
   }
 }

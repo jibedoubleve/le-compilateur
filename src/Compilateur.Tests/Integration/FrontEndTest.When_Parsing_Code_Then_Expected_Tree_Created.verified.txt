@@ -1,392 +1,355 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
-        {
-          Token: {
-            Column: 15,
-            Lexeme: 42,
-            Line: 2,
-            Type: Numeric,
-            Value: 42.0
-          }
+      Initialiser: {
+        Token: {
+          Column: 15,
+          Kind: Numeric,
+          Lexeme: 42,
+          Line: 2,
+          Value: 42.0
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: android,
         Line: 2,
-        Type: Identifier,
         Value: android
       }
     },
     {
-      Children: [
-        {
-          Token: {
-            Column: 10,
-            Lexeme: 3.14,
-            Line: 4,
-            Type: Numeric,
-            Value: 3.14
-          }
+      Initialiser: {
+        Token: {
+          Column: 10,
+          Kind: Numeric,
+          Lexeme: 3.14,
+          Line: 4,
+          Value: 3.14
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: pi,
         Line: 4,
-        Type: Identifier,
         Value: pi
       }
     },
     {
-      Children: [
-        {
-          Token: {
-            Column: 12,
-            Lexeme: "hello world",
-            Line: 5,
-            Type: String,
-            Value: hello world
-          }
+      Initialiser: {
+        Token: {
+          Column: 12,
+          Kind: String,
+          Lexeme: "hello world",
+          Line: 5,
+          Value: hello world
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: name,
         Line: 5,
-        Type: Identifier,
         Value: name
       }
     },
     {
-      Children: [
-        {
-          Token: {
-            Column: 12,
-            Lexeme: true,
-            Line: 6,
-            Type: True
-          }
+      Initialiser: {
+        Token: {
+          Column: 12,
+          Kind: True,
+          Lexeme: true,
+          Line: 6
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: flag,
         Line: 6,
-        Type: Identifier,
         Value: flag
       }
     },
     {
-      Children: [
-        {
-          Token: {
-            Column: 15,
-            Lexeme: nil,
-            Line: 7,
-            Type: Nil
-          }
+      Initialiser: {
+        Token: {
+          Column: 15,
+          Kind: Nil,
+          Lexeme: nil,
+          Line: 7
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: nothing,
         Line: 7,
-        Type: Identifier,
         Value: nothing
       }
     },
     {
-      Children: [
-        {
-          Children: [
-            {
-              Children: [
-                {
-                  Token: {
-                    Column: 5,
-                    Lexeme: android,
-                    Line: 10,
-                    Type: Identifier,
-                    Value: android
-                  }
-                },
-                {
-                  Token: {
-                    Column: 16,
-                    Lexeme: 10,
-                    Line: 10,
-                    Type: Numeric,
-                    Value: 10.0
-                  }
-                }
-              ],
+      Condition: {
+        Left: {
+          Left: {
+            Token: {
+              Column: 5,
+              Kind: Identifier,
+              Lexeme: android,
+              Line: 10,
+              Value: android
+            }
+          },
+          Right: {
+            Token: {
+              Column: 16,
+              Kind: Numeric,
+              Lexeme: 10,
+              Line: 10,
+              Value: 10.0
+            }
+          },
+          Token: {
+            Column: 13,
+            Kind: GreaterThanOrEqual,
+            Lexeme: >=,
+            Line: 10
+          }
+        },
+        Right: {
+          Token: {
+            Column: 23,
+            Kind: Identifier,
+            Lexeme: flag,
+            Line: 10,
+            Value: flag
+          }
+        },
+        Token: {
+          Column: 19,
+          Kind: And,
+          Lexeme: and,
+          Line: 10
+        }
+      },
+      ElseBranch: {
+        Statements: [
+          {
+            Value: {
               Token: {
-                Column: 13,
-                Lexeme: >=,
-                Line: 10,
-                Type: GreaterThanOrEqual
+                Column: 11,
+                Kind: Identifier,
+                Lexeme: name,
+                Line: 13,
+                Value: name
               }
             },
-            {
-              Token: {
-                Column: 23,
-                Lexeme: flag,
-                Line: 10,
-                Type: Identifier,
-                Value: flag
-              }
+            Token: {
+              Column: 5,
+              Kind: Print,
+              Lexeme: print,
+              Line: 13
             }
-          ],
-          Role: Condition,
-          Token: {
-            Column: 19,
-            Lexeme: and,
-            Line: 10,
-            Type: And
           }
-        },
-        {
-          Children: [
-            {
-              Children: [
-                {
-                  Children: [
-                    {
-                      Token: {
-                        Column: 11,
-                        Lexeme: android,
-                        Line: 11,
-                        Type: Identifier,
-                        Value: android
-                      }
-                    },
-                    {
-                      Token: {
-                        Column: 21,
-                        Lexeme: pi,
-                        Line: 11,
-                        Type: Identifier,
-                        Value: pi
-                      }
-                    }
-                  ],
-                  Token: {
-                    Column: 19,
-                    Lexeme: +,
-                    Line: 11,
-                    Type: Plus
-                  }
-                }
-              ],
-              Token: {
-                Column: 5,
-                Lexeme: print,
-                Line: 11,
-                Type: Print
-              }
-            }
-          ],
-          Role: Then,
-          Token: {
-            Column: 29,
-            Lexeme: {,
-            Line: 10,
-            Type: OpenCurlyBracket
-          }
-        },
-        {
-          Children: [
-            {
-              Children: [
-                {
-                  Token: {
-                    Column: 11,
-                    Lexeme: name,
-                    Line: 13,
-                    Type: Identifier,
-                    Value: name
-                  }
-                }
-              ],
-              Token: {
-                Column: 5,
-                Lexeme: print,
-                Line: 13,
-                Type: Print
-              }
-            }
-          ],
-          Role: Else,
-          Token: {
-            Column: 8,
-            Lexeme: {,
-            Line: 12,
-            Type: OpenCurlyBracket
-          }
+        ],
+        Token: {
+          Column: 8,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 12
         }
-      ],
+      },
+      ThenBranch: {
+        Statements: [
+          {
+            Value: {
+              Left: {
+                Token: {
+                  Column: 11,
+                  Kind: Identifier,
+                  Lexeme: android,
+                  Line: 11,
+                  Value: android
+                }
+              },
+              Right: {
+                Token: {
+                  Column: 21,
+                  Kind: Identifier,
+                  Lexeme: pi,
+                  Line: 11,
+                  Value: pi
+                }
+              },
+              Token: {
+                Column: 19,
+                Kind: Plus,
+                Lexeme: +,
+                Line: 11
+              }
+            },
+            Token: {
+              Column: 5,
+              Kind: Print,
+              Lexeme: print,
+              Line: 11
+            }
+          }
+        ],
+        Token: {
+          Column: 29,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 10
+        }
+      },
       Token: {
         Column: 1,
+        Kind: If,
         Lexeme: if,
-        Line: 10,
-        Type: If
+        Line: 10
       }
     },
     {
-      Children: [
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Column: 12,
+                  Kind: String,
+                  Lexeme: "hi ",
+                  Line: 19,
+                  Value: hi 
+                }
+              },
+              Right: {
+                Token: {
+                  Column: 20,
+                  Kind: Identifier,
+                  Lexeme: who,
+                  Line: 19,
+                  Value: who
+                }
+              },
+              Token: {
+                Column: 18,
+                Kind: Plus,
+                Lexeme: +,
+                Line: 19
+              }
+            },
+            Token: {
+              Column: 5,
+              Kind: Return,
+              Lexeme: return,
+              Line: 19
+            }
+          }
+        ],
+        Token: {
+          Column: 16,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 18
+        }
+      },
+      Parameters: [
         {
-          Role: Argument,
           Token: {
             Column: 11,
+            Kind: Identifier,
             Lexeme: who,
             Line: 18,
-            Type: Identifier,
             Value: who
-          }
-        },
-        {
-          Children: [
-            {
-              Children: [
-                {
-                  Children: [
-                    {
-                      Token: {
-                        Column: 12,
-                        Lexeme: "hi ",
-                        Line: 19,
-                        Type: String,
-                        Value: hi 
-                      }
-                    },
-                    {
-                      Token: {
-                        Column: 20,
-                        Lexeme: who,
-                        Line: 19,
-                        Type: Identifier,
-                        Value: who
-                      }
-                    }
-                  ],
-                  Token: {
-                    Column: 18,
-                    Lexeme: +,
-                    Line: 19,
-                    Type: Plus
-                  }
-                }
-              ],
-              Token: {
-                Column: 5,
-                Lexeme: return,
-                Line: 19,
-                Type: Return
-              }
-            }
-          ],
-          Role: Body,
-          Token: {
-            Column: 16,
-            Lexeme: {,
-            Line: 18,
-            Type: OpenCurlyBracket
           }
         }
       ],
-      Role: Function,
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: greet,
         Line: 18,
-        Type: Identifier,
         Value: greet
       }
     },
     {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Column: 20,
-                Lexeme: name,
-                Line: 22,
-                Type: Identifier,
-                Value: name
-              }
+      Initialiser: {
+        Arguments: [
+          {
+            Token: {
+              Column: 20,
+              Kind: Identifier,
+              Lexeme: name,
+              Line: 22,
+              Value: name
             }
-          ],
-          Role: Call,
+          }
+        ],
+        Callee: {
           Token: {
             Column: 14,
+            Kind: Identifier,
             Lexeme: greet,
             Line: 22,
-            Type: Identifier,
             Value: greet
           }
+        },
+        Token: {
+          Column: 19,
+          Kind: OpenParenthesis,
+          Lexeme: (,
+          Line: 22
         }
-      ],
-      Role: Var,
+      },
       Token: {
         Column: 5,
+        Kind: Identifier,
         Lexeme: result,
         Line: 22,
-        Type: Identifier,
         Value: result
       }
     },
     {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Column: 7,
-                Lexeme: result,
-                Line: 23,
-                Type: Identifier,
-                Value: result
-              }
-            },
-            {
-              Token: {
-                Column: 17,
-                Lexeme: "bye",
-                Line: 23,
-                Type: String,
-                Value: bye
-              }
-            }
-          ],
+      Value: {
+        Left: {
           Token: {
-            Column: 14,
-            Lexeme: !=,
+            Column: 7,
+            Kind: Identifier,
+            Lexeme: result,
             Line: 23,
-            Type: Inequality
+            Value: result
           }
+        },
+        Right: {
+          Token: {
+            Column: 17,
+            Kind: String,
+            Lexeme: "bye",
+            Line: 23,
+            Value: bye
+          }
+        },
+        Token: {
+          Column: 14,
+          Kind: Inequality,
+          Lexeme: !=,
+          Line: 23
         }
-      ],
+      },
       Token: {
         Column: 1,
+        Kind: Print,
         Lexeme: print,
-        Line: 23,
-        Type: Print
+        Line: 23
       }
     }
   ],
   Token: {
     Column: 1,
+    Kind: Eof,
     Lexeme: $,
-    Line: 24,
-    Type: Eof
+    Line: 24
   }
 }

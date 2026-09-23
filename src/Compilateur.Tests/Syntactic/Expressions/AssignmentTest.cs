@@ -1,7 +1,6 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -46,6 +45,72 @@ public class AssignmentTest
                 .Number(2)
                 .BuildParsingContext()
         ];
+    }
+
+    [Fact]
+    public Task When_Chaining_Assignment_Then_Value_Is_Assigned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Equal()
+                      .Identifier("b")
+                      .Equal()
+                      .Identifier("c")
+                      .Equal()
+                      .Number(15)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+        
+        // assert
+        return Verify(node);
+    }
+    
+    [Fact]
+    public Task When_Dot_Assignment_Then_Value_Is_Assigned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Dot()
+                      .Identifier("b")
+                      .Equal()
+                      .Number(15)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+        
+        // assert
+        return Verify(node);
+    }
+    
+    [Fact]
+    public void When_Assign_Value_To_Value_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Number(1)
+                      .Equal()
+                      .Number(2)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+        
+        // assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(context.FormatErrors()),
+            () => node.ShouldBeNull()
+        );
     }
 
     [Fact]

@@ -1,7 +1,7 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -108,18 +108,18 @@ public class ExpressionTest
 
         Assert.Multiple(
             () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Divided),
+            () => node.Token.Kind.ShouldBe(TokenKind.Divided),
             () => node.Children.Count().ShouldBe(2),
             // (1 + 2)
             () => node.Child(0).Children.Count().ShouldBe(2),
-            () => node.Child(0).Token.Type.ShouldBe(TokenType.Plus),
-            () => node.Child(0).Child(0).Token.Type.ShouldBe(TokenType.Numeric),
-            () => node.Child(0).Child(1).Token.Type.ShouldBe(TokenType.Numeric),
+            () => node.Child(0).Token.Kind.ShouldBe(TokenKind.Plus),
+            () => node.Child(0).Child(0).Token.Kind.ShouldBe(TokenKind.Numeric),
+            () => node.Child(0).Child(1).Token.Kind.ShouldBe(TokenKind.Numeric),
             // (3 * 4)
             () => node.Child(1).Children.Count().ShouldBe(2),
-            () => node.Child(1).Token.Type.ShouldBe(TokenType.Multiply),
-            () => node.Child(1).Child(0).Token.Type.ShouldBe(TokenType.Numeric),
-            () => node.Child(1).Child(1).Token.Type.ShouldBe(TokenType.Numeric)
+            () => node.Child(1).Token.Kind.ShouldBe(TokenKind.Multiply),
+            () => node.Child(1).Child(0).Token.Kind.ShouldBe(TokenKind.Numeric),
+            () => node.Child(1).Child(1).Token.Kind.ShouldBe(TokenKind.Numeric)
         );
     }
 

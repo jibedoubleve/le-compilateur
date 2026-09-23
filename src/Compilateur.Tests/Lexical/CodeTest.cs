@@ -36,22 +36,22 @@ public class CodeTest : ScannerTestBase
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.Last().Type.ShouldBe(TokenType.Eof)
+            () => res.Tokens.Last().Kind.ShouldBe(TokenKind.Eof)
         );
     }
 
     [Theory]
-    [InlineData(-1, "-1")]
-    [InlineData(-1.5, "-1,5")]
-    public void When_Negative_Number_Then_No_Error_Is_Returned(float number, string expected)
+    [InlineData(-1)]
+    [InlineData(-1.5)]
+    public void When_Negative_Number_Then_No_Error_Is_Returned(float number)
     {
         _output.WriteLine($"Tokenize '{number}'");
         var res = Scanner.Tokenize($"{number}");
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Minus),
-            () => res.Tokens.ElementAt(1).Type.ShouldBe(TokenType.Numeric)
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Minus),
+            () => res.Tokens.ElementAt(1).Kind.ShouldBe(TokenKind.Numeric)
         );
     }
 
@@ -76,23 +76,23 @@ public class CodeTest : ScannerTestBase
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Numeric),
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Numeric),
             () => res.Tokens.First().Lexeme.ShouldBe(expected)
         );
     }
 
     [Theory]
-    [InlineData("android", new[] { TokenType.Identifier, TokenType.Eof }, new[] { "android", "$" })]
+    [InlineData("android", new[] { TokenKind.Identifier, TokenKind.Eof }, new[] { "android", "$" })]
     [InlineData("andr+oid",
-        new[] { TokenType.Identifier, TokenType.Plus, TokenType.Identifier, TokenType.Eof },
+        new[] { TokenKind.Identifier, TokenKind.Plus, TokenKind.Identifier, TokenKind.Eof },
         new[] { "andr", "+", "oid", "$" })]
     public void When_Scan_Identifier_With_Keywords_Then_Identifier_Token_Returned(
-        string code, TokenType[] tokenTypes, string[] lexemes)
+        string code, TokenKind[] tokenTypes, string[] lexemes)
     {
         var res = Scanner.Tokenize(code);
         Assert.Multiple(
             () => res.Tokens.Count.ShouldBeGreaterThan(0),
-            () => res.Tokens.Select(x => x.Type).ShouldBe(tokenTypes),
+            () => res.Tokens.Select(x => x.Kind).ShouldBe(tokenTypes),
             () => res.Tokens.Select(x => x.Lexeme).ShouldBe(lexemes)
         );
     }
@@ -157,7 +157,7 @@ public class CodeTest : ScannerTestBase
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Numeric),
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Numeric),
             () => res.Tokens.First().Lexeme.ShouldBe("0")
         );
     }

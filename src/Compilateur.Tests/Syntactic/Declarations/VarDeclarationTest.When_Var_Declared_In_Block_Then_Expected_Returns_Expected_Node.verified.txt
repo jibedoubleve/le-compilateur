@@ -1,0 +1,22 @@
+﻿{
+  Statements: [
+    {
+      Statements: [
+        {
+          Token: {
+            Kind: Identifier,
+            Lexeme: foo
+          }
+        }
+      ],
+      Token: {
+        Kind: OpenCurlyBracket,
+        Lexeme: {
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

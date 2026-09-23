@@ -1,5 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -21,29 +22,6 @@ public class TermTest
     #endregion
 
     #region Methods
-
-    [Fact]
-    public Task When_Parsing_Algebric_Equation_Then_Algebric_Logic_Is_Used()
-    {
-        // arrange
-        var context = new TokenCollectionBuilder()
-                      .Number(1)
-                      .Plus()
-                      .Number(9)
-                      .Multiply()
-                      .Number(2)
-                      .Plus()
-                      .Number(8)
-                      .BuildParsingContext();
-        var parser = new ExpressionParser();
-
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        return Verify(node);
-    }
 
     public static IEnumerable<object[]> BuildTermOperations()
     {
@@ -192,6 +170,29 @@ public class TermTest
                       .Minus().Number(5)
                       .Minus().Number(6)
                       .Semicolon()
+                      .BuildParsingContext();
+        var parser = new ExpressionParser();
+
+        // act
+        var node = parser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Parsing_Algebric_Equation_Then_Algebric_Logic_Is_Used()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Number(1)
+                      .Plus()
+                      .Number(9)
+                      .Multiply()
+                      .Number(2)
+                      .Plus()
+                      .Number(8)
                       .BuildParsingContext();
         var parser = new ExpressionParser();
 

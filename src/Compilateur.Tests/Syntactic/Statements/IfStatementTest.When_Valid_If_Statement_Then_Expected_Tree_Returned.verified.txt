@@ -1,75 +1,71 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: foo,
-            Type: Identifier
-          }
-        },
-        {
-          Token: {
-            Lexeme: 4,
-            Type: Numeric,
-            Value: 4.0
-          }
-        }
-      ],
-      Role: Condition,
+  Condition: {
+    Left: {
       Token: {
-        Lexeme: >,
-        Type: GreaterThan
+        Kind: Identifier,
+        Lexeme: foo
       }
     },
-    {
-      Children: [
-        {
-          Children: [
-            {
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 4,
+        Value: 4.0
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
+    }
+  },
+  ThenBranch: {
+    Statements: [
+      {
+        Expression: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: foo
+            }
+          },
+          Value: {
+            Left: {
               Token: {
-                Lexeme: foo,
-                Type: Identifier
+                Kind: Numeric,
+                Lexeme: 4,
+                Value: 4.0
               }
             },
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: 4,
-                    Type: Numeric,
-                    Value: 4.0
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: 7,
-                    Type: Numeric,
-                    Value: 7.0
-                  }
-                }
-              ],
+            Right: {
               Token: {
-                Lexeme: +,
-                Type: Plus
+                Kind: Numeric,
+                Lexeme: 7,
+                Value: 7.0
               }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
             }
-          ],
+          },
           Token: {
-            Lexeme: =,
-            Type: Assignment
+            Kind: Assignment,
+            Lexeme: =
           }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
         }
-      ],
-      Role: Then,
-      Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
       }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
     }
-  ],
+  },
   Token: {
-    Lexeme: if,
-    Type: If
+    Kind: If,
+    Lexeme: if
   }
 }

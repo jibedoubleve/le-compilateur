@@ -1,6 +1,6 @@
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Statements;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -34,14 +34,9 @@ public class PrintStatementTest
                       .BuildParsingContext();
         var parser = new PrintStatementParser();
 
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        Assert.Multiple(
-            () => node.ShouldBeNull(),
-            () => context.Errors.ShouldNotBeEmpty()
+        // act & assert
+        Assert.Throws<InvalidOperationException>(
+            () => parser.Parse(context)
         );
     }
 
@@ -50,7 +45,7 @@ public class PrintStatementTest
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Symbol(TokenType.Print)
+                      .Symbol(TokenKind.Print)
                       .Number(1).Plus().Number(2)
                       .Semicolon()
                       .BuildParsingContext();
@@ -116,7 +111,7 @@ public class PrintStatementTest
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Symbol(TokenType.Print)
+                      .Symbol(TokenKind.Print)
                       .Bang()
                       .Semicolon()
                       .BuildParsingContext();

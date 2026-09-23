@@ -42,7 +42,7 @@ public sealed record StringRule : ITokenRule
                 return new Token
                 {
                     Lexeme = $"\"{lexeme}\"",
-                    Type = TokenType.String,
+                    Kind = TokenKind.String,
                     Column = first.Column,
                     Line = first.Line,
                     Value = lexeme

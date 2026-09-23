@@ -1,16 +1,18 @@
 ﻿{
-  Children: [
-    {
-      Role: Call,
+  Callee: {
+    Callee: {
       Token: {
-        Lexeme: foo,
-        Type: Identifier
+        Kind: Identifier,
+        Lexeme: foo
       }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
     }
-  ],
-  Role: Call,
+  },
   Token: {
-    Lexeme: (,
-    Type: OpenParenthesis
+    Kind: OpenParenthesis,
+    Lexeme: (
   }
 }

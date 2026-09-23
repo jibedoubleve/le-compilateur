@@ -1,3 +1,4 @@
+using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
 
@@ -15,14 +16,14 @@ public sealed class TokenCollectionBuilder
 
     private TokenCursor BuildCursor()
     {
-        if (!_tokens.Any() || _tokens.Last().Type != TokenType.Eof)
+        if (!_tokens.Any() || _tokens.Last().Kind != TokenKind.Eof)
         {
             _tokens.Add(new Token
             {
                 Column = 0,
                 Line = 0,
                 Lexeme = "$",
-                Type = TokenType.Eof
+                Kind = TokenKind.Eof
             });
         }
 
@@ -31,11 +32,11 @@ public sealed class TokenCollectionBuilder
 
     private static TokenCursor BuildEmpty() => new([]);
 
-    private TokenCollectionBuilder Symbol(TokenType tokenType, string lexeme)
+    private TokenCollectionBuilder Symbol(TokenKind tokenKind, string lexeme)
     {
         _tokens.Add(new Token
         {
-            Type = tokenType,
+            Kind = tokenKind,
             Lexeme = $"{lexeme}",
             Value = null,
             Column = 0,
@@ -44,9 +45,9 @@ public sealed class TokenCollectionBuilder
         return this;
     }
 
-    public TokenCollectionBuilder And() => Symbol(TokenType.And);
+    public TokenCollectionBuilder And() => Symbol(TokenKind.And);
 
-    public TokenCollectionBuilder Bang() => Symbol(TokenType.Bang);
+    public TokenCollectionBuilder Bang() => Symbol(TokenKind.Bang);
 
     public TokenCollectionBuilder BetweenCurlyBracket(Action<TokenCollectionBuilder>? expression = null)
     {
@@ -55,7 +56,7 @@ public sealed class TokenCollectionBuilder
             Column = 0,
             Line = 0,
             Lexeme = "{",
-            Type = TokenType.OpenCurlyBracket
+            Kind = TokenKind.OpenCurlyBracket
         });
 
         expression?.Invoke(this);
@@ -65,7 +66,7 @@ public sealed class TokenCollectionBuilder
             Column = 0,
             Line = 0,
             Lexeme = "}",
-            Type = TokenType.CloseCurlyBracket
+            Kind = TokenKind.CloseCurlyBracket
         });
         return this;
     }
@@ -77,7 +78,7 @@ public sealed class TokenCollectionBuilder
             Column = 0,
             Line = 0,
             Lexeme = "(",
-            Type = TokenType.OpenParenthesis
+            Kind = TokenKind.OpenParenthesis
         });
 
         expression(this);
@@ -87,7 +88,7 @@ public sealed class TokenCollectionBuilder
             Column = 0,
             Line = 0,
             Lexeme = ")",
-            Type = TokenType.CloseParenthesis
+            Kind = TokenKind.CloseParenthesis
         });
         return this;
     }
@@ -98,47 +99,47 @@ public sealed class TokenCollectionBuilder
 
     public TokenCollectionBuilder Class(string? className, Action<TokenCollectionBuilder>? expression = null)
     {
-        var builder = Symbol(TokenType.Class);
+        var builder = Symbol(TokenKind.Class);
         if (!string.IsNullOrEmpty(className))
         {
             builder.Identifier(className);
         }
 
-        builder.Symbol(TokenType.OpenCurlyBracket);
+        builder.Symbol(TokenKind.OpenCurlyBracket);
         expression?.Invoke(this);
-        builder.Symbol(TokenType.CloseCurlyBracket);
+        builder.Symbol(TokenKind.CloseCurlyBracket);
 
         return builder;
     }
 
-    public TokenCollectionBuilder CloseCurlyBracket() => Symbol(TokenType.CloseCurlyBracket);
-    public TokenCollectionBuilder CloseParenthesis() => Symbol(TokenType.CloseParenthesis);
-    public TokenCollectionBuilder Comma() => Symbol(TokenType.Comma);
-    public TokenCollectionBuilder Divided() => Symbol(TokenType.Divided);
+    public TokenCollectionBuilder CloseCurlyBracket() => Symbol(TokenKind.CloseCurlyBracket);
+    public TokenCollectionBuilder CloseParenthesis() => Symbol(TokenKind.CloseParenthesis);
+    public TokenCollectionBuilder Comma() => Symbol(TokenKind.Comma);
+    public TokenCollectionBuilder Divided() => Symbol(TokenKind.Divided);
 
-    public TokenCollectionBuilder Dot() => Symbol(TokenType.Dot);
+    public TokenCollectionBuilder Dot() => Symbol(TokenKind.Dot);
 
-    public TokenCollectionBuilder DoubleEqual() => Symbol(TokenType.Equality);
-    public TokenCollectionBuilder Else() => Symbol(TokenType.Else);
+    public TokenCollectionBuilder DoubleEqual() => Symbol(TokenKind.Equality);
+    public TokenCollectionBuilder Else() => Symbol(TokenKind.Else);
 
     /// <summary>
     ///     Adds the tokens for an empty argument list, i.e. '()'.
     /// </summary>
     public TokenCollectionBuilder EmptyCall() =>
-        Symbol(TokenType.OpenParenthesis)
-            .Symbol(TokenType.CloseParenthesis);
+        Symbol(TokenKind.OpenParenthesis)
+            .Symbol(TokenKind.CloseParenthesis);
 
     public TokenCollectionBuilder Eof()
     {
-        Symbol(TokenType.Eof);
+        Symbol(TokenKind.Eof);
         return this;
     }
 
-    public TokenCollectionBuilder Equal() => Symbol(TokenType.Assignment);
+    public TokenCollectionBuilder Equal() => Symbol(TokenKind.Assignment);
 
-    public TokenCollectionBuilder For() => Symbol(TokenType.For);
+    public TokenCollectionBuilder For() => Symbol(TokenKind.For);
 
-    public TokenCollectionBuilder Fun() => Symbol(TokenType.Fun);
+    public TokenCollectionBuilder Fun() => Symbol(TokenKind.Fun);
 
     public TokenCollectionBuilder Fun(string? functionName, Action<TokenCollectionBuilder>? expression = null)
     {
@@ -148,131 +149,82 @@ public sealed class TokenCollectionBuilder
             builder.Identifier(functionName);
         }
 
-        builder.Symbol(TokenType.OpenParenthesis);
+        builder.Symbol(TokenKind.OpenParenthesis);
         expression?.Invoke(this);
-        builder.Symbol(TokenType.CloseParenthesis);
+        builder.Symbol(TokenKind.CloseParenthesis);
 
         return builder;
     }
 
-    public TokenCollectionBuilder GreaterThan() => Symbol(TokenType.GreaterThan);
-    public TokenCollectionBuilder GreaterThanOrEqual() => Symbol(TokenType.GreaterThanOrEqual);
-    public TokenCollectionBuilder Identifier(string name) => Symbol(TokenType.Identifier, name);
-    public TokenCollectionBuilder If() => Symbol(TokenType.If);
-    public TokenCollectionBuilder Inequality() => Symbol(TokenType.Inequality);
-    public TokenCollectionBuilder LessThan() => Symbol(TokenType.LessThan);
-    public TokenCollectionBuilder LessThanOrEqual() => Symbol(TokenType.LessThanOrEqual);
-    public TokenCollectionBuilder Minus() => Symbol(TokenType.Minus);
-    public TokenCollectionBuilder Multiply() => Symbol(TokenType.Multiply);
+    public TokenCollectionBuilder GreaterThan() => Symbol(TokenKind.GreaterThan);
+    public TokenCollectionBuilder GreaterThanOrEqual() => Symbol(TokenKind.GreaterThanOrEqual);
+    public TokenCollectionBuilder Identifier(string name) => Symbol(TokenKind.Identifier, name);
+    public TokenCollectionBuilder If() => Symbol(TokenKind.If);
+    public TokenCollectionBuilder Inequality() => Symbol(TokenKind.Inequality);
+    public TokenCollectionBuilder LessThan() => Symbol(TokenKind.LessThan);
+    public TokenCollectionBuilder LessThanOrEqual() => Symbol(TokenKind.LessThanOrEqual);
+    public TokenCollectionBuilder Minus() => Symbol(TokenKind.Minus);
+    public TokenCollectionBuilder Multiply() => Symbol(TokenKind.Multiply);
 
     public TokenCollectionBuilder Nil()
     {
-        Symbol(TokenType.Nil);
+        Symbol(TokenKind.Nil);
         return this;
     }
 
-    public TokenCollectionBuilder Number(double number) => Value(TokenType.Numeric, number);
-    public TokenCollectionBuilder Number(string number) => Value(TokenType.Numeric, number);
+    public TokenCollectionBuilder Number(double number) => Value(TokenKind.Numeric, number);
+    public TokenCollectionBuilder Number(string number) => Value(TokenKind.Numeric, number);
 
-    public TokenCollectionBuilder OpenCurlyBracket() => Symbol(TokenType.OpenCurlyBracket);
+    public TokenCollectionBuilder OpenCurlyBracket() => Symbol(TokenKind.OpenCurlyBracket);
 
-    public TokenCollectionBuilder OpenParenthesis() => Symbol(TokenType.OpenParenthesis);
-    public TokenCollectionBuilder Or() => Symbol(TokenType.Or);
-    public TokenCollectionBuilder Plus() => Symbol(TokenType.Plus);
+    public TokenCollectionBuilder OpenParenthesis() => Symbol(TokenKind.OpenParenthesis);
+    public TokenCollectionBuilder Or() => Symbol(TokenKind.Or);
+    public TokenCollectionBuilder Plus() => Symbol(TokenKind.Plus);
 
     public TokenCollectionBuilder Print(string output)
     {
-        Symbol(TokenType.Print).String(output);
+        Symbol(TokenKind.Print).String(output);
         return this;
     }
 
-    public TokenCollectionBuilder Return() => Symbol(TokenType.Return);
-    public TokenCollectionBuilder Semicolon() => Symbol(TokenType.Semicolon);
+    public TokenCollectionBuilder Return() => Symbol(TokenKind.Return);
+    public TokenCollectionBuilder Semicolon() => Symbol(TokenKind.Semicolon);
 
     public TokenCollectionBuilder String(string output)
     {
-        Symbol(TokenType.String, output);
+        Symbol(TokenKind.String, output);
         return this;
     }
 
     public TokenCollectionBuilder Subclass(
         string className, string subclassName, Action<TokenCollectionBuilder>? expression = null)
     {
-        var builder = Symbol(TokenType.Class)
+        var builder = Symbol(TokenKind.Class)
                       .Identifier(className)
-                      .Symbol(TokenType.LessThan)
+                      .Symbol(TokenKind.LessThan)
                       .Identifier(subclassName);
 
-        builder.Symbol(TokenType.OpenCurlyBracket);
+        builder.Symbol(TokenKind.OpenCurlyBracket);
         expression?.Invoke(this);
-        builder.Symbol(TokenType.CloseCurlyBracket);
+        builder.Symbol(TokenKind.CloseCurlyBracket);
 
         return builder;
     }
 
 
-    public TokenCollectionBuilder Symbol(TokenType tokenType)
-    {
-        var lexeme = tokenType switch
-        {
-            TokenType.Dot                => ".",
-            TokenType.Comma              => ",",
-            TokenType.Semicolon          => ";",
-            TokenType.OpenParenthesis    => "(",
-            TokenType.CloseParenthesis   => ")",
-            TokenType.OpenCurlyBracket   => "{",
-            TokenType.CloseCurlyBracket  => "}",
-            TokenType.Bang               => "!",
-            TokenType.GreaterThan        => ">",
-            TokenType.LessThan           => "<",
-            TokenType.Assignment         => "=",
-            TokenType.Plus               => "+",
-            TokenType.Minus              => "-",
-            TokenType.Multiply           => "*",
-            TokenType.Divided            => "/",
-            TokenType.And                => "and",
-            TokenType.Or                 => "or",
-            TokenType.GreaterThanOrEqual => ">=",
-            TokenType.LessThanOrEqual    => "<=",
-            TokenType.Equality           => "==",
-            TokenType.Inequality         => "!=",
-            TokenType.Nil                => "nil",
-            TokenType.If                 => "if",
-            TokenType.Else               => "else",
-            TokenType.While              => "while",
-            TokenType.For                => "for",
-            TokenType.Fun                => "fun",
-            TokenType.Return             => "return",
-            TokenType.Class              => "class",
-            TokenType.This               => "this",
-            TokenType.Super              => "super",
-            TokenType.Var                => "var",
-            TokenType.Print              => "print",
-            TokenType.Eof                => "$",
-            TokenType.False              => "false",
-            TokenType.True               => "true",
-            TokenType.Numeric            => string.Empty,
-            TokenType.Identifier         => string.Empty,
-            TokenType.String             => string.Empty,
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(tokenType),
-                tokenType,
-                $"Symbol token {tokenType} is not supported.")
-        };
-        return Symbol(tokenType, lexeme);
-    }
+    public TokenCollectionBuilder Symbol(TokenKind tokenKind) => Symbol(tokenKind, tokenKind.ToLexeme());
 
     public TokenCollectionBuilder True()
     {
-        Symbol(TokenType.True);
+        Symbol(TokenKind.True);
         return this;
     }
 
-    public TokenCollectionBuilder Value(TokenType tokenType, object? value)
+    public TokenCollectionBuilder Value(TokenKind tokenKind, object? value)
     {
         _tokens.Add(new Token
         {
-            Type = tokenType,
+            Kind = tokenKind,
             Lexeme = $"{value}",
             Value = value,
             Column = 0,
@@ -283,19 +235,19 @@ public sealed class TokenCollectionBuilder
 
     public TokenCollectionBuilder Var(string variableName, Action<TokenCollectionBuilder>? expression = null)
     {
-        var builder = Symbol(TokenType.Var)
+        var builder = Symbol(TokenKind.Var)
             .Identifier(variableName);
 
         if (expression != null)
         {
-            builder.Symbol(TokenType.Assignment);
+            builder.Symbol(TokenKind.Assignment);
             expression.Invoke(this);
         }
 
         return this;
     }
 
-    public TokenCollectionBuilder While() => Symbol(TokenType.While);
+    public TokenCollectionBuilder While() => Symbol(TokenKind.While);
 
     #endregion
 }

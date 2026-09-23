@@ -76,7 +76,7 @@ public sealed record NumericRule : ITokenRule
             Line = first.Line,
             Lexeme = lexeme,
             Value = double.Parse(lexeme, CultureInfo.InvariantCulture),
-            Type = TokenType.Numeric
+            Kind = TokenKind.Numeric
         };
     }
 

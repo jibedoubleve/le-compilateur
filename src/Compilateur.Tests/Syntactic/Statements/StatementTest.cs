@@ -1,5 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 
@@ -22,12 +21,12 @@ public class StatementTest
     #region Methods
 
     [Fact]
-    public Task When_Block_With_Var_Defined_Then_Ok()
+    public Task When_Block_Defined_Then_Ok()
     {
         // arrange
         var context = new TokenCollectionBuilder()
                       .BetweenCurlyBracket(b =>
-                          b.Var("a")
+                          b.Identifier("a")
                            .Equal()
                            .Number(14)
                            .Semicolon())
@@ -41,14 +40,14 @@ public class StatementTest
         // assert
         return Verify(node);
     }
-    
+
     [Fact]
-    public Task When_Block_Defined_Then_Ok()
+    public Task When_Block_With_Var_Defined_Then_Ok()
     {
         // arrange
         var context = new TokenCollectionBuilder()
                       .BetweenCurlyBracket(b =>
-                          b.Identifier("a")
+                          b.Var("a")
                            .Equal()
                            .Number(14)
                            .Semicolon())

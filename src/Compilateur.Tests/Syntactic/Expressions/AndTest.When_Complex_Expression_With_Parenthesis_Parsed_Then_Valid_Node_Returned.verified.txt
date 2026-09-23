@@ -1,78 +1,82 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
-        {
-          Children: [
-            {
+      Expression: {
+        Left: {
+          Left: {
+            Left: {
               Token: {
-                Lexeme: a,
-                Type: Identifier
+                Kind: Identifier,
+                Lexeme: a
               }
             },
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: b,
-                    Type: Identifier
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: c,
-                    Type: Identifier
-                  }
+            Right: {
+              Left: {
+                Token: {
+                  Kind: Identifier,
+                  Lexeme: b
                 }
-              ],
+              },
+              Right: {
+                Token: {
+                  Kind: Identifier,
+                  Lexeme: c
+                }
+              },
               Token: {
-                Lexeme: and,
-                Type: And
+                Kind: And,
+                Lexeme: and
               }
+            },
+            Token: {
+              Kind: And,
+              Lexeme: and
             }
-          ],
+          },
+          Right: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: d
+            }
+          },
           Token: {
-            Lexeme: and,
-            Type: And
+            Kind: And,
+            Lexeme: and
           }
         },
-        {
+        Right: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 1,
+              Value: 1.0
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 2,
+              Value: 2.0
+            }
+          },
           Token: {
-            Lexeme: d,
-            Type: Identifier
-          }
-        }
-      ],
-      Token: {
-        Lexeme: and,
-        Type: And
-      }
-    },
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: 1,
-            Type: Numeric,
-            Value: 1.0
+            Kind: And,
+            Lexeme: and
           }
         },
-        {
-          Token: {
-            Lexeme: 2,
-            Type: Numeric,
-            Value: 2.0
-          }
+        Token: {
+          Kind: And,
+          Lexeme: and
         }
-      ],
+      },
       Token: {
-        Lexeme: and,
-        Type: And
+        Kind: And,
+        Lexeme: and
       }
     }
   ],
   Token: {
-    Lexeme: and,
-    Type: And
+    Kind: Eof,
+    Lexeme: $
   }
 }

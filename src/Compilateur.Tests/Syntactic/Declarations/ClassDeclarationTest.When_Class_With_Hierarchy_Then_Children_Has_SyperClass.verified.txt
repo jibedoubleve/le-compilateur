@@ -1,16 +1,12 @@
 ﻿{
-  Children: [
-    {
-      Role: Class,
-      Token: {
-        Lexeme: MySubClass,
-        Type: Identifier
-      }
+  SuperClass: {
+    Token: {
+      Kind: Identifier,
+      Lexeme: MySubClass
     }
-  ],
-  Role: Class,
+  },
   Token: {
-    Lexeme: MyClass,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: MyClass
   }
 }

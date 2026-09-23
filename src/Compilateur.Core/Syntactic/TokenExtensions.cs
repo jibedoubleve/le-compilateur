@@ -1,4 +1,5 @@
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
 
 namespace Compilateur.Core.Syntactic;
 
@@ -6,13 +7,10 @@ public static class TokenExtensions
 {
     #region Methods
 
-    public static bool IsOfType(this SyntaxNode? node, TokenType tokenType) =>
-        node is not null && node.Token.IsOfType(tokenType);
+    public static bool IsOfKind(this SyntaxNode? node, TokenKind tokenKind) =>
+        node is not null && node.Token.IsOfKind(tokenKind);
 
-    public static bool IsOfType(this Token? token, TokenType tokenType) => token is not null && token.Type == tokenType;
-
-    public static bool IsOneOfRole(this SyntaxNode? node, params SyntaxNodeRole[] types)
-        => node is not null && types.Contains(node.Role);
+    public static bool IsOfKind(this Token? token, TokenKind tokenKind) => token is not null && token.Kind == tokenKind;
 
     #endregion
 }

@@ -32,10 +32,10 @@ public class ScannerTest : ScannerTestBase
     }
 
     [Theory]
-    [InlineData(" .", TokenType.Dot, ".")]
-    [InlineData(" . ", TokenType.Dot, ".")]
-    [InlineData(". ", TokenType.Dot, ".")]
-    public void When_Scan_Contains_Dead_Char_Then_They_Are_Ignored(string code, TokenType tokenType, string expected)
+    [InlineData(" .", TokenKind.Dot, ".")]
+    [InlineData(" . ", TokenKind.Dot, ".")]
+    [InlineData(". ", TokenKind.Dot, ".")]
+    public void When_Scan_Contains_Dead_Char_Then_They_Are_Ignored(string code, TokenKind tokenKind, string expected)
     {
         var res = Scanner.Tokenize(code);
 
@@ -43,7 +43,7 @@ public class ScannerTest : ScannerTestBase
 
         Assert.Multiple(
             () => res.HasErrors.ShouldBeFalse(),
-            () => res.Tokens.First().Type.ShouldBe(tokenType),
+            () => res.Tokens.First().Kind.ShouldBe(tokenKind),
             () => res.Tokens.First().Lexeme.ShouldBe(expected)
         );
     }
@@ -63,56 +63,54 @@ public class ScannerTest : ScannerTestBase
 
     [Theory]
     // Single char
-    [InlineData(".", TokenType.Dot)]
-    [InlineData(",", TokenType.Comma)]
-    [InlineData(";", TokenType.Semicolon)]
-    [InlineData("(", TokenType.OpenParenthesis)]
-    [InlineData(")", TokenType.CloseParenthesis)]
-    [InlineData("{", TokenType.OpenCurlyBracket)]
-    [InlineData("}", TokenType.CloseCurlyBracket)]
-    [InlineData("!", TokenType.Bang)]
-    [InlineData(">", TokenType.GreaterThan)]
-    [InlineData("<", TokenType.LessThan)]
-    [InlineData("=", TokenType.Assignment)]
-    [InlineData("+", TokenType.Plus)]
-    [InlineData("-", TokenType.Minus)]
-    [InlineData("*", TokenType.Multiply)]
-    [InlineData("/", TokenType.Divided)]
+    [InlineData(".", TokenKind.Dot)]
+    [InlineData(",", TokenKind.Comma)]
+    [InlineData(";", TokenKind.Semicolon)]
+    [InlineData("(", TokenKind.OpenParenthesis)]
+    [InlineData(")", TokenKind.CloseParenthesis)]
+    [InlineData("{", TokenKind.OpenCurlyBracket)]
+    [InlineData("}", TokenKind.CloseCurlyBracket)]
+    [InlineData("!", TokenKind.Bang)]
+    [InlineData(">", TokenKind.GreaterThan)]
+    [InlineData("<", TokenKind.LessThan)]
+    [InlineData("=", TokenKind.Assignment)]
+    [InlineData("+", TokenKind.Plus)]
+    [InlineData("-", TokenKind.Minus)]
+    [InlineData("*", TokenKind.Multiply)]
+    [InlineData("/", TokenKind.Divided)]
     // Double chars
-    [InlineData("||", TokenType.Or)]
-    [InlineData("&&", TokenType.And)]
-    [InlineData(">=", TokenType.GreaterThanOrEqual)]
-    [InlineData("<=", TokenType.LessThanOrEqual)]
-    [InlineData("==", TokenType.Equality)]
-    [InlineData("!=", TokenType.Inequality)]
+    [InlineData(">=", TokenKind.GreaterThanOrEqual)]
+    [InlineData("<=", TokenKind.LessThanOrEqual)]
+    [InlineData("==", TokenKind.Equality)]
+    [InlineData("!=", TokenKind.Inequality)]
     // Identifiers
-    [InlineData("one_two", TokenType.Identifier)]
-    [InlineData("_one_1", TokenType.Identifier)]
-    [InlineData("one", TokenType.Identifier)]
+    [InlineData("one_two", TokenKind.Identifier)]
+    [InlineData("_one_1", TokenKind.Identifier)]
+    [InlineData("one", TokenKind.Identifier)]
     // Keywords
-    [InlineData("and", TokenType.And)]
-    [InlineData("or", TokenType.Or)]
-    [InlineData("nil", TokenType.Nil)]
-    [InlineData("if", TokenType.If)]
-    [InlineData("else", TokenType.Else)]
-    [InlineData("while", TokenType.While)]
-    [InlineData("for", TokenType.For)]
-    [InlineData("fun", TokenType.Fun)]
-    [InlineData("var", TokenType.Var)]
-    [InlineData("class", TokenType.Class)]
-    [InlineData("this", TokenType.This)]
-    [InlineData("super", TokenType.Super)]
-    [InlineData("return", TokenType.Return)]
-    [InlineData("true", TokenType.True)]
-    [InlineData("false", TokenType.False)]
-    [InlineData("print", TokenType.Print)]
+    [InlineData("and", TokenKind.And)]
+    [InlineData("or", TokenKind.Or)]
+    [InlineData("nil", TokenKind.Nil)]
+    [InlineData("if", TokenKind.If)]
+    [InlineData("else", TokenKind.Else)]
+    [InlineData("while", TokenKind.While)]
+    [InlineData("for", TokenKind.For)]
+    [InlineData("fun", TokenKind.Fun)]
+    [InlineData("var", TokenKind.Var)]
+    [InlineData("class", TokenKind.Class)]
+    [InlineData("this", TokenKind.This)]
+    [InlineData("super", TokenKind.Super)]
+    [InlineData("return", TokenKind.Return)]
+    [InlineData("true", TokenKind.True)]
+    [InlineData("false", TokenKind.False)]
+    [InlineData("print", TokenKind.Print)]
     // Numbers
-    [InlineData("0", TokenType.Numeric)]
-    [InlineData("123456789", TokenType.Numeric)]
-    [InlineData("1234.56789", TokenType.Numeric)]
+    [InlineData("0", TokenKind.Numeric)]
+    [InlineData("123456789", TokenKind.Numeric)]
+    [InlineData("1234.56789", TokenKind.Numeric)]
     // Strings
-    [InlineData("\"undeux\"", TokenType.String)]
-    public void When_Scan_Lexeme_Then_Expected_Token_Returned(string code, TokenType tokenType)
+    [InlineData("\"undeux\"", TokenKind.String)]
+    public void When_Scan_Lexeme_Then_Expected_Token_Returned(string code, TokenKind tokenKind)
     {
         var res = Scanner.Tokenize(code);
 
@@ -120,7 +118,7 @@ public class ScannerTest : ScannerTestBase
 
         Assert.Multiple(
             () => res.HasErrors.ShouldBeFalse(),
-            () => res.Tokens.First().Type.ShouldBe(tokenType),
+            () => res.Tokens.First().Kind.ShouldBe(tokenKind),
             () => res.Tokens.First().Lexeme.ShouldBe(code),
             () => res.Tokens.First().Column.ShouldBe(1),
             () => res.Tokens.First().Line.ShouldBe(1)
@@ -156,7 +154,7 @@ public class ScannerTest : ScannerTestBase
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.Count.ShouldBe(2), // The numeric value and the EOF
             () => ((double)res.Tokens.First().Value!).ShouldBe(value, 1e-9),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Numeric)
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Numeric)
         );
     }
 

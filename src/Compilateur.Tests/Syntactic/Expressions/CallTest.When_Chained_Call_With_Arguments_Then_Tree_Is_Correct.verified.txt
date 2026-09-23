@@ -1,51 +1,52 @@
 ﻿{
-  Children: [
-    {
-      Children: [
+  Callee: {
+    Arguments: [
+      {
+        Token: {
+          Kind: Identifier,
+          Lexeme: c
+        }
+      },
+      {
+        Token: {
+          Kind: Identifier,
+          Lexeme: d
+        }
+      }
+    ],
+    Callee: {
+      Arguments: [
         {
           Token: {
-            Lexeme: c,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: a
           }
         },
         {
           Token: {
-            Lexeme: d,
-            Type: Identifier
-          }
-        },
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: a,
-                Type: Identifier
-              }
-            },
-            {
-              Token: {
-                Lexeme: b,
-                Type: Identifier
-              }
-            }
-          ],
-          Role: Call,
-          Token: {
-            Lexeme: foo,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: b
           }
         }
       ],
-      Role: Call,
+      Callee: {
+        Token: {
+          Kind: Identifier,
+          Lexeme: foo
+        }
+      },
       Token: {
-        Lexeme: (,
-        Type: OpenParenthesis
+        Kind: OpenParenthesis,
+        Lexeme: (
       }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
     }
-  ],
-  Role: Call,
+  },
   Token: {
-    Lexeme: (,
-    Type: OpenParenthesis
+    Kind: OpenParenthesis,
+    Lexeme: (
   }
 }

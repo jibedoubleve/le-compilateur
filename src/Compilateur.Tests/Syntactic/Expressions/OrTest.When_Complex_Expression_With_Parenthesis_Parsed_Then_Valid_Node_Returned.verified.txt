@@ -1,78 +1,68 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: a,
-                Type: Identifier
-              }
-            },
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: b,
-                    Type: Identifier
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: c,
-                    Type: Identifier
-                  }
-                }
-              ],
-              Token: {
-                Lexeme: or,
-                Type: Or
-              }
-            }
-          ],
+  Left: {
+    Left: {
+      Left: {
+        Token: {
+          Kind: Identifier,
+          Lexeme: a
+        }
+      },
+      Right: {
+        Left: {
           Token: {
-            Lexeme: or,
-            Type: Or
+            Kind: Identifier,
+            Lexeme: b
           }
         },
-        {
+        Right: {
           Token: {
-            Lexeme: d,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: c
           }
+        },
+        Token: {
+          Kind: Or,
+          Lexeme: or
         }
-      ],
+      },
       Token: {
-        Lexeme: or,
-        Type: Or
+        Kind: Or,
+        Lexeme: or
       }
     },
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: 1,
-            Type: Numeric,
-            Value: 1.0
-          }
-        },
-        {
-          Token: {
-            Lexeme: 2,
-            Type: Numeric,
-            Value: 2.0
-          }
-        }
-      ],
+    Right: {
       Token: {
-        Lexeme: or,
-        Type: Or
+        Kind: Identifier,
+        Lexeme: d
       }
+    },
+    Token: {
+      Kind: Or,
+      Lexeme: or
     }
-  ],
+  },
+  Right: {
+    Left: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 1,
+        Value: 1.0
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 2,
+        Value: 2.0
+      }
+    },
+    Token: {
+      Kind: Or,
+      Lexeme: or
+    }
+  },
   Token: {
-    Lexeme: or,
-    Type: Or
+    Kind: Or,
+    Lexeme: or
   }
 }

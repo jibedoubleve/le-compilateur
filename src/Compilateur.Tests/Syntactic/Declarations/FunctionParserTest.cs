@@ -1,5 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Declarations;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;

@@ -1,4 +1,3 @@
-using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
 using Microsoft.Extensions.DependencyInjection;

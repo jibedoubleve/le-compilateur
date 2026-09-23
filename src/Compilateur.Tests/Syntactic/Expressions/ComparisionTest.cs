@@ -1,7 +1,7 @@
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -33,7 +33,7 @@ public class ComparisionTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.GreaterThan
+            TokenKind.GreaterThan
         ];
         yield return
         [
@@ -42,7 +42,7 @@ public class ComparisionTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.GreaterThanOrEqual
+            TokenKind.GreaterThanOrEqual
         ];
         yield return
         [
@@ -51,7 +51,7 @@ public class ComparisionTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.LessThan
+            TokenKind.LessThan
         ];
         yield return
         [
@@ -60,7 +60,7 @@ public class ComparisionTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.LessThanOrEqual
+            TokenKind.LessThanOrEqual
         ];
     }
 
@@ -96,11 +96,11 @@ public class ComparisionTest
 
     [Theory]
     [MemberData(nameof(BuildSimpleOperations))]
-    public void When_Simple_Operation_Then_Valid_Node_Returned(ParsingContext context, TokenType tokenType)
+    public void When_Simple_Operation_Then_Valid_Node_Returned(ParsingContext context, TokenKind tokenKind)
     {
         // Arrange
         var parser = new ExpressionParser();
-        
+
         // Act
 
         var node = parser.Parse(context);
@@ -109,7 +109,7 @@ public class ComparisionTest
         // Assert
         Assert.Multiple(
             () => node.ShouldNotBeNull(),
-            () => node!.Token.Type.ShouldBe(tokenType),
+            () => node!.Token.Kind.ShouldBe(tokenKind),
             () => node!.Children.Count().ShouldBe(2)
         );
     }

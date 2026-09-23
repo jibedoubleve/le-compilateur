@@ -1,8 +1,8 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -153,7 +153,7 @@ public class UnaryTest
 
         Assert.Multiple(
             () => node.Children.Count().ShouldBe(1),
-            () => node.Token.Type.ShouldBeOneOf(TokenType.Bang, TokenType.Minus)
+            () => node.Token.Kind.ShouldBeOneOf(TokenKind.Bang, TokenKind.Minus)
         );
     }
 
@@ -180,9 +180,9 @@ public class UnaryTest
         // assert
         Assert.Multiple(
             () => node.ShouldNotBeNull(),
-            () => node!.Token.Type.ShouldBe(TokenType.Bang),
-            () => node!.Child(0).Token.Type.ShouldBe(TokenType.Bang),
-            () => node!.Child(0).Child(0).Token.Type.ShouldBe(TokenType.Bang)
+            () => node!.Token.Kind.ShouldBe(TokenKind.Bang),
+            () => node!.Child(0).Token.Kind.ShouldBe(TokenKind.Bang),
+            () => node!.Child(0).Child(0).Token.Kind.ShouldBe(TokenKind.Bang)
         );
     }
 
@@ -194,13 +194,15 @@ public class UnaryTest
         var parser = new ExpressionParser();
 
         // act
-        var match = parser.Matches(context);
+        parser.Matches(context);
         var node = parser.Parse(context);
         _output.WriteFullContext(context, node);
 
         // assert
-        match.ShouldBeTrue();
-        context.Errors.Count().ShouldBe(1);
+        Assert.Multiple(
+            () => node.ShouldBeNull(),
+            () => context.Errors.Count().ShouldBe(1)
+        );
     }
 
     [Theory]

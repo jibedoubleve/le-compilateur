@@ -1,49 +1,48 @@
 ﻿{
-  Children: [
+  Functions: [
     {
-      Children: [
-        {
-          Children: [
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: 6,
-                    Type: Numeric,
-                    Value: 6.0
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: 5,
-                    Type: Numeric,
-                    Value: 5.0
-                  }
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 6,
+                  Value: 6.0
                 }
-              ],
+              },
+              Right: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 5,
+                  Value: 5.0
+                }
+              },
               Token: {
-                Lexeme: +,
-                Type: Plus
+                Kind: Plus,
+                Lexeme: +
               }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
             }
-          ],
-          Role: Body,
-          Token: {
-            Lexeme: {,
-            Type: OpenCurlyBracket
           }
+        ],
+        Token: {
+          Kind: OpenCurlyBracket,
+          Lexeme: {
         }
-      ],
-      Role: Function,
+      },
       Token: {
-        Lexeme: myFunc,
-        Type: Identifier
+        Kind: Identifier,
+        Lexeme: myFunc
       }
     }
   ],
-  Role: Class,
   Token: {
-    Lexeme: MyClass,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: MyClass
   }
 }

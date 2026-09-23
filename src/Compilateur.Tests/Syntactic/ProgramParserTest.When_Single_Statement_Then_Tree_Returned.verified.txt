@@ -1,22 +1,20 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
-        {
-          Token: {
-            Lexeme: hello_world,
-            Type: String
-          }
+      Value: {
+        Token: {
+          Kind: String,
+          Lexeme: hello_world
         }
-      ],
+      },
       Token: {
-        Lexeme: print,
-        Type: Print
+        Kind: Print,
+        Lexeme: print
       }
     }
   ],
   Token: {
-    Lexeme: $,
-    Type: Eof
+    Kind: Eof,
+    Lexeme: $
   }
 }

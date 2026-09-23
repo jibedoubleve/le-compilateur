@@ -1,29 +1,33 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
-        {
+      Expression: {
+        Target: {
           Token: {
-            Lexeme: a,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: a
           }
         },
-        {
+        Value: {
           Token: {
+            Kind: Numeric,
             Lexeme: 14,
-            Type: Numeric,
             Value: 14.0
           }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
         }
-      ],
+      },
       Token: {
-        Lexeme: =,
-        Type: Assignment
+        Kind: Assignment,
+        Lexeme: =
       }
     }
   ],
   Token: {
-    Lexeme: {,
-    Type: OpenCurlyBracket
+    Kind: OpenCurlyBracket,
+    Lexeme: {
   }
 }

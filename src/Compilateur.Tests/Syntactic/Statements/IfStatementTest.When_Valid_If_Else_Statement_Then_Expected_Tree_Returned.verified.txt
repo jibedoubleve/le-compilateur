@@ -1,120 +1,117 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
+  Condition: {
+    Left: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 4,
+        Value: 4.0
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
+    }
+  },
+  ElseBranch: {
+    Statements: [
+      {
+        Expression: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: bar
+            }
+          },
+          Value: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 4,
+                Value: 4.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 2,
+                Value: 2.0
+              }
+            },
+            Token: {
+              Kind: Divided,
+              Lexeme: /
+            }
+          },
           Token: {
-            Lexeme: foo,
-            Type: Identifier
+            Kind: Assignment,
+            Lexeme: =
           }
         },
-        {
-          Token: {
-            Lexeme: 4,
-            Type: Numeric,
-            Value: 4.0
-          }
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
         }
-      ],
-      Role: Condition,
-      Token: {
-        Lexeme: >,
-        Type: GreaterThan
       }
-    },
-    {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: foo,
-                Type: Identifier
-              }
-            },
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: 4,
-                    Type: Numeric,
-                    Value: 4.0
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: 7,
-                    Type: Numeric,
-                    Value: 7.0
-                  }
-                }
-              ],
-              Token: {
-                Lexeme: +,
-                Type: Plus
-              }
-            }
-          ],
-          Token: {
-            Lexeme: =,
-            Type: Assignment
-          }
-        }
-      ],
-      Role: Then,
-      Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
-      }
-    },
-    {
-      Children: [
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: bar,
-                Type: Identifier
-              }
-            },
-            {
-              Children: [
-                {
-                  Token: {
-                    Lexeme: 4,
-                    Type: Numeric,
-                    Value: 4.0
-                  }
-                },
-                {
-                  Token: {
-                    Lexeme: 2,
-                    Type: Numeric,
-                    Value: 2.0
-                  }
-                }
-              ],
-              Token: {
-                Lexeme: /,
-                Type: Divided
-              }
-            }
-          ],
-          Token: {
-            Lexeme: =,
-            Type: Assignment
-          }
-        }
-      ],
-      Role: Else,
-      Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
-      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
     }
-  ],
+  },
+  ThenBranch: {
+    Statements: [
+      {
+        Expression: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: foo
+            }
+          },
+          Value: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 4,
+                Value: 4.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 7,
+                Value: 7.0
+              }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
+            }
+          },
+          Token: {
+            Kind: Assignment,
+            Lexeme: =
+          }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
   Token: {
-    Lexeme: if,
-    Type: If
+    Kind: If,
+    Lexeme: if
   }
 }

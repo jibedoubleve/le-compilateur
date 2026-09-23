@@ -1,6 +1,7 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Helpers;
+using Compilateur.Core.Syntactic.Nodes;
 using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Helpers;

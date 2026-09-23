@@ -1,48 +1,42 @@
 ﻿{
-  Children: [
+  Statements: [
     {
-      Children: [
+      Statements: [
         {
-          Children: [
-            {
-              Children: [
-                {
-                  Children: [
-                    {
-                      Token: {
-                        Lexeme: foo_far,
-                        Type: String
-                      }
-                    }
-                  ],
+          Body: {
+            Statements: [
+              {
+                Value: {
                   Token: {
-                    Lexeme: print,
-                    Type: Print
+                    Kind: String,
+                    Lexeme: foo_far
                   }
+                },
+                Token: {
+                  Kind: Print,
+                  Lexeme: print
                 }
-              ],
-              Role: Body,
-              Token: {
-                Lexeme: {,
-                Type: OpenCurlyBracket
               }
+            ],
+            Token: {
+              Kind: OpenCurlyBracket,
+              Lexeme: {
             }
-          ],
-          Role: Function,
+          },
           Token: {
-            Lexeme: foo,
-            Type: Identifier
+            Kind: Identifier,
+            Lexeme: foo
           }
         }
       ],
       Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
+        Kind: OpenCurlyBracket,
+        Lexeme: {
       }
     }
   ],
   Token: {
-    Lexeme: $,
-    Type: Eof
+    Kind: Eof,
+    Lexeme: $
   }
 }

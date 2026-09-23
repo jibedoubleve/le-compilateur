@@ -1,24 +1,18 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: foo,
-            Type: Identifier
-          }
-        }
-      ],
-      Role: Get,
+  Object: {
+    Object: {
       Token: {
-        Lexeme: bar,
-        Type: Identifier
+        Kind: Identifier,
+        Lexeme: foo
       }
+    },
+    Token: {
+      Kind: Identifier,
+      Lexeme: bar
     }
-  ],
-  Role: Get,
+  },
   Token: {
-    Lexeme: baz,
-    Type: Identifier
+    Kind: Identifier,
+    Lexeme: baz
   }
 }

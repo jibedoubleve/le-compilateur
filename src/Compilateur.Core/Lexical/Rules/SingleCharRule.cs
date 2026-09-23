@@ -8,16 +8,16 @@ public abstract record SingleCharRule : ITokenRule
     #region Fields
 
     private readonly char _lexeme;
-    private readonly TokenType _tokenType;
+    private readonly TokenKind _tokenKind;
 
     #endregion
 
     #region Constructors
 
-    public SingleCharRule(char lexeme, TokenType tokenType)
+    public SingleCharRule(char lexeme, TokenKind tokenKind)
     {
         _lexeme = lexeme;
-        _tokenType = tokenType;
+        _tokenKind = tokenKind;
     }
 
     #endregion
@@ -45,7 +45,7 @@ public abstract record SingleCharRule : ITokenRule
             Column = consumed.Column,
             Line = consumed.Line,
             Lexeme = consumed.Char!.ToString()!,
-            Type = _tokenType,
+            Kind = _tokenKind,
             Value = null
         };
     }
@@ -56,32 +56,32 @@ public abstract record SingleCharRule : ITokenRule
 /* =========================
  * Single char rules
  * ========================= */
-public sealed record DotRule() : SingleCharRule('.', TokenType.Dot);
+public sealed record DotRule() : SingleCharRule('.', TokenKind.Dot);
 
-public sealed record CommaRule() : SingleCharRule(',', TokenType.Comma);
+public sealed record CommaRule() : SingleCharRule(',', TokenKind.Comma);
 
-public sealed record SemiColonRule() : SingleCharRule(';', TokenType.Semicolon);
+public sealed record SemiColonRule() : SingleCharRule(';', TokenKind.Semicolon);
 
-public sealed record OpenBracketRule() : SingleCharRule('(', TokenType.OpenParenthesis);
+public sealed record OpenBracketRule() : SingleCharRule('(', TokenKind.OpenParenthesis);
 
-public sealed record ClosingBracketRule() : SingleCharRule(')', TokenType.CloseParenthesis);
+public sealed record ClosingBracketRule() : SingleCharRule(')', TokenKind.CloseParenthesis);
 
-public sealed record OpenCurlyBracketRule() : SingleCharRule('{', TokenType.OpenCurlyBracket);
+public sealed record OpenCurlyBracketRule() : SingleCharRule('{', TokenKind.OpenCurlyBracket);
 
-public sealed record ClosingCurlyBracketRule() : SingleCharRule('}', TokenType.CloseCurlyBracket);
+public sealed record ClosingCurlyBracketRule() : SingleCharRule('}', TokenKind.CloseCurlyBracket);
 
-public sealed record BangRule() : SingleCharRule('!', TokenType.Bang);
+public sealed record BangRule() : SingleCharRule('!', TokenKind.Bang);
 
-public sealed record GreaterThanRule() : SingleCharRule('>', TokenType.GreaterThan);
+public sealed record GreaterThanRule() : SingleCharRule('>', TokenKind.GreaterThan);
 
-public sealed record LessThanRule() : SingleCharRule('<', TokenType.LessThan);
+public sealed record LessThanRule() : SingleCharRule('<', TokenKind.LessThan);
 
-public sealed record AssignmentRule() : SingleCharRule('=', TokenType.Assignment);
+public sealed record AssignmentRule() : SingleCharRule('=', TokenKind.Assignment);
 
-public sealed record PlusRule() : SingleCharRule('+', TokenType.Plus);
+public sealed record PlusRule() : SingleCharRule('+', TokenKind.Plus);
 
-public sealed record MinusRule() : SingleCharRule('-', TokenType.Minus);
+public sealed record MinusRule() : SingleCharRule('-', TokenKind.Minus);
 
-public sealed record MultiplyRule() : SingleCharRule('*', TokenType.Multiply);
+public sealed record MultiplyRule() : SingleCharRule('*', TokenKind.Multiply);
 
-public sealed record DividedRule() : SingleCharRule('/', TokenType.Divided);
+public sealed record DividedRule() : SingleCharRule('/', TokenKind.Divided);

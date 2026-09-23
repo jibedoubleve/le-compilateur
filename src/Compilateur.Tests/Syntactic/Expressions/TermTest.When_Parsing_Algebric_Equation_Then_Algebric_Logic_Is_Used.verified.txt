@@ -1,52 +1,46 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: 1,
-            Type: Numeric,
-            Value: 1.0
-          }
-        },
-        {
-          Children: [
-            {
-              Token: {
-                Lexeme: 9,
-                Type: Numeric,
-                Value: 9.0
-              }
-            },
-            {
-              Token: {
-                Lexeme: 2,
-                Type: Numeric,
-                Value: 2.0
-              }
-            }
-          ],
-          Token: {
-            Lexeme: *,
-            Type: Multiply
-          }
-        }
-      ],
+  Left: {
+    Left: {
       Token: {
-        Lexeme: +,
-        Type: Plus
+        Kind: Numeric,
+        Lexeme: 1,
+        Value: 1.0
       }
     },
-    {
+    Right: {
+      Left: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 9,
+          Value: 9.0
+        }
+      },
+      Right: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 2,
+          Value: 2.0
+        }
+      },
       Token: {
-        Lexeme: 8,
-        Type: Numeric,
-        Value: 8.0
+        Kind: Multiply,
+        Lexeme: *
       }
+    },
+    Token: {
+      Kind: Plus,
+      Lexeme: +
     }
-  ],
+  },
+  Right: {
+    Token: {
+      Kind: Numeric,
+      Lexeme: 8,
+      Value: 8.0
+    }
+  },
   Token: {
-    Lexeme: +,
-    Type: Plus
+    Kind: Plus,
+    Lexeme: +
   }
 }

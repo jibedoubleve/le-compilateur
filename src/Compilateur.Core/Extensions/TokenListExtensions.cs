@@ -16,7 +16,7 @@ public static class TokenListExtensions
         {
             Column = 1,
             Line = lineNumber,
-            Type = TokenType.Eof,
+            Kind = TokenKind.Eof,
             Lexeme = "$",
             Value = null
         });

@@ -1,30 +1,26 @@
 ﻿{
-  Children: [
-    {
-      Children: [
-        {
-          Token: {
-            Lexeme: 1,
-            Type: Numeric,
-            Value: 1.0
-          }
-        },
-        {
-          Token: {
-            Lexeme: 2,
-            Type: Numeric,
-            Value: 2.0
-          }
-        }
-      ],
+  Value: {
+    Left: {
       Token: {
-        Lexeme: +,
-        Type: Plus
+        Kind: Numeric,
+        Lexeme: 1,
+        Value: 1.0
       }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 2,
+        Value: 2.0
+      }
+    },
+    Token: {
+      Kind: Plus,
+      Lexeme: +
     }
-  ],
+  },
   Token: {
-    Lexeme: print,
-    Type: Print
+    Kind: Print,
+    Lexeme: print
   }
 }

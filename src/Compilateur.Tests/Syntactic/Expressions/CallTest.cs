@@ -1,7 +1,6 @@
-using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -289,6 +288,44 @@ public class CallTest
         return Verify(node);
     }
 
+    [Fact]
+    public Task When_Chaining_Call_Then_Expected_Node_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .EmptyCall()
+                      .EmptyCall()
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Chaining_Call_With_Parameters_Then_Expected_Node_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .BetweenParentheses(b => b.Number(1))
+                      .BetweenParentheses(b => b.Number(2))
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteFullContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
     [Theory]
     [MemberData(nameof(BuildValidCallExpressionTokenWithTreeInformation))]
     public void When_Parsing_CallExpression_Then_Expected_Node_Returned(ParsingContext context, int nodeCount)
@@ -302,8 +339,11 @@ public class CallTest
         _output.WriteFullContext(context, node);
 
         // assert
-        node!.ShouldNotBeNull(context.FormatErrors());
-        node.Children.Count().ShouldBe(nodeCount);
+        Assert.Multiple(
+            () => node.ShouldNotBeNull(),
+            () => node.ShouldBeOfType<CallExpression>(),
+            () => (node as CallExpression)!.Arguments.Count.ShouldBe(nodeCount)
+        );
     }
 
     [Theory]

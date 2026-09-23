@@ -1,0 +1,14 @@
+﻿{
+  Statements: [
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}
