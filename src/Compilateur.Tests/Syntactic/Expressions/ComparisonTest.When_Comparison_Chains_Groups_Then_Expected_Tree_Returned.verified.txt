@@ -1,0 +1,90 @@
+﻿{
+  Left: {
+    Left: {
+      Inner: {
+        Left: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 1,
+            Value: 1.0
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 2,
+            Value: 2.0
+          }
+        },
+        Token: {
+          Kind: LessThan,
+          Lexeme: <
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Right: {
+      Inner: {
+        Left: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 3,
+            Value: 3.0
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 4,
+            Value: 4.0
+          }
+        },
+        Token: {
+          Kind: GreaterThan,
+          Lexeme: >
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
+    }
+  },
+  Right: {
+    Inner: {
+      Left: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 5,
+          Value: 5.0
+        }
+      },
+      Right: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 6,
+          Value: 6.0
+        }
+      },
+      Token: {
+        Kind: LessThanOrEqual,
+        Lexeme: <=
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Token: {
+    Kind: GreaterThanOrEqual,
+    Lexeme: >=
+  }
+}

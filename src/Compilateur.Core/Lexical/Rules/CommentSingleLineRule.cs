@@ -48,26 +48,26 @@ public record CommentSingleLineRule : ITokenRule
         return current == "//";
     }
 
-    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
     {
-        if (codeCursor.IsAtEnd)
+        if (cursor.IsAtEnd)
         {
             return null;
         }
 
         var strBuilder = new StringBuilder();
-        strBuilder.Append(codeCursor.Consume()); // Consume '/'
-        strBuilder.Append(codeCursor.Consume()); // Consume second '/'
+        strBuilder.Append(cursor.Consume()); // Consume '/'
+        strBuilder.Append(cursor.Consume()); // Consume second '/'
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeCursor.IsAtEnd || IsEndOfLine(codeCursor))
+            if (cursor.IsAtEnd || IsEndOfLine(cursor))
             {
                 _logger.LogDebug("Scanned comments:\n{Comments}", strBuilder.ToString());
                 return null;
             }
 
-            var current = codeCursor.Consume();
+            var current = cursor.Consume();
 
             _logger.LogTrace("{Current}", current);
 

@@ -1,0 +1,14 @@
+﻿{
+  Statements: [
+    {
+      Token: {
+        Kind: Return,
+        Lexeme: return
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

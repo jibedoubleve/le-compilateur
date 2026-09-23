@@ -1,0 +1,27 @@
+﻿[
+  {
+    Column: 1,
+    Kind: Numeric,
+    Lexeme: 1.2,
+    Line: 1,
+    Value: 1.2
+  },
+  {
+    Column: 4,
+    Lexeme: .,
+    Line: 1
+  },
+  {
+    Column: 5,
+    Kind: Numeric,
+    Lexeme: 3.4,
+    Line: 1,
+    Value: 3.4
+  },
+  {
+    Column: 1,
+    Kind: Eof,
+    Lexeme: $,
+    Line: 2
+  }
+]

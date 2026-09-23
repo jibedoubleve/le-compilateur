@@ -35,34 +35,34 @@ public record CommentMultiLineRule : ITokenRule
         return $"{codeCursor.Peek()}{codeCursor.PeekNext()}" == "/*";
     }
 
-    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeCursor.Consume(); // Consume '/'
-        codeCursor.Consume(); // Consume '*'
+        var first = cursor.Consume(); // Consume '/'
+        cursor.Consume(); // Consume '*'
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeCursor.IsAtEnd)
+            if (cursor.IsAtEnd)
             {
-                errors?.Add(new SyntaxError(first, "Unterminated block comment: missing '*/'"));
+                errors?.Add(first, "Unterminated block comment: missing '*/'");
                 return null;
             }
 
-            if (EndOfComments(codeCursor))
+            if (EndOfComments(cursor))
             {
-                codeCursor.Consume(); // Consume '*'
-                codeCursor.Consume(); // Consume '/'
+                cursor.Consume(); // Consume '*'
+                cursor.Consume(); // Consume '/'
                 return null;
             }
 
-            codeCursor.Consume();
+            cursor.Consume();
         }
 
         var msg =
             $"Comments starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
             $"maximum length of {MaxSize} characters.";
 
-        errors?.Add(new SyntaxError(first, msg));
+        errors?.Add(first, msg);
         return null;
     }
 

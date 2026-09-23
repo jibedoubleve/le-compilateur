@@ -1,7 +1,6 @@
-using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -24,7 +23,7 @@ public class CallTest
 
     #region Methods
 
-    public static IEnumerable<object[]> BuildDotExpression()
+    public static IEnumerable<object[]> BuildPropertyAccessChains()
     {
         yield return
         [
@@ -68,7 +67,7 @@ public class CallTest
         yield return [new TokenCollectionBuilder().Return().BuildParsingContext()];
     }
 
-    public static IEnumerable<object[]> BuildValidCallExpressionTokenWithTreeInformation()
+    public static IEnumerable<object[]> BuildCallsWithArgumentCount()
     {
         const string foo = "foo";
         const string a = "a";
@@ -191,27 +190,48 @@ public class CallTest
         ];
     }
 
+    [Fact]
+    public Task When_Call_Suffixes_Are_Chained_Then_Tree_Nests_Left_To_Right()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .Dot()
+                      .Identifier("bar")
+                      .BetweenParentheses(b => b.Number(1))
+                      .BetweenParentheses(b => b.Number(2))
+                      .Semicolon()
+                      .BuildParsingContext();
+        
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+        
+        // assert
+        return Verify(node);
+    }
     [Theory]
-    [MemberData(nameof(BuildDotExpression))]
-    public void When_Call_Dot_Then_No_Error(ParsingContext context)
+    [MemberData(nameof(BuildPropertyAccessChains))]
+    public void When_Property_Access_Chained_Then_No_Error_Raised(ParsingContext context)
     {
         // arrange
         var parser = new ExpressionParser();
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
             () => context.Errors.ShouldBeEmpty(),
+            () => node.ShouldBeOfType<GetExpression>(),
             () => node.ShouldNotBeNull(),
-            () => node!.Child(0).Children.ShouldNotBeNull()
+            () => ((GetExpression)node!).Object.ShouldNotBeNull()
         );
     }
 
     [Fact]
-    public Task When_Call_Dot_Then_Tree_Is_Correct()
+    public Task When_Property_Access_Then_Get_Node_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -223,14 +243,32 @@ public class CallTest
         // act
 
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Chained_Call_Then_Tree_Is_Correct()
+    public Task When_Call_Argument_Is_Expression_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .BetweenParentheses(b => b.Number(1).Plus().Number(2))
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Calls_Are_Chained_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -242,7 +280,7 @@ public class CallTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         context.Errors.ShouldBeEmpty();
@@ -250,7 +288,7 @@ public class CallTest
     }
 
     [Fact]
-    public Task When_Chained_Call_With_Arguments_Then_Tree_Is_Correct()
+    public Task When_Calls_With_Arguments_Are_Chained_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -263,7 +301,7 @@ public class CallTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         context.Errors.ShouldBeEmpty();
@@ -271,7 +309,7 @@ public class CallTest
     }
 
     [Fact]
-    public Task When_Chained_Dot_Call_Then_Tree_Is_Correct()
+    public Task When_Property_Accesses_Are_Chained_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -283,15 +321,56 @@ public class CallTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
+    [Fact]
+    public Task When_Property_Access_Is_Operand_Then_Get_Binds_Tighter_Than_Plus()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .Dot()
+                      .Identifier("bar")
+                      .Plus().Number(1)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public void When_Identifier_Missing_After_Dot_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Dot()
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(),
+            () => node.ShouldBeNull()
+        );
+    }
+
     [Theory]
-    [MemberData(nameof(BuildValidCallExpressionTokenWithTreeInformation))]
-    public void When_Parsing_CallExpression_Then_Expected_Node_Returned(ParsingContext context, int nodeCount)
+    [MemberData(nameof(BuildCallsWithArgumentCount))]
+    public void When_Call_Parsed_Then_Argument_Count_Matches(ParsingContext context, int argumentCount)
     {
         // arrange
         _output.WriteLine($"Output tokens: {context.Cursor}");
@@ -299,16 +378,19 @@ public class CallTest
 
         // act
         var node = expression.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
-        node!.ShouldNotBeNull(context.FormatErrors());
-        node.Children.Count().ShouldBe(nodeCount);
+        Assert.Multiple(
+            () => node.ShouldNotBeNull(),
+            () => node.ShouldBeOfType<CallExpression>(),
+            () => (node as CallExpression)!.Arguments.Count.ShouldBe(argumentCount)
+        );
     }
 
     [Theory]
     [MemberData(nameof(BuildInvalidCallExpressionTokens))]
-    public void When_Parsing_Invalid_CallExpression_Then_No_Match(ParsingContext context)
+    public void When_Tokens_Cannot_Start_Expression_Then_Parser_Does_Not_Match(ParsingContext context)
     {
         // arrange
         var expression = new ExpressionParser();
@@ -320,9 +402,31 @@ public class CallTest
         match.ShouldBeFalse();
     }
 
+    [Fact]
+    public void When_Call_Not_Closed_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("foo")
+                      .OpenParenthesis()
+                      .Number(1).Comma().Number(1).Plus()
+                      .Eof()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(),
+            () => node.ShouldBeNull()
+        );
+    }
+
     [Theory]
     [MemberData(nameof(BuildValidCallExpressionTokens))]
-    public void When_Parsing_Valid_CallExpression_Then_Matches(ParsingContext context)
+    public void When_Call_Or_Property_Access_Then_Parser_Matches(ParsingContext context)
     {
         // arrange
         var expression = new ExpressionParser();
@@ -330,7 +434,7 @@ public class CallTest
         // act 
         var match = expression.Matches(context);
         var node = expression.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // arrange
         match.ShouldBeTrue();

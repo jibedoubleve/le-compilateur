@@ -1,0 +1,103 @@
+﻿{
+  Body: {
+    Statements: [
+      {
+        Expression: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: bar
+            }
+          },
+          Value: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 11,
+                Value: 11.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 60,
+                Value: 60.0
+              }
+            },
+            Token: {
+              Kind: Multiply,
+              Lexeme: *
+            }
+          },
+          Token: {
+            Kind: Assignment,
+            Lexeme: =
+          }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Condition: {
+    Left: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 10,
+        Value: 10.0
+      }
+    },
+    Token: {
+      Kind: LessThanOrEqual,
+      Lexeme: <=
+    }
+  },
+  Increment: {
+    Left: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 1,
+        Value: 1.0
+      }
+    },
+    Token: {
+      Kind: Plus,
+      Lexeme: +
+    }
+  },
+  Initialiser: {
+    Initialiser: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 0,
+        Value: 0.0
+      }
+    },
+    Token: {
+      Kind: Identifier,
+      Lexeme: foo
+    }
+  },
+  Token: {
+    Kind: For,
+    Lexeme: for
+  }
+}

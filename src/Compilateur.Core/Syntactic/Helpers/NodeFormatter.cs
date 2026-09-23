@@ -1,78 +1,89 @@
+using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
+using Compilateur.Core.Syntactic.Nodes.Declaration;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Nodes.Statements;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
 internal static class SyntaxNodeExtensions
 {
-    #region Fields
-
-    private static readonly HashSet<int> ClosedNodes = new();
-
-    #endregion
-
     #region Methods
 
-    private static string FormatHeader(int depth = 0)
-    {
-        var builder = new StringBuilder();
-        for (var i = 0; i < depth; i++)
+    private static IEnumerable<SyntaxNode> Children(this SyntaxNode node) =>
+        node switch
         {
-            builder.Append(
-                ClosedNodes.Contains(i)
-                    ? "    "
-                    : " │  "
-            );
-        }
+            BinaryExpression n                      => [n.Left, n.Right],
+            VarDeclarationStatement n               => Optional(n.Initialiser),
+            FunctionDeclarationStatement n          => [.. n.Parameters, n.Body],
+            AssignExpression n                      => [n.Target, n.Value],
+            ProgramNode n                           => n.Statements,
+            CallExpression n                        => [n.Callee, .. n.Arguments],
+            BlockStatement n                        => n.Statements,
+            SetExpression n                         => [n.Object, n.Value],
+            IfStatement { ElseBranch: { } @else } n => [n.Condition, n.ThenBranch, @else],
+            IfStatement n                           => [n.Condition, n.ThenBranch],
+            ClassStatement n                        => [.. Optional(n.SuperClass), .. n.Functions],
+            GetExpression n                         => [n.Object],
+            GroupExpressionNode n                   => [n.Inner],
+            ReturnStatement n                       => Optional(n.Expression),
+            PrintStatement n                        => [n.Value],
+            UnaryExpression n                       => [n.Operand],
+            ExpressionStatement n                   => [n.Expression],
+            LogicalExpression n                     => [n.Left, n.Right],
+            WhileStatement n                        => [.. Optional(n.Condition), n.Body],
+            LiteralExpression
+                or ParameterNode
+                or IdentifierExpression
+                or SuperExpression
+                or ThisExpression => [],
+            _ => throw new NotSupportedException($"Type {node.GetType()} not supported")
+        };
 
-        return builder.ToString();
+    private static string Describe(SyntaxNode node)
+    {
+        string?[] strings =
+        [
+            node.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description,
+            GetTokenKind(node)
+        ];
+
+        var ret = string.Join(", ", strings.Where(x => !string.IsNullOrEmpty(x)));
+        return string.IsNullOrEmpty(ret) ? string.Empty : $"[{ret}]";
     }
 
-    private static void FormatTree(
-        this SyntaxNode node, StringBuilder stringBuilder, int depth, string treeNode = "")
+    private static void FormatChildren(this SyntaxNode node, StringBuilder stringBuilder, string prefix)
     {
-        stringBuilder.AppendLine(
-            $"{FormatHeader(depth)}{treeNode} {node.Token.Lexeme} [{FormatType(node)}]"
-        );
-
-        var max = node.Children.Count();
-        for (var i = 0; i < max; i++)
+        var children = node.Children().ToList();
+        for (var i = 0; i < children.Count; i++)
         {
-            node.Children
-                .ElementAt(i)
-                .FormatTree(
-                    stringBuilder,
-                    depth + 1,
-                    FormatTreeNode(i, max, depth)
-                );
+            var child = children[i];
+            var isLast = i == children.Count - 1;
+
+            stringBuilder.AppendLine($"{prefix}{(isLast ? " └──" : " ├──")} {child.Token.Lexeme} {Describe(child)}");
+            child.FormatChildren(stringBuilder, prefix + (isLast ? "    " : " │  "));
         }
     }
 
-    private static string FormatTreeNode(int i, int max, int depth)
-    {
-        if (i < max - 1) { return " ├──"; }
-
-        ClosedNodes.Add(depth + 1);
-        return " └──";
-    }
-
-    private static string FormatType(SyntaxNode node)
-    {
-        if (node.Role == SyntaxNodeRole.Unspecified)
+    private static string GetTokenKind(SyntaxNode node) =>
+        node.Token.Kind switch
         {
-            return $"{node.Token.Type}";
-        }
+            TokenKind.Numeric => $"{node.Token.Kind}",
+            TokenKind.String  => $"{node.Token.Kind}",
+            TokenKind.Eof     => "EOF",
+            _                 => string.Empty
+        };
 
-        return node.IsOfType(TokenType.Identifier) && node.Role != SyntaxNodeRole.Unspecified
-            ? $"{node.Role}"
-            : $"{node.Token.Type}, {node.Role}";
-    }
+    private static IEnumerable<SyntaxNode> Optional(SyntaxNode? node) => node is null ? [] : [node];
 
     public static string FormatTree(this SyntaxNode node)
     {
-        ClosedNodes.Clear();
         var stringBuilder = new StringBuilder();
-        node.FormatTree(stringBuilder, -1);
+        stringBuilder.AppendLine($" {node.Token.Lexeme} {Describe(node)}");
+        node.FormatChildren(stringBuilder, "");
         return stringBuilder.ToString();
     }
 

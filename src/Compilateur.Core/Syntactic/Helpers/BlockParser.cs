@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Nodes;
+using Compilateur.Core.Syntactic.Nodes.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
@@ -15,20 +15,26 @@ public static class BlockParser
 
     #region Methods
 
-    public static SyntaxNode? Parse(ParsingContext context)
+    public static BlockStatement? Parse(ParsingContext context)
     {
         var firstToken = context.Cursor.Peek();
-        if (context.Cursor.IsPeekOfType(TokenType.OpenCurlyBracket))
+        if (context.Cursor.IsPeekOfKind(TokenKind.OpenCurlyBracket))
         {
             context.Cursor.Consume(); // Consume the '{'
-            
-            var children = new List<SyntaxNode>();
+
+            var children = new List<StatementNode>();
             while (true)
             {
-                if (context.Cursor.IsPeekOfType(TokenType.CloseCurlyBracket))
+                if (context.Cursor.IsPeekOfKind(TokenKind.CloseCurlyBracket))
                 {
                     context.Cursor.Consume();
                     break;
+                }
+
+                if (!DeclarationParser.Matches(context))
+                {
+                    context.AddError($"Expected a declaration or a statement, found {context.Cursor.Peek().Lexeme}.");
+                    return null;
                 }
 
                 var node = DeclarationParser.Parse(context);
@@ -37,7 +43,7 @@ public static class BlockParser
                 children.Add(node);
             }
 
-            return SyntaxNode.Unspecified(firstToken, [.. children]);
+            return new BlockStatement(firstToken, [.. children]);
         }
 
         context.AddError("Expected '{' before block body.");

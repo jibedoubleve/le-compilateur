@@ -7,14 +7,6 @@ namespace Compilateur.Core.Lexical.Rules;
 
 public sealed record NumericRule : ITokenRule
 {
-    #region Fields
-
-    private const int MaxSize = 25;
-
-    private static readonly char[] Separators = ['.', ','];
-
-    #endregion
-
     #region Properties
 
     public int Weight => 999;
@@ -23,60 +15,65 @@ public sealed record NumericRule : ITokenRule
 
     #region Methods
 
-    private static bool IsEndOfScan(CodeCursor codeCursor)
-    {
-        if (codeCursor.IsAtEnd)
-        {
-            return true;
-        }
-
-        var codeChar = codeCursor.Peek();
-        return !IsValidChar(codeChar);
-    }
-
-    private static bool IsValidChar(char? codeChar) => codeChar.HasValue &&
-                                                       (char.IsAsciiDigit(codeChar.Value) ||
-                                                        Separators.Contains(codeChar.Value));
-
-
     public bool Matches(CodeCursor codeCursor)
     {
         var current = codeCursor.Peek();
         return !current.IsEmpty && char.IsAsciiDigit(current.Char!.Value);
     }
 
-    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
     {
         var strBuilder = new StringBuilder();
-        var first = codeCursor.Peek();
-        var decimalCounter = 0;
 
-        while (!IsEndOfScan(codeCursor))
+        // A numeric should start with a number
+        var first = cursor.Peek();
+        if (!first.Char.HasValue || !char.IsAsciiDigit(first.Char.Value))
         {
-            var current = codeCursor.Consume();
-
-            if (current.Char.HasValue && Separators.Contains(current.Char.Value))
-            {
-                decimalCounter++;
-            }
-
-            strBuilder.Append(current.Char);
-        }
-
-        var lexeme = strBuilder.ToString();
-        if (decimalCounter > 1)
-        {
-            errors?.Add(new SyntaxError(first, $"Malformed number literal '{lexeme}': multiple decimal points."));
+            errors?.Add(first, $"Expected number literal, found '{first.Char ?? '\0'}'.");
             return null;
         }
 
+        var hasSeparator = false;
+        var current = first;
+        while (!cursor.IsAtEnd)
+        {
+            // Then, the token should either be a numeric
+            if (current.Char.HasValue && char.IsAsciiDigit(current.Char.Value))
+            {
+                strBuilder.Append(current.Char.Value);
+                cursor.Consume();
+                current = cursor.Peek();
+                continue;
+            }
+
+            // or a '.' (dot) followed by a numeric
+            var next = cursor.PeekNext();
+
+            if (next is null) { break; }
+
+            if (current.Char == '.' && next.Char.HasValue && char.IsAsciiDigit(next.Char.Value))
+            {
+                // If another separator, return the scanned numeric and go for the next...
+                if (hasSeparator) { break; }
+
+                hasSeparator = true;
+                strBuilder.Append(current.Char);
+                cursor.Consume();
+                current = cursor.Peek();
+                continue;
+            }
+
+            break;
+        }
+
+        var lexeme = strBuilder.ToString();
         return new Token
         {
             Column = first.Column,
             Line = first.Line,
             Lexeme = lexeme,
             Value = double.Parse(lexeme, CultureInfo.InvariantCulture),
-            Type = TokenType.Numeric
+            Kind = TokenKind.Numeric
         };
     }
 

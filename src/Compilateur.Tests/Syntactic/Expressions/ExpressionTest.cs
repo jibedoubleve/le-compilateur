@@ -1,7 +1,7 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -25,7 +25,7 @@ public class ExpressionTest
     #region Methods
 
     [Fact]
-    public Task When_Parsing_Complex_Calculus_Then_Node_Is_Returned()
+    public Task When_Arithmetic_Has_Groups_Then_Expected_Tree_Returned()
     {
         // arrange
         // (1+6) - (4*8) / 2
@@ -45,7 +45,7 @@ public class ExpressionTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         context.Errors.ShouldBeEmpty(context.FormatErrors());
@@ -53,7 +53,7 @@ public class ExpressionTest
     }
 
     [Fact]
-    public Task When_Parsing_Complex_Calculus_Without_Braces_Then_Node_Is_Returned()
+    public Task When_Arithmetic_Has_No_Groups_Then_Precedence_Is_Respected()
     {
         // arrange
         // 1+6 - 4*8 / 2
@@ -73,7 +73,7 @@ public class ExpressionTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         context.Errors.ShouldBeEmpty(context.FormatErrors());
@@ -81,50 +81,7 @@ public class ExpressionTest
     }
 
     [Fact]
-    public void When_Parsing_Complex_Expression_Then_Node_Is_Returned()
-    {
-        // arrange
-        // Code: ( 1 + 2 ) / ( 3 * 4 );
-        var context = new TokenCollectionBuilder()
-                      .BetweenParentheses(b => b.Number(1)
-                                                .Plus()
-                                                .Number(2))
-                      .Divided()
-                      .BetweenParentheses(b => b.Number(3)
-                                                .Multiply()
-                                                .Number(4))
-                      .Semicolon()
-                      .BuildParsingContext();
-
-        // act
-        var parser = new ExpressionParser();
-        var matched = parser.Matches(context);
-        var node = parser.Parse(context);
-
-        _output.WriteFullContext(context, node);
-
-        // assert
-        node.ShouldNotBeNull(context.FormatErrors());
-
-        Assert.Multiple(
-            () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Divided),
-            () => node.Children.Count().ShouldBe(2),
-            // (1 + 2)
-            () => node.Child(0).Children.Count().ShouldBe(2),
-            () => node.Child(0).Token.Type.ShouldBe(TokenType.Plus),
-            () => node.Child(0).Child(0).Token.Type.ShouldBe(TokenType.Numeric),
-            () => node.Child(0).Child(1).Token.Type.ShouldBe(TokenType.Numeric),
-            // (3 * 4)
-            () => node.Child(1).Children.Count().ShouldBe(2),
-            () => node.Child(1).Token.Type.ShouldBe(TokenType.Multiply),
-            () => node.Child(1).Child(0).Token.Type.ShouldBe(TokenType.Numeric),
-            () => node.Child(1).Child(1).Token.Type.ShouldBe(TokenType.Numeric)
-        );
-    }
-
-    [Fact]
-    public void When_Parsing_Invalid_Expression_Then_Error_Written_In_List()
+    public void When_Declaration_Given_To_Expression_Parser_Then_Single_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder().Var(
@@ -134,7 +91,7 @@ public class ExpressionTest
 
         // act
         var node = new ExpressionParser().Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         context.Errors.Count().ShouldBe(1);

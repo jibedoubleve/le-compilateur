@@ -1,0 +1,32 @@
+﻿{
+  Body: {
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Parameters: [
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: a
+      }
+    },
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: b
+      }
+    },
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: c
+      }
+    }
+  ],
+  Token: {
+    Kind: Identifier,
+    Lexeme: myFunc
+  }
+}

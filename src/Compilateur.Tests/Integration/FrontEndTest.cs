@@ -1,13 +1,13 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace Compilateur.Tests.E2E;
+namespace Compilateur.Tests.Integration;
 
 public class FrontEndTest
 {
@@ -36,7 +36,7 @@ public class FrontEndTest
     }
 
     [Fact]
-    public Task When_Parsing_Code_Then_Expected_Tree_Created()
+    public Task When_Parsing_Full_Program_Then_Expected_Tree_Returned()
     {
         // arrange
         const string code = """
@@ -73,8 +73,8 @@ public class FrontEndTest
         var context = new ParsingContext(cursor, nodes.Errors);
         var node = ProgramParser.Parse(context);
 
-        _output.WriteFullContext(context, node);
-        
+        _output.WriteSyntaxContext(context: context, node: node);
+
         // assert
         return Verify(node);
     }

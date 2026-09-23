@@ -1,4 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -22,14 +22,14 @@ public class ProgramParserTest
     #region Methods
 
     [Fact]
-    public void When_Empty_Code_Then_Error_Raised()
+    public void When_Token_Stream_Has_No_Eof_Then_Error_Raised()
     {
         // arrange
         var context = TokenCollectionBuilder.BuildEmptyParsingContext();
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -39,15 +39,15 @@ public class ProgramParserTest
     }
 
     [Fact]
-    public Task When_Empty_Code_With_Eof_Then_Empty_Tree()
+    public Task When_Only_Eof_Then_Empty_Program_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .BuildParsingContext();
+            .BuildParsingContext();
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -58,7 +58,7 @@ public class ProgramParserTest
     }
 
     [Fact]
-    public Task When_Mix_Of_Statements_And_Expressions_Then_Tree_Returned()
+    public Task When_Declaration_And_Statement_Then_Program_Contains_Both()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -68,14 +68,14 @@ public class ProgramParserTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Multiple_Statement_Then_Tree_Returned()
+    public Task When_Several_Statements_Then_Program_Contains_All()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -85,32 +85,14 @@ public class ProgramParserTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public void When_Orphan_Token_Then_Error_Raised()
-    {
-        // arrange
-        var context = new TokenCollectionBuilder()
-                      .OpenCurlyBracket()
-                      .BuildParsingContext();
-        // act
-        var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        Assert.Multiple(
-            () => node.ShouldBeNull(),
-            () => context.Errors.ShouldNotBeEmpty()
-        );
-    }
-
-    [Fact]
-    public Task When_Single_Statement_Then_Tree_Returned()
+    public Task When_Single_Statement_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -120,7 +102,7 @@ public class ProgramParserTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);

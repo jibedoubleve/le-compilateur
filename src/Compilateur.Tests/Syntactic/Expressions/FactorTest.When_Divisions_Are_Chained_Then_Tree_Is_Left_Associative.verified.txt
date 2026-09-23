@@ -1,0 +1,33 @@
+﻿{
+  Left: {
+    Left: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 10,
+        Value: 10.0
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 3,
+        Value: 3.0
+      }
+    },
+    Token: {
+      Kind: Divided,
+      Lexeme: /
+    }
+  },
+  Right: {
+    Token: {
+      Kind: Numeric,
+      Lexeme: 2,
+      Value: 2.0
+    }
+  },
+  Token: {
+    Kind: Divided,
+    Lexeme: /
+  }
+}

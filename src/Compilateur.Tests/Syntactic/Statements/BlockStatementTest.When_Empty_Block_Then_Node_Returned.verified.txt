@@ -1,14 +1,14 @@
 ﻿{
-  Children: [
+  Statements: [
     {
       Token: {
-        Lexeme: {,
-        Type: OpenCurlyBracket
+        Kind: OpenCurlyBracket,
+        Lexeme: {
       }
     }
   ],
   Token: {
-    Lexeme: $,
-    Type: Eof
+    Kind: Eof,
+    Lexeme: $
   }
 }

@@ -1,0 +1,50 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Arguments: [
+          {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 2,
+              Value: 2.0
+            }
+          }
+        ],
+        Callee: {
+          Arguments: [
+            {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 1,
+                Value: 1.0
+              }
+            }
+          ],
+          Callee: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: foo
+            }
+          },
+          Token: {
+            Kind: OpenParenthesis,
+            Lexeme: (
+          }
+        },
+        Token: {
+          Kind: OpenParenthesis,
+          Lexeme: (
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

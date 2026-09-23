@@ -1,0 +1,18 @@
+﻿{
+  Callee: {
+    Callee: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Token: {
+    Kind: OpenParenthesis,
+    Lexeme: (
+  }
+}

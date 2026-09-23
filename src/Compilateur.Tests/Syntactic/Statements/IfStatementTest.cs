@@ -1,6 +1,6 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
+using Shouldly;
 using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Statements;
@@ -22,7 +22,29 @@ public class IfStatementTest
     #region Methods
 
     [Fact]
-    public Task When_Valid_If_Else_Statement_Then_Expected_Tree_Returned()
+    public void When_If_Branch_Is_Not_A_Statement_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .If()
+                      .BetweenParentheses(b => b.Identifier("foo"))
+                      .CloseCurlyBracket()
+                      .BuildParsingContext();
+
+        // act
+
+        var node =  ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+        
+        // assert
+        Assert.Multiple(
+            () => node.ShouldBeNull(),
+            () => context.Errors.ShouldHaveSingleItem()
+        );
+    }
+
+    [Fact]
+    public Task When_If_Has_Else_Branch_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -52,14 +74,32 @@ public class IfStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Valid_If_Statement_Then_Expected_Tree_Returned()
+    public Task When_If_Branch_Is_Single_Statement_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .If().BetweenParentheses(b => b.Identifier("foo"))
+                      .Print("Hello world")
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_If_Branch_Is_Block_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -81,7 +121,7 @@ public class IfStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);

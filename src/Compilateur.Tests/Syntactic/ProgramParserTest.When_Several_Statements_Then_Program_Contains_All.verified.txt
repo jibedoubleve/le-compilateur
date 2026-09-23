@@ -1,0 +1,32 @@
+﻿{
+  Statements: [
+    {
+      Value: {
+        Token: {
+          Kind: String,
+          Lexeme: hello_world
+        }
+      },
+      Token: {
+        Kind: Print,
+        Lexeme: print
+      }
+    },
+    {
+      Value: {
+        Token: {
+          Kind: String,
+          Lexeme: hello_world
+        }
+      },
+      Token: {
+        Kind: Print,
+        Lexeme: print
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

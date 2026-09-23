@@ -1,0 +1,33 @@
+﻿{
+  Statements: [
+    {
+      Initialiser: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 1,
+          Value: 1.0
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    {
+      Value: {
+        Token: {
+          Kind: String,
+          Lexeme: hello_world
+        }
+      },
+      Token: {
+        Kind: Print,
+        Lexeme: print
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

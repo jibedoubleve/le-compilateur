@@ -1,6 +1,5 @@
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -24,15 +23,15 @@ public class FunDeclarationTest
     #region Methods
 
     [Fact]
-    public Task When_Declaring_Fun_With_2_Params_Then_Parsing_Returns_Expected_Node()
+    public Task When_Fun_Has_Two_Parameters_Then_Expected_Tree_Returned()
     {
         // arrange
         const string name = "myFunc";
         var context = new TokenCollectionBuilder()
-                      .Fun(name,
-                          b => b.Identifier("a")
-                                .Comma()
-                                .Identifier("b")
+                      .Fun(name)
+                      .BetweenParentheses(b => b.Identifier("a")
+                                                 .Comma()
+                                                 .Identifier("b")
                       )
                       .BetweenCurlyBracket()
                       .BuildParsingContext();
@@ -42,7 +41,7 @@ public class FunDeclarationTest
         // act
         var matched = p.Matches(context);
         var node = p.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         node.ShouldNotBeNull(context.FormatErrors());
@@ -51,17 +50,17 @@ public class FunDeclarationTest
     }
 
     [Fact]
-    public Task When_Declaring_Fun_With_3_Params_Then_Parsing_Returns_Expected_Node()
+    public Task When_Fun_Has_Three_Parameters_Then_Expected_Tree_Returned()
     {
         // arrange
         const string name = "myFunc";
         var context = new TokenCollectionBuilder()
-                      .Fun(name,
-                          b => b.Identifier("a")
-                                .Comma()
-                                .Identifier("b")
-                                .Comma()
-                                .Identifier("c")
+                      .Fun(name)
+                      .BetweenParentheses(b => b.Identifier("a")
+                                                 .Comma()
+                                                 .Identifier("b")
+                                                 .Comma()
+                                                 .Identifier("c")
                       )
                       .BetweenCurlyBracket()
                       .BuildParsingContext();
@@ -71,7 +70,7 @@ public class FunDeclarationTest
         // act
         var matched = p.Matches(context);
         var node = p.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -82,13 +81,13 @@ public class FunDeclarationTest
     }
 
     [Fact]
-    public void When_Defining_Function_With_More_Than_255_Parameter_Then_Error_Raised()
+    public void When_Fun_Has_More_Than_255_Parameters_Then_Error_Raised()
     {
         // arrange
         const string name = "myFunc";
         var context = new TokenCollectionBuilder()
-                      .Fun(name,
-                          b => {
+                      .Fun(name)
+                      .BetweenParentheses(b => {
                               for (var i = 0; i < 260; i++)
                               {
                                   b.Identifier("a")
@@ -106,7 +105,7 @@ public class FunDeclarationTest
         // act
         var matched = p.Matches(context);
         var node = p.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -116,15 +115,15 @@ public class FunDeclarationTest
     }
 
     [Fact]
-    public Task When_Fun_Declared_And_Defined_Token_Then_Parsing_Returns_Expected_Node()
+    public Task When_Fun_Has_Parameters_And_Body_Then_Expected_Tree_Returned()
     {
         // arrange
         const string name = "myFunc";
         var context = new TokenCollectionBuilder()
-                      .Fun(name,
-                          b => b.Identifier("a")
-                                .Comma()
-                                .Identifier("b")
+                      .Fun(name)
+                      .BetweenParentheses(b => b.Identifier("a")
+                                                 .Comma()
+                                                 .Identifier("b")
                       ).BetweenCurlyBracket(b =>
                           b.Number(6)
                            .Plus()
@@ -142,7 +141,7 @@ public class FunDeclarationTest
         var matched = p.Matches(context);
         var node = p.Parse(context);
 
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -153,12 +152,13 @@ public class FunDeclarationTest
     }
 
     [Fact]
-    public Task When_Fun_Declared_With_Param_And_Declaration_Of_Same_Name_Then_Segregation_In_AST_Exists()
+    public Task When_Body_Uses_Parameter_Name_Then_Parameter_And_Usage_Are_Distinct_Nodes()
     {
         // arrange
         const string name = "myFunc";
         var context = new TokenCollectionBuilder()
-                      .Fun(name, b => b.Identifier("a"))
+                      .Fun(name)
+                      .BetweenParentheses(b => b.Identifier("a"))
                       .BetweenCurlyBracket(b => b.Identifier("a")
                                                  .Semicolon())
                       .BuildParsingContext();
@@ -168,7 +168,7 @@ public class FunDeclarationTest
         // act
         var matched = p.Matches(context);
         var node = p.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         node.ShouldNotBeNull(context.FormatErrors());

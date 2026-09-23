@@ -1,6 +1,6 @@
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Statements;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -24,7 +24,7 @@ public class PrintStatementTest
     #region Methods
 
     [Fact]
-    public void When_No_Print_Then_Parser_Return_No_Node()
+    public void When_Print_Keyword_Missing_Then_Exception_Thrown()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -34,23 +34,18 @@ public class PrintStatementTest
                       .BuildParsingContext();
         var parser = new PrintStatementParser();
 
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        Assert.Multiple(
-            () => node.ShouldBeNull(),
-            () => context.Errors.ShouldNotBeEmpty()
+        // act & assert
+        Assert.Throws<InvalidOperationException>(
+            () => parser.Parse(context)
         );
     }
 
     [Fact]
-    public Task When_Print_Expression_Then_Node_Is_Returned()
+    public Task When_Print_Expression_Then_Node_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Symbol(TokenType.Print)
+                      .Symbol(TokenKind.Print)
                       .Number(1).Plus().Number(2)
                       .Semicolon()
                       .BuildParsingContext();
@@ -58,7 +53,7 @@ public class PrintStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
@@ -70,7 +65,7 @@ public class PrintStatementTest
     [InlineData("hello\nworld")]
     [InlineData("hello_world")]
     [InlineData("1 + 4")]
-    public void When_Print_String_Then_Node_Is_Returned(string output)
+    public void When_Print_String_Then_Node_Returned(string output)
     {
         // arrange
         output = $"\"{output}\"";
@@ -82,7 +77,7 @@ public class PrintStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -92,7 +87,7 @@ public class PrintStatementTest
     }
 
     [Fact]
-    public void When_Statement_Has_No_Final_Semicolon_Then_Error_Raised()
+    public void When_Print_Has_No_Semicolon_Then_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -102,7 +97,7 @@ public class PrintStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -112,11 +107,11 @@ public class PrintStatementTest
     }
 
     [Fact]
-    public void When_Statement_Start_Without_Expression_Then_Error_Raised()
+    public void When_Print_Expression_Is_Invalid_Then_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Symbol(TokenType.Print)
+                      .Symbol(TokenKind.Print)
                       .Bang()
                       .Semicolon()
                       .BuildParsingContext();
@@ -124,7 +119,7 @@ public class PrintStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(

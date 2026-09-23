@@ -1,0 +1,86 @@
+﻿{
+  Left: {
+    Left: {
+      Inner: {
+        Left: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: a
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: b
+          }
+        },
+        Token: {
+          Kind: Or,
+          Lexeme: or
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Right: {
+      Inner: {
+        Left: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: c
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: d
+          }
+        },
+        Token: {
+          Kind: Or,
+          Lexeme: or
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Token: {
+      Kind: Or,
+      Lexeme: or
+    }
+  },
+  Right: {
+    Inner: {
+      Left: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 1,
+          Value: 1.0
+        }
+      },
+      Right: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 2,
+          Value: 2.0
+        }
+      },
+      Token: {
+        Kind: Or,
+        Lexeme: or
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Token: {
+    Kind: Or,
+    Lexeme: or
+  }
+}

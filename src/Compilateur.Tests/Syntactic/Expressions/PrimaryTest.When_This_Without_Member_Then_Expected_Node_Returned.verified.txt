@@ -1,0 +1,20 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Token: {
+          Kind: This,
+          Lexeme: this
+        }
+      },
+      Token: {
+        Kind: This,
+        Lexeme: this
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

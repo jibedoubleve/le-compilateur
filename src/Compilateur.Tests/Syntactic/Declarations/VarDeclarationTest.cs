@@ -1,7 +1,8 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Declarations;
+using Compilateur.Core.Syntactic.Nodes.Declaration;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -24,44 +25,48 @@ public class VarDeclarationTest
 
     #region Methods
 
-    public static IEnumerable<object[]> Build_Var_Expressions()
+    [Fact]
+    public Task When_Var_Declared_In_Block_Then_Expected_Tree_Returned()
     {
-        const string name = "myVariable";
-        yield return
-        [
-            new TokenCollectionBuilder()
-                .Var(name, b => b.Bang())
-                .BuildParsingContext()
-        ];
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .BetweenCurlyBracket(b => b.Var("foo")
+                                                 .Semicolon())
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
     }
 
     [Fact]
-    public void When_Malformed_Var_Declared_And_Assigned_Token_Then_Parsing_Returns_Expected_Node()
+    public void When_Var_Declared_Without_Semicolon_Then_Error_Raised()
     {
         // arrange
-        // Build malformed "var myVariable = !;"
-        const string name = "myVariable";
         var context = new TokenCollectionBuilder()
-                      .Var(name, b => b.Bang())
-                      .Semicolon()
+                      .Var("myVariable")
                       .BuildParsingContext();
 
-        var p = new DeclarationParser();
+        var parser = new DeclarationParser();
 
         // act
-        var matched = p.Matches(context);
-        var node = p.Parse(context);
+        var matched = parser.Matches(context);
+        var node = parser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
-        _output.WriteFullContext(context, node);
         Assert.Multiple(
             () => node.ShouldBeNull(),
-            () => matched.ShouldBeTrue()
+            () => matched.ShouldBeTrue(),
+            () => context.Errors.ShouldNotBeEmpty()
         );
     }
 
     [Fact]
-    public void When_Var_Declared_And_Assigned_Token_Then_Parsing_Returns_Expected_Node()
+    public void When_Var_Has_Initialiser_Then_Initialiser_Is_Parsed()
     {
         // arrange
         const string name = "myVariable";
@@ -80,23 +85,43 @@ public class VarDeclarationTest
         // act
         var matched = p.Matches(context);
         var node = p.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         node.ShouldNotBeNull(context.FormatErrors());
         Assert.Multiple(
             () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Identifier),
-            () => node.Children.Count().ShouldBe(1)
+            () => node.ShouldBeOfType<VarDeclarationStatement>(),
+            () => ((VarDeclarationStatement)node).Initialiser.ShouldBeOfType<BinaryExpression>(),
+            () => ((VarDeclarationStatement)node).Token.Kind.ShouldBe(TokenKind.Identifier)
         );
     }
 
     [Fact]
-    public void When_Var_Declared_Token_Then_Parsing_Returns_Expected_Node()
+    public Task When_Var_Has_No_Initialiser_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .Var("myVariable")
+                      .Var("foo")
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public void When_Var_Initialiser_Is_Invalid_Then_Null_Returned()
+    {
+        // arrange
+        // Build malformed "var myVariable = !;"
+        const string name = "myVariable";
+        var context = new TokenCollectionBuilder()
+                      .Var(name, b => b.Bang())
                       .Semicolon()
                       .BuildParsingContext();
 
@@ -107,45 +132,12 @@ public class VarDeclarationTest
         var node = p.Parse(context);
 
         // assert
-        node.ShouldNotBeNull();
-        Assert.Multiple(
-            () => matched.ShouldBeTrue(),
-            () => node.Token.Type.ShouldBe(TokenType.Identifier)
-        );
-    }
-
-    [Fact]
-    public void When_Var_Declared_Without_Semicolon_Then_Parsing_Returns_Error()
-    {
-        // arrange
-        var context = new TokenCollectionBuilder()
-                      .Var("myVariable")
-                      .BuildParsingContext();
-
-        var parser = new DeclarationParser();
-
-        // act
-        var matched = parser.Matches(context);
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
+        _output.WriteSyntaxContext(context, node);
         Assert.Multiple(
             () => node.ShouldBeNull(),
-            () => matched.ShouldBeTrue(),
-            () => context.Errors.ShouldNotBeEmpty()
+            () => matched.ShouldBeTrue()
         );
     }
 
-    [Fact]
-    public void When_Var_Declared_In_Program_Then_Parsing_Returns_Expected_Node()
-    {
-        
-    }
-    [Fact]
-    public void When_Var_Declared_In_Block_Then_Parsing_Returns_Expected_Node()
-    {
-        
-    }
     #endregion
 }

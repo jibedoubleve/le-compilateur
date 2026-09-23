@@ -1,4 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -22,7 +22,23 @@ public class ReturnStatementTest
     #region Methods
 
     [Fact]
-    public void When_Statement_Without_Semicolon_Then_Error_Raised()
+    public Task When_Return_Without_Value_Then_Statement_Has_No_Expression()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Return()
+                      .Semicolon()
+                      .BuildParsingContext();
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public void When_Return_Has_No_Semicolon_Then_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -35,7 +51,7 @@ public class ReturnStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         Assert.Multiple(
@@ -45,7 +61,7 @@ public class ReturnStatementTest
     }
 
     [Fact]
-    public Task When_Valid_Return_Statement_Then_Expected_Tree_Returned()
+    public Task When_Return_Has_Value_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -59,7 +75,7 @@ public class ReturnStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);

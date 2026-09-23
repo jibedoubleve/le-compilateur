@@ -1,6 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -23,7 +23,7 @@ public class FactorTest
 
     #region Methods
 
-    public static IEnumerable<object[]> BuildSimpleFactorOperator()
+    public static IEnumerable<object[]> BuildValidFactorOperations()
     {
         yield return // 1 * 2
         [
@@ -108,7 +108,7 @@ public class FactorTest
     }
 
     [Fact]
-    public Task When_Complex_Factor_Operation_Then_All_Nodes_Are_Processed()
+    public Task When_Divisions_Are_Chained_Then_Tree_Is_Left_Associative()
     {
         // arrange
 
@@ -126,26 +126,44 @@ public class FactorTest
         // act
 
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Theory]
-    [MemberData(nameof(BuildSimpleFactorOperator))]
-    public void When_Valid_Factor_Operation_Then_Valid_Node_Returned(ParsingContext context)
+    [MemberData(nameof(BuildValidFactorOperations))]
+    public void When_Valid_Factor_Operation_Then_Parser_Matches(ParsingContext context)
     {
         // arrange
         var parser = new ExpressionParser();
 
         // act
         var match = parser.Matches(context);
-        _output.WriteFullContext(context);
+        _output.WriteSyntaxContext(context);
 
         // arrange
         match.ShouldBeTrue();
     }
 
+    [Fact]
+    public Task When_Multiplications_Are_Chained_Then_Tree_Is_Left_Associative()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Number(1).Multiply()
+                      .Number(2).Multiply()
+                      .Number(3)
+                      .Semicolon()
+            .BuildParsingContext();
+        
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
+    }
     #endregion
 }

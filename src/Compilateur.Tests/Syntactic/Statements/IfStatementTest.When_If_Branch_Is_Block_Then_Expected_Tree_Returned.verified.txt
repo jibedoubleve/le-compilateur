@@ -1,0 +1,71 @@
+﻿{
+  Condition: {
+    Left: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 4,
+        Value: 4.0
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
+    }
+  },
+  ThenBranch: {
+    Statements: [
+      {
+        Expression: {
+          Target: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: foo
+            }
+          },
+          Value: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 4,
+                Value: 4.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 7,
+                Value: 7.0
+              }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
+            }
+          },
+          Token: {
+            Kind: Assignment,
+            Lexeme: =
+          }
+        },
+        Token: {
+          Kind: Assignment,
+          Lexeme: =
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Token: {
+    Kind: If,
+    Lexeme: if
+  }
+}

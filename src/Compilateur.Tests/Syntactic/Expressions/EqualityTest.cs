@@ -1,7 +1,7 @@
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -33,7 +33,7 @@ public class EqualityTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.Equality
+            TokenKind.Equality
         ];
         yield return
         [
@@ -42,12 +42,32 @@ public class EqualityTest
                                         .Number(2)
                                         .Semicolon()
                                         .BuildParsingContext(),
-            TokenType.Inequality
+            TokenKind.Inequality
         ];
     }
 
     [Fact]
-    public Task When_Complex_Expression_Parsed_Then_Valid_Node_Returned()
+    public Task When_Equalities_Are_Chained_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .DoubleEqual()
+                      .Identifier("b")
+                      .DoubleEqual()
+                      .Identifier("c")
+                      .Semicolon()
+                      .BuildParsingContext();
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Equality_Chains_Groups_Then_Expected_Tree_Returned()
     {
         // arrange
         // (1 == 1) != (2 == 2) == (3 != 3)
@@ -70,7 +90,7 @@ public class EqualityTest
         // act
         var node = parser.Parse(context);
 
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);
@@ -78,7 +98,7 @@ public class EqualityTest
 
     [Theory]
     [MemberData(nameof(BuildSimpleOperations))]
-    public void When_Simple_Operation_Then_Valid_Node_Returned(ParsingContext context, TokenType tokenType)
+    public void When_Single_Equality_Then_Binary_Node_Returned(ParsingContext context, TokenKind tokenKind)
     {
         // Arrange
         var parser = new ExpressionParser();
@@ -86,13 +106,15 @@ public class EqualityTest
         // Act
 
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // Assert
         Assert.Multiple(
             () => node.ShouldNotBeNull(),
-            () => node!.Token.Type.ShouldBe(tokenType),
-            () => node!.Children.Count().ShouldBe(2)
+            () => node.ShouldBeOfType<BinaryExpression>(),
+            () => node!.Token.Kind.ShouldBe(tokenKind),
+            () => ((BinaryExpression)node!).Left.ShouldNotBeNull(),
+            () => ((BinaryExpression)node!).Right.ShouldNotBeNull()
         );
     }
 

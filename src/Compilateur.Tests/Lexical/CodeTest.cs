@@ -1,5 +1,7 @@
+using System.Globalization;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -36,22 +38,29 @@ public class CodeTest : ScannerTestBase
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.Last().Type.ShouldBe(TokenType.Eof)
+            () => res.Tokens.Last().Kind.ShouldBe(TokenKind.Eof)
         );
     }
 
     [Theory]
-    [InlineData(-1, "-1")]
-    [InlineData(-1.5, "-1,5")]
-    public void When_Negative_Number_Then_No_Error_Is_Returned(float number, string expected)
+    [InlineData(-1)]
+    [InlineData(-1.5)]
+    public void When_Negative_Number_Then_Minus_And_Numeric_Tokens_Returned(float number)
     {
-        _output.WriteLine($"Tokenize '{number}'");
-        var res = Scanner.Tokenize($"{number}");
+        // arrange
+        var code = number.ToString(CultureInfo.InvariantCulture);
+
+        // act
+        var tokenization = Scanner.Tokenize(code);
+        _output.WriteLexerContext(code, tokenization);
+
+        // assert
         Assert.Multiple(
-            () => res.Errors.ShouldBeEmpty(),
-            () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Minus),
-            () => res.Tokens.ElementAt(1).Type.ShouldBe(TokenType.Numeric)
+            () => tokenization.Errors.ShouldBeEmpty(),
+            () => tokenization.Tokens.ShouldNotBeEmpty(),
+            () => tokenization.Tokens.First().Kind.ShouldBe(TokenKind.Minus),
+            () => tokenization.Tokens.ElementAt(1).Kind.ShouldBe(TokenKind.Numeric),
+            () => tokenization.Tokens.ElementAt(2).Kind.ShouldBe(TokenKind.Eof)
         );
     }
 
@@ -59,46 +68,52 @@ public class CodeTest : ScannerTestBase
     [InlineData("école")]
     [InlineData("noël")]
     [InlineData("hôtel")]
-    public void When_Non_Ascii_In_Identifier_Then_Error_Is_Returned(string code)
+    public void When_Non_Ascii_In_Identifier_Then_Error_Raised(string code)
     {
         var res = Scanner.Tokenize(code);
         res.Errors.ShouldNotBeEmpty();
     }
 
     [Theory]
-    [InlineData(1, "1")]
-    [InlineData(1.5, "1,5")]
-    [InlineData(0, "0")]
-    public void When_Number_Then_No_Error_Is_Returned(float number, string expected)
+    [InlineData(1)]
+    [InlineData(1.5)]
+    [InlineData(0)]
+    public void When_Number_Then_Numeric_Token_Returned(float number)
     {
-        _output.WriteLine($"Tokenize '{number}'");
-        var res = Scanner.Tokenize($"{number}");
+        // arrange
+        var code = number.ToString(CultureInfo.InvariantCulture);
+
+        // act
+        var tokenization = Scanner.Tokenize(code);
+        _output.WriteLexerContext(code, tokenization);
+
+        // assert
         Assert.Multiple(
-            () => res.Errors.ShouldBeEmpty(),
-            () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Numeric),
-            () => res.Tokens.First().Lexeme.ShouldBe(expected)
+            () => tokenization.Errors.ShouldBeEmpty(),
+            () => tokenization.Tokens.ShouldNotBeEmpty(),
+            () => tokenization.Tokens.First().Kind.ShouldBe(TokenKind.Numeric),
+            () => tokenization.Tokens.First().Lexeme.ShouldBe(number.ToString(CultureInfo.InvariantCulture))
         );
     }
 
     [Theory]
-    [InlineData("android", new[] { TokenType.Identifier, TokenType.Eof }, new[] { "android", "$" })]
+    [InlineData("android", new[] { TokenKind.Identifier, TokenKind.Eof }, new[] { "android", "$" })]
     [InlineData("andr+oid",
-        new[] { TokenType.Identifier, TokenType.Plus, TokenType.Identifier, TokenType.Eof },
+        new[] { TokenKind.Identifier, TokenKind.Plus, TokenKind.Identifier, TokenKind.Eof },
         new[] { "andr", "+", "oid", "$" })]
-    public void When_Scan_Identifier_With_Keywords_Then_Identifier_Token_Returned(
-        string code, TokenType[] tokenTypes, string[] lexemes)
+    public void When_Identifier_Starts_With_Keyword_Then_Identifier_Token_Returned(
+        string code, TokenKind[] tokenTypes, string[] lexemes)
     {
         var res = Scanner.Tokenize(code);
         Assert.Multiple(
             () => res.Tokens.Count.ShouldBeGreaterThan(0),
-            () => res.Tokens.Select(x => x.Type).ShouldBe(tokenTypes),
+            () => res.Tokens.Select(x => x.Kind).ShouldBe(tokenTypes),
             () => res.Tokens.Select(x => x.Lexeme).ShouldBe(lexemes)
         );
     }
 
     [Fact]
-    public Task When_Scanning_Code_Then_No_Error_Is_Returned()
+    public Task When_Scanning_Full_Program_Then_Expected_Tokens_Returned()
     {
         const string code = """
                             // One line comments
@@ -137,7 +152,7 @@ public class CodeTest : ScannerTestBase
     [Theory]
     [InlineData("\"hello")]
     [InlineData("hello\"")]
-    public void When_String_Not_Ended_Then_Error_Is_Returned(string code)
+    public void When_String_Not_Ended_Then_Error_Raised(string code)
     {
         // act
         var res = Scanner.Tokenize(code);
@@ -145,21 +160,6 @@ public class CodeTest : ScannerTestBase
 
         // assert
         res.Errors.ShouldNotBeEmpty();
-    }
-
-    [Theory]
-    [InlineData(-0)]
-    [InlineData(0)]
-    public void When_Zero_Then_No_Error_Is_Returned(float number)
-    {
-        _output.WriteLine($"Tokenize '{number}'");
-        var res = Scanner.Tokenize($"{number}");
-        Assert.Multiple(
-            () => res.Errors.ShouldBeEmpty(),
-            () => res.Tokens.ShouldNotBeEmpty(),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Numeric),
-            () => res.Tokens.First().Lexeme.ShouldBe("0")
-        );
     }
 
     #endregion

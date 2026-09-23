@@ -1,0 +1,94 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Left: {
+          Left: {
+            Left: {
+              Token: {
+                Kind: Identifier,
+                Lexeme: a
+              }
+            },
+            Right: {
+              Inner: {
+                Left: {
+                  Token: {
+                    Kind: Identifier,
+                    Lexeme: b
+                  }
+                },
+                Right: {
+                  Token: {
+                    Kind: Identifier,
+                    Lexeme: c
+                  }
+                },
+                Token: {
+                  Kind: And,
+                  Lexeme: and
+                }
+              },
+              Token: {
+                Kind: OpenParenthesis,
+                Lexeme: (
+              }
+            },
+            Token: {
+              Kind: And,
+              Lexeme: and
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: d
+            }
+          },
+          Token: {
+            Kind: And,
+            Lexeme: and
+          }
+        },
+        Right: {
+          Inner: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 1,
+                Value: 1.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 2,
+                Value: 2.0
+              }
+            },
+            Token: {
+              Kind: And,
+              Lexeme: and
+            }
+          },
+          Token: {
+            Kind: OpenParenthesis,
+            Lexeme: (
+          }
+        },
+        Token: {
+          Kind: And,
+          Lexeme: and
+        }
+      },
+      Token: {
+        Kind: And,
+        Lexeme: and
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

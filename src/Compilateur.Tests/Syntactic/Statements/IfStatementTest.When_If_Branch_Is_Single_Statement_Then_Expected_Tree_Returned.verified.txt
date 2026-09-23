@@ -1,0 +1,32 @@
+﻿{
+  Statements: [
+    {
+      Condition: {
+        Token: {
+          Kind: Identifier,
+          Lexeme: foo
+        }
+      },
+      ThenBranch: {
+        Value: {
+          Token: {
+            Kind: String,
+            Lexeme: Hello world
+          }
+        },
+        Token: {
+          Kind: Print,
+          Lexeme: print
+        }
+      },
+      Token: {
+        Kind: If,
+        Lexeme: if
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

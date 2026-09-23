@@ -1,5 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 
@@ -22,7 +21,7 @@ public class AndTest
     #region Methods
 
     [Fact]
-    public Task When_Complex_Expression_Parsed_Then_Valid_Node_Returned()
+    public Task When_And_Chains_Groups_Then_Expected_Tree_Returned()
     {
         // arrange
         // (a and b) and (c and d) and (1 and 2)
@@ -39,41 +38,33 @@ public class AndTest
                       .BetweenParentheses(b => b.Number(1)
                                                 .And()
                                                 .Number(2))
+                      .Semicolon()
                       .BuildParsingContext();
-        var parser = new ExpressionParser();
-        
+
         // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Complex_Expression_With_Parenthesis_Parsed_Then_Valid_Node_Returned()
+    public Task When_Or_Followed_By_And_Then_And_Binds_Tighter()
     {
         // arrange
-        // a and (b and c) and d and (1 and 2)
         var context = new TokenCollectionBuilder()
                       .Identifier("a")
+                      .Or()
+                      .Identifier("b")
                       .And()
-                      .BetweenParentheses(b =>
-                          b.Identifier("b")
-                           .And()
-                           .Identifier("c"))
-                      .And()
-                      .Identifier("d")
-                      .And()
-                      .BetweenParentheses(b => b.Number(1)
-                                                .And()
-                                                .Number(2))
+                      .Identifier("c")
+                      .Semicolon()
                       .BuildParsingContext();
-        var parser = new ExpressionParser();
 
         // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
