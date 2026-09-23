@@ -32,7 +32,7 @@ public class Scanner
     {
         var codeChar = cursor.Consume();
         var errorMsg = $"Character '{codeChar.Char}' is not supported";
-        errors.Add(new SyntaxError(codeChar, errorMsg));
+        errors.Add(codeChar, errorMsg);
         _logger.LogWarning(errorMsg);
     }
 

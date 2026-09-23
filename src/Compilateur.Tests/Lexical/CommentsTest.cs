@@ -22,7 +22,7 @@ public class CommentsTest : ScannerTestBase
     #region Methods
 
     [Fact]
-    private void When_Multiline_Comments_Then_They_Are_Ignored()
+    public void When_Block_Comment_Then_It_Is_Ignored()
     {
         const string code = """
                             /* These are comments written
@@ -41,7 +41,7 @@ public class CommentsTest : ScannerTestBase
     }
 
     [Fact]
-    private void When_Multiline_Comments_With_Double_Slash_Then_They_Are_Ignored()
+    public void When_Block_Comment_Contains_Double_Slash_Then_It_Is_Ignored()
     {
         const string code = """
                             /* These are comments written
@@ -62,7 +62,7 @@ public class CommentsTest : ScannerTestBase
     }
 
     [Fact]
-    private void When_Multiple_Comments_Not_Closed_Then_Error_Raised()
+    public void When_Block_Comment_Not_Closed_Then_Error_Raised()
     {
         const string code = """
                             /* If I open multiline comments
@@ -97,7 +97,7 @@ public class CommentsTest : ScannerTestBase
 
                 /* multiline comment on one line */
                 """)]
-    private void When_Single_Line_Comments_After_Lexeme_Then_Token_Is_Generated_And_Comment_Ignored(string code)
+    public void When_Comments_Around_Code_Then_Code_Tokens_Are_Kept(string code)
     {
         var res = Scanner.Tokenize(code);
 
@@ -105,12 +105,12 @@ public class CommentsTest : ScannerTestBase
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.ShouldNotBeEmpty(),
             () => res.Tokens.First().Lexeme.ShouldBe("var"),
-            () => res.Tokens.First().Type.ShouldBe(TokenType.Var)
+            () => res.Tokens.First().Kind.ShouldBe(TokenKind.Var)
         );
     }
 
     [Fact]
-    public void When_Single_Line_Comments_Then_They_Are_Ignored()
+    public void When_Line_Comment_Then_It_Is_Ignored()
     {
         const string code = """
                             // Hello World

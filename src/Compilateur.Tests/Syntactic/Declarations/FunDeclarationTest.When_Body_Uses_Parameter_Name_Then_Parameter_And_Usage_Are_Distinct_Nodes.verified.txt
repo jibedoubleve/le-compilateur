@@ -1,0 +1,34 @@
+﻿{
+  Body: {
+    Statements: [
+      {
+        Expression: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: a
+          }
+        },
+        Token: {
+          Kind: Identifier,
+          Lexeme: a
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Parameters: [
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: a
+      }
+    }
+  ],
+  Token: {
+    Kind: Identifier,
+    Lexeme: myFunc
+  }
+}

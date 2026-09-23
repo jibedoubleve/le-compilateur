@@ -1,6 +1,9 @@
+using Compilateur.Core;
 using Compilateur.Core.Extensions;
+using Compilateur.Core.Lexical;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Helpers;
+using Compilateur.Core.Syntactic.Nodes;
 using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Helpers;
@@ -33,7 +36,36 @@ public static class TestOutputHelperExtension
             );
         }
 
-        public void WriteFullContext(ParsingContext context, SyntaxNode? node = null)
+        public void WriteLexerContext(string code, TokenizeResult tokenization)
+        {
+            output.WriteLine($"""
+                              Code:
+                              -----
+                              
+                              {code}
+                              
+                              Errors:
+                              -------
+                              
+                              {tokenization.Errors.Format()}
+                              
+                              Tokens:
+                              -------
+                              """
+            );
+
+            output.WriteLine("""
+                             | Lexeme | Kind               |
+                             | ------ | ------------------ |
+                             """);
+            foreach (var token in tokenization.Tokens)
+            {
+                
+                output.WriteLine($"| {token.Lexeme, 6} | {token.Kind, -18} |");
+            }
+        }
+
+        public void WriteSyntaxContext(ParsingContext context, SyntaxNode? node = null)
         {
             output.WriteCode(context)
                 ;

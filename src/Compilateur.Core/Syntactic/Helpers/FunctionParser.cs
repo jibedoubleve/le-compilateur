@@ -1,4 +1,6 @@
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
+using Compilateur.Core.Syntactic.Nodes.Declaration;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
@@ -17,97 +19,104 @@ public static class FunctionParser
 
     #region Methods
 
-    private static IEnumerable<SyntaxNode>? ParseArguments(ParsingContext context)
+    private static IEnumerable<ParameterNode>? ParseParameters(ParsingContext context)
     {
-        if (context.Cursor.IsPeekOfType(TokenType.OpenParenthesis))
+        if (context.Cursor.IsPeekOfKind(TokenKind.OpenParenthesis))
         {
             context.Cursor.Consume(); // Consume '('
-            var arguments = new List<SyntaxNode>();
+            var parameters = new List<ParameterNode>();
 
-            var current = context.Cursor.Peek();
-            switch (current.Type)
+            var current = context.Cursor.Consume();
+            switch (current.Kind)
             {
-                case TokenType.CloseParenthesis:
-                    context.Cursor.Consume();
+                case TokenKind.CloseParenthesis:
                     return [];
-                case TokenType.Identifier:
-                    arguments.Add(SyntaxNode.Argument(current));
-                    context.Cursor.Consume();
+                case TokenKind.Identifier:
+                    parameters.Add(new ParameterNode(current));
+                    if (!ValidateParameterSeparator(context)) { return null; }
+
                     break;
+                default:
+                    context.AddError(
+                        $"Expected identifier, found '{current.Lexeme}'."
+                    );
+                    return null;
             }
 
-            while (current.Type != TokenType.Eof)
+            while (current.Kind != TokenKind.Eof)
             {
-                current = context.Cursor.Peek();
+                current = context.Cursor.Consume();
 
-                switch (current.Type)
+                switch (current.Kind)
                 {
-                    case TokenType.Comma:
-                        context.Cursor.Consume();
+                    case TokenKind.Comma:
+                        if (!context.Cursor.IsPeekOfKind(TokenKind.Identifier))
+                        {
+                            context.AddError($"Expected identifier, found '{context.Cursor.Peek().Lexeme}'.");
+                            return null;
+                        }
+
                         break;
-                    case TokenType.CloseParenthesis:
-                        context.Cursor.Consume();
-                        return ValidateArguments(arguments, context);
-                    case TokenType.Identifier:
-                        context.Cursor.Consume();
-                        arguments.Add(SyntaxNode.Argument(current));
+                    case TokenKind.CloseParenthesis:
+                        return ValidateParameters(parameters, context);
+                    case TokenKind.Identifier:
+                        if (!ValidateParameterSeparator(context)) { return null; }
+
+                        parameters.Add(new ParameterNode(current));
                         break;
                     default:
                         context.AddError(
-                            $"Expect identifier while found '{current.Lexeme}'."
+                            $"Expected identifier, found '{current.Lexeme}'."
                         );
                         return null;
                 }
             }
 
-            return ValidateArguments(arguments, context);
+            return ValidateParameters(parameters, context);
         }
 
         context.AddError("Expected '(' after function name.");
         return null;
     }
 
-    private static IEnumerable<SyntaxNode>? ValidateArguments(IEnumerable<SyntaxNode> arguments, ParsingContext context)
+    private static bool ValidateParameterSeparator(ParsingContext context)
     {
-        var args = arguments as SyntaxNode[] ?? [.. arguments];
+        if (context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis, TokenKind.Comma)) { return true; }
+
+        context.AddError($"Expected identifier, ',' or ')', found '{context.Cursor.Peek().Lexeme}'.");
+        return false;
+    }
+
+    private static IEnumerable<ParameterNode>? ValidateParameters(
+        IEnumerable<ParameterNode> parameters, ParsingContext context)
+    {
+        var args = parameters as ParameterNode[] ?? [.. parameters];
         if (args.Length <= MaxParams) { return args; }
 
         context.AddError($"Maximum number of {MaxParams} parameters exceeded.");
         return null;
     }
 
-    public static SyntaxNode? Parse(ParsingContext context)
+    public static FunctionDeclarationStatement? Parse(ParsingContext context)
     {
         var funcName = context.Cursor.Peek(); // Consume the identifier
-        if (funcName.Type != TokenType.Identifier)
+        if (funcName.Kind != TokenKind.Identifier)
         {
             context.AddError(
-                $"Expected a function identifier but found '{funcName.Lexeme}' [{funcName.Type}]"
+                $"Expected a function identifier, found '{funcName.Lexeme}' [{funcName.Kind}]"
             );
             return null;
         }
 
         context.Cursor.Consume(); // Consume the identifier
 
-        var arguments = ParseArguments(context);
-        if (arguments is null)
-        {
-            context.AddError(
-                $"Failed to parse arguments of function '{funcName.Lexeme}' - see the error above."
-            );
-            return null;
-        }
+        var parameters = ParseParameters(context);
+        if (parameters is null) { return null; }
 
         var block = BlockParser.Parse(context);
-        if (block is null)
-        {
-            context.AddError(
-                $"Failed to parse function '{funcName.Lexeme}' - see the error above."
-            );
-            return null;
-        }
+        if (block is null) { return null; }
 
-        return SyntaxNode.Function(funcName, [.. arguments, SyntaxNode.Body(block)]);
+        return new FunctionDeclarationStatement(funcName, parameters ?? [], block);
     }
 
     #endregion

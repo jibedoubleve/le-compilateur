@@ -1,0 +1,12 @@
+﻿{
+  Object: {
+    Token: {
+      Kind: Identifier,
+      Lexeme: foo
+    }
+  },
+  Token: {
+    Kind: Identifier,
+    Lexeme: bar
+  }
+}

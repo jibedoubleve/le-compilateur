@@ -1,5 +1,5 @@
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Xunit.Abstractions;
 
@@ -22,7 +22,7 @@ public class OrTest
     #region Methods
 
     [Fact]
-    public Task When_Complex_Expression_Parsed_Then_Valid_Node_Returned()
+    public Task When_Or_Chains_Groups_Then_Expected_Tree_Returned()
     {
         // arrange
         // (a or b) or (c or d) or (1 or 2)
@@ -44,36 +44,7 @@ public class OrTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        return Verify(node);
-    }
-
-    [Fact]
-    public Task When_Complex_Expression_With_Parenthesis_Parsed_Then_Valid_Node_Returned()
-    {
-        // arrange
-        // a or (b or c) or d or (1 or 2)
-        var context = new TokenCollectionBuilder()
-                      .Identifier("a")
-                      .Or()
-                      .BetweenParentheses(b =>
-                          b.Identifier("b")
-                           .Or()
-                           .Identifier("c"))
-                      .Or()
-                      .Identifier("d")
-                      .Or()
-                      .BetweenParentheses(b => b.Number(1)
-                                                .Or()
-                                                .Number(2))
-                      .BuildParsingContext();
-        var parser = new ExpressionParser();
-
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);

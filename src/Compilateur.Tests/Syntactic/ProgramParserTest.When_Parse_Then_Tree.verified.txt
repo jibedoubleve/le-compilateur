@@ -1,6 +1,0 @@
-﻿{
-  Cursor: {
-    IsAtEnd: true
-  },
-  Errors: []
-}

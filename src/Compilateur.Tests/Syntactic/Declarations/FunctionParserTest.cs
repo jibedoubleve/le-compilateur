@@ -1,5 +1,5 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -22,7 +22,7 @@ public class FunctionParserTest
 
     #region Methods
 
-    public static IEnumerable<object[]> BuildFunctionWithInvalidArguments()
+    public static IEnumerable<object[]> BuildInvalidFunDeclarations()
     {
         yield return
         [
@@ -35,6 +35,7 @@ public class FunctionParserTest
         [
             new TokenCollectionBuilder()
                 .Fun("DefinitionIsSemicolon")
+                .EmptyCall()
                 .BetweenCurlyBracket(b => b.Semicolon().Semicolon())
                 .BuildParsingContext()
         ];
@@ -42,6 +43,7 @@ public class FunctionParserTest
         [
             new TokenCollectionBuilder()
                 .Fun("MissingSemicolonInDefinition")
+                .EmptyCall()
                 .BetweenCurlyBracket(b => b.Number(4).Plus().Number(6)
                                            .Semicolon()
                                            .Semicolon())
@@ -51,6 +53,7 @@ public class FunctionParserTest
         [
             new TokenCollectionBuilder()
                 .Fun("MissingSemicolonInDefinition")
+                .EmptyCall()
                 .BetweenCurlyBracket(b => b.Number(4).Plus().Number(6)
                                            .Number(2).Plus().Number(3)
                                            .Semicolon())
@@ -61,6 +64,25 @@ public class FunctionParserTest
             new TokenCollectionBuilder()
                 .Fun("NoIdentifier")
                 .BetweenParentheses(b => b.Number(1))
+                .BetweenCurlyBracket()
+                .BuildParsingContext()
+        ];
+        yield return
+        [
+            new TokenCollectionBuilder()
+                .Fun("NoIdentifier")
+                .BetweenParentheses(b => b.Identifier("foo")
+                                          .Identifier("bar"))
+                .BetweenCurlyBracket()
+                .BuildParsingContext()
+        ];
+        yield return
+        [
+            new TokenCollectionBuilder()
+                .Fun("NoIdentifier")
+                .BetweenParentheses(b => b.Identifier("foo")
+                                          .Identifier("bar")
+                                          .Identifier("baz"))
                 .BetweenCurlyBracket()
                 .BuildParsingContext()
         ];
@@ -100,16 +122,40 @@ public class FunctionParserTest
         ];
     }
 
+    [Fact]
+    public void When_Fun_Body_Statement_Has_No_Semicolon_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Fun("foo").EmptyCall()
+                      .BetweenCurlyBracket(b =>
+                          b.Number(1)
+                           .Number(2))
+                      .BetweenCurlyBracket(b => b.Var("bar")
+                                                 .Semicolon())
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        //assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(),
+            () => node.ShouldBeNull()
+        );
+    }
+
     [Theory]
-    [MemberData(nameof(BuildFunctionWithInvalidArguments))]
-    public void When_Invalid_Arguments_Then_Error_Displayed(ParsingContext context)
+    [MemberData(nameof(BuildInvalidFunDeclarations))]
+    public void When_Fun_Declaration_Is_Invalid_Then_Error_Raised(ParsingContext context)
     {
         // arrange
         var parser = new DeclarationParser();
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         Assert.Multiple(
@@ -119,7 +165,7 @@ public class FunctionParserTest
     }
 
     [Fact]
-    public void When_No_Bracket_In_Definition_Then_Error_Displayed()
+    public void When_Fun_Has_No_Parentheses_Then_Single_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -131,12 +177,35 @@ public class FunctionParserTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         Assert.Multiple(
             () => node.ShouldBeNull(),
-            () => context.Errors.Count().ShouldBe(2)
+            () => context.Errors.Count().ShouldBe(1)
+        );
+    }
+
+
+    [Fact]
+    public void When_Fun_Parameters_Not_Closed_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Fun("foo")
+                      .OpenParenthesis()
+                      .Number(1)
+                      .Comma()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        //assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(),
+            () => node.ShouldBeNull()
         );
     }
 

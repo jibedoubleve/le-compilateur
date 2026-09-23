@@ -11,7 +11,7 @@ public class CodeCursorTest
     [InlineData("a\n\rb")]
     [InlineData("a\nb")]
     [InlineData("a\rb")]
-    public void When_Code_New_Line_Then_Jump_NewLine(string code)
+    public void When_Newline_Variant_Then_Next_Char_Is_On_Next_Line(string code)
     {
         // ARRANGE
         var stream = new CodeCursor(code);
@@ -39,7 +39,7 @@ public class CodeCursorTest
     [InlineData("a", 1)]
     [InlineData("aa", 2)]
     [InlineData("aaa", 3)]
-    public void When_Code_is_Empty_Then_Is_Eof(string code, int index)
+    public void When_All_Chars_Consumed_Then_IsAtEnd_Is_True(string code, int index)
     {
         var stream = new CodeCursor(code);
         for (var i = 0; i < index; i++)
@@ -97,7 +97,7 @@ public class CodeCursorTest
     }
 
     [Fact]
-    public void When_Peek_Then_No_Index_Update()
+    public void When_PeekNext_Called_Repeatedly_Then_Cursor_Does_Not_Advance()
     {
         const string code = "ab";
         var stream = new CodeCursor(code);

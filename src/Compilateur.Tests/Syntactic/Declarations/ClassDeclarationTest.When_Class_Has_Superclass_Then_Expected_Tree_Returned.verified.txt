@@ -1,0 +1,12 @@
+﻿{
+  SuperClass: {
+    Token: {
+      Kind: Identifier,
+      Lexeme: MySubClass
+    }
+  },
+  Token: {
+    Kind: Identifier,
+    Lexeme: MyClass
+  }
+}

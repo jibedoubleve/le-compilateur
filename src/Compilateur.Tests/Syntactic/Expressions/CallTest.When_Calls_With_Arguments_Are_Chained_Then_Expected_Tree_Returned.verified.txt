@@ -1,0 +1,52 @@
+﻿{
+  Callee: {
+    Arguments: [
+      {
+        Token: {
+          Kind: Identifier,
+          Lexeme: c
+        }
+      },
+      {
+        Token: {
+          Kind: Identifier,
+          Lexeme: d
+        }
+      }
+    ],
+    Callee: {
+      Arguments: [
+        {
+          Token: {
+            Kind: Identifier,
+            Lexeme: a
+          }
+        },
+        {
+          Token: {
+            Kind: Identifier,
+            Lexeme: b
+          }
+        }
+      ],
+      Callee: {
+        Token: {
+          Kind: Identifier,
+          Lexeme: foo
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Token: {
+    Kind: OpenParenthesis,
+    Lexeme: (
+  }
+}

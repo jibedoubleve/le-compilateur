@@ -1,0 +1,80 @@
+﻿{
+  Body: {
+    Statements: [
+      {
+        Expression: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 6,
+              Value: 6.0
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 5,
+              Value: 5.0
+            }
+          },
+          Token: {
+            Kind: Plus,
+            Lexeme: +
+          }
+        },
+        Token: {
+          Kind: Plus,
+          Lexeme: +
+        }
+      },
+      {
+        Expression: {
+          Left: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 6,
+              Value: 6.0
+            }
+          },
+          Right: {
+            Token: {
+              Kind: Numeric,
+              Lexeme: 8,
+              Value: 8.0
+            }
+          },
+          Token: {
+            Kind: Multiply,
+            Lexeme: *
+          }
+        },
+        Token: {
+          Kind: Multiply,
+          Lexeme: *
+        }
+      }
+    ],
+    Token: {
+      Kind: OpenCurlyBracket,
+      Lexeme: {
+    }
+  },
+  Parameters: [
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: a
+      }
+    },
+    {
+      Token: {
+        Kind: Identifier,
+        Lexeme: b
+      }
+    }
+  ],
+  Token: {
+    Kind: Identifier,
+    Lexeme: myFunc
+  }
+}

@@ -1,0 +1,26 @@
+﻿{
+  Statements: [
+    {
+      Body: {
+        Value: {
+          Token: {
+            Kind: String,
+            Lexeme: foo bar
+          }
+        },
+        Token: {
+          Kind: Print,
+          Lexeme: print
+        }
+      },
+      Token: {
+        Kind: For,
+        Lexeme: for
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

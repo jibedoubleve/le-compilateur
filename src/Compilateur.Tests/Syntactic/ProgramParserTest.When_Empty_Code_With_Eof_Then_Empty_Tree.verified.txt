@@ -1,6 +1,0 @@
-﻿{
-  Token: {
-    Lexeme: $,
-    Type: Eof
-  }
-}

@@ -1,6 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Statements;
+using Compilateur.Core.Syntactic.Nodes.Statements;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -37,7 +37,7 @@ public class WhileStatementTest
                 .Semicolon()
                 .BuildParsingContext()
         ];
-        
+
         yield return
         [
             new TokenCollectionBuilder()
@@ -141,7 +141,7 @@ public class WhileStatementTest
     {
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -159,12 +159,13 @@ public class WhileStatementTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
             () => node.ShouldNotBeNull(),
-            () => context.Errors.ShouldBeEmpty()
+            () => context.Errors.ShouldBeEmpty(),
+            ()=> node.ShouldBeOfType<WhileStatement>()
         );
     }
 

@@ -1,0 +1,71 @@
+﻿{
+  Left: {
+    Inner: {
+      Left: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 1,
+          Value: 1.0
+        }
+      },
+      Right: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 6,
+          Value: 6.0
+        }
+      },
+      Token: {
+        Kind: Plus,
+        Lexeme: +
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Right: {
+    Left: {
+      Inner: {
+        Left: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 4,
+            Value: 4.0
+          }
+        },
+        Right: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 8,
+            Value: 8.0
+          }
+        },
+        Token: {
+          Kind: Multiply,
+          Lexeme: *
+        }
+      },
+      Token: {
+        Kind: OpenParenthesis,
+        Lexeme: (
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 2,
+        Value: 2.0
+      }
+    },
+    Token: {
+      Kind: Divided,
+      Lexeme: /
+    }
+  },
+  Token: {
+    Kind: Minus,
+    Lexeme: -
+  }
+}

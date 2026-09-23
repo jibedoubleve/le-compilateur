@@ -22,41 +22,41 @@ public sealed record StringRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor) => codeCursor.Peek() == '"';
 
-    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeCursor.Consume();
+        var first = cursor.Consume();
         var strBuilder = new StringBuilder();
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (codeCursor.IsAtEnd)
+            if (cursor.IsAtEnd)
             {
-                errors?.Add(new SyntaxError(first, "Reached end of file before closing quotes (\")"));
+                errors?.Add(first, "Reached end of file before closing quotes (\")");
                 return null;
             }
 
-            if (codeCursor.Peek() == '"')
+            if (cursor.Peek() == '"')
             {
-                codeCursor.Consume();
+                cursor.Consume();
                 var lexeme = strBuilder.ToString();
                 return new Token
                 {
                     Lexeme = $"\"{lexeme}\"",
-                    Type = TokenType.String,
+                    Kind = TokenKind.String,
                     Column = first.Column,
                     Line = first.Line,
                     Value = lexeme
                 };
             }
 
-            var next = codeCursor.Consume();
+            var next = cursor.Consume();
             strBuilder.Append(next.Char);
         }
 
         var msg =
             $"String starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
             $"maximum length of {MaxSize} characters.";
-        errors?.Add(new SyntaxError(first, msg));
+        errors?.Add(first, msg);
         return null;
 
         #endregion

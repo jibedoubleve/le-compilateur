@@ -1,0 +1,128 @@
+﻿{
+  Functions: [
+    {
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 6,
+                  Value: 6.0
+                }
+              },
+              Right: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 5,
+                  Value: 5.0
+                }
+              },
+              Token: {
+                Kind: Plus,
+                Lexeme: +
+              }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
+            }
+          }
+        ],
+        Token: {
+          Kind: OpenCurlyBracket,
+          Lexeme: {
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: myFunc
+      }
+    },
+    {
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 9,
+                  Value: 9.0
+                }
+              },
+              Right: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 8,
+                  Value: 8.0
+                }
+              },
+              Token: {
+                Kind: Divided,
+                Lexeme: /
+              }
+            },
+            Token: {
+              Kind: Divided,
+              Lexeme: /
+            }
+          }
+        ],
+        Token: {
+          Kind: OpenCurlyBracket,
+          Lexeme: {
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: myOtherFunc
+      }
+    },
+    {
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 1,
+                  Value: 1.0
+                }
+              },
+              Right: {
+                Token: {
+                  Kind: Numeric,
+                  Lexeme: 2,
+                  Value: 2.0
+                }
+              },
+              Token: {
+                Kind: Multiply,
+                Lexeme: *
+              }
+            },
+            Token: {
+              Kind: Multiply,
+              Lexeme: *
+            }
+          }
+        ],
+        Token: {
+          Kind: OpenCurlyBracket,
+          Lexeme: {
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: myThirdFunc
+      }
+    }
+  ],
+  Token: {
+    Kind: Identifier,
+    Lexeme: MyClass
+  }
+}

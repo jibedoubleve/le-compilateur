@@ -1,0 +1,26 @@
+﻿{
+  Value: {
+    Left: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 1,
+        Value: 1.0
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 2,
+        Value: 2.0
+      }
+    },
+    Token: {
+      Kind: Plus,
+      Lexeme: +
+    }
+  },
+  Token: {
+    Kind: Print,
+    Lexeme: print
+  }
+}

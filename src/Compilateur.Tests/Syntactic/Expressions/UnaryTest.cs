@@ -1,8 +1,8 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -25,7 +25,7 @@ public class UnaryTest
 
     #region Methods
 
-    public static IEnumerable<object[]> BuildCascadingUnaryOperator()
+    public static IEnumerable<object[]> BuildNestedUnaryOperators()
     {
         yield return // !!foo
         [
@@ -79,23 +79,7 @@ public class UnaryTest
         ];
     }
 
-    public static IEnumerable<object[]> BuildInvalidUnaryOperator()
-    {
-        yield return // !if
-        [
-            new TokenCollectionBuilder().Bang()
-                                        .If()
-                                        .BuildParsingContext()
-        ];
-        yield return // -;
-        [
-            new TokenCollectionBuilder().Minus()
-                                        .Semicolon()
-                                        .BuildParsingContext()
-        ];
-    }
-
-    public static IEnumerable<object[]> BuildSimpleUnaryOperator()
+    public static IEnumerable<object[]> BuildSingleUnaryOperators()
     {
         yield return // !foo
         [
@@ -135,30 +119,44 @@ public class UnaryTest
         ];
     }
 
-    [Theory]
-    [MemberData(nameof(BuildCascadingUnaryOperator))]
-    public void When_Cascading_Unary_Operator_Parsed_Then_Valid_Node_Returned(ParsingContext context)
+    public static IEnumerable<object[]> BuildUnaryWithInvalidOperand()
     {
-        // arrange
+        yield return // !if
+        [
+            new TokenCollectionBuilder().Bang()
+                                        .If()
+                                        .BuildParsingContext()
+        ];
+        yield return // -;
+        [
+            new TokenCollectionBuilder().Minus()
+                                        .Semicolon()
+                                        .BuildParsingContext()
+        ];
+    }
+
+    [Theory]
+    [MemberData(nameof(BuildSingleUnaryOperators))]
+    public void When_Single_Unary_Operator_Then_Unary_Node_Returned(ParsingContext context)
+    {
+        // Arrange
         var parser = new ExpressionParser();
 
-        // act
-        var matches = parser.Matches(context);
+        // Act
+
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
-        // assert
-        matches.ShouldBeTrue(context.FormatErrors());
-        node.ShouldNotBeNull(context.FormatErrors());
-
+        // Assert
         Assert.Multiple(
-            () => node.Children.Count().ShouldBe(1),
-            () => node.Token.Type.ShouldBeOneOf(TokenType.Bang, TokenType.Minus)
+            () => node.ShouldNotBeNull(),
+            () => node.ShouldBeOfType<UnaryExpression>(),
+            () => ((UnaryExpression)node!).Operand.ShouldNotBeNull()
         );
     }
 
     [Fact]
-    public void When_Cascading_Unary_Parsed_Then_Valid_Node_Returned()
+    public Task When_Unary_Applies_To_Group_Then_Group_Node_Is_Kept()
     {
         // arrange
         // !(!(!a)) 
@@ -175,50 +173,51 @@ public class UnaryTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
-        Assert.Multiple(
-            () => node.ShouldNotBeNull(),
-            () => node!.Token.Type.ShouldBe(TokenType.Bang),
-            () => node!.Child(0).Token.Type.ShouldBe(TokenType.Bang),
-            () => node!.Child(0).Child(0).Token.Type.ShouldBe(TokenType.Bang)
-        );
+        return Verify(node);
     }
 
     [Theory]
-    [MemberData(nameof(BuildInvalidUnaryOperator))]
-    public void When_Invalid_Unary_Parsed_Then_Errors_Added(ParsingContext context)
+    [MemberData(nameof(BuildUnaryWithInvalidOperand))]
+    public void When_Unary_Operand_Is_Invalid_Then_Single_Error_Raised(ParsingContext context)
     {
         // arrange
         var parser = new ExpressionParser();
 
         // act
-        var match = parser.Matches(context);
+        parser.Matches(context);
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
-        match.ShouldBeTrue();
-        context.Errors.Count().ShouldBe(1);
+        Assert.Multiple(
+            () => node.ShouldBeNull(),
+            () => context.Errors.Count().ShouldBe(1)
+        );
     }
 
     [Theory]
-    [MemberData(nameof(BuildSimpleUnaryOperator))]
-    public void When_Simple_Operation_Then_Valid_Node_Returned(ParsingContext context)
+    [MemberData(nameof(BuildNestedUnaryOperators))]
+    public void When_Unary_Operators_Are_Nested_Then_Unary_Node_Returned(ParsingContext context)
     {
-        // Arrange
+        // arrange
         var parser = new ExpressionParser();
 
-        // Act
-
+        // act
+        var matches = parser.Matches(context);
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
-        // Assert
+        // assert
+        matches.ShouldBeTrue(context.FormatErrors());
+        node.ShouldNotBeNull(context.FormatErrors());
+
         Assert.Multiple(
-            () => node.ShouldNotBeNull(),
-            () => node!.Children.Count().ShouldBe(1)
+            () => node.ShouldBeOfType<UnaryExpression>(),
+            () => ((UnaryExpression)node).Operand.ShouldNotBeNull(),
+            () => node.Token.Kind.ShouldBeOneOf(TokenKind.Bang, TokenKind.Minus)
         );
     }
 

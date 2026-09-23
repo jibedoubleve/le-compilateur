@@ -1,0 +1,24 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Method: {
+          Kind: Identifier,
+          Lexeme: foo
+        },
+        Token: {
+          Kind: Super,
+          Lexeme: super
+        }
+      },
+      Token: {
+        Kind: Super,
+        Lexeme: super
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

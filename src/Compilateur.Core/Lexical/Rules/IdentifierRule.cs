@@ -10,24 +10,24 @@ public sealed record IdentifierRule : ITokenRule
 
     private const int MaxSize = 10_000;
 
-    private readonly Dictionary<string, TokenType> _keywords = new()
+    private readonly Dictionary<string, TokenKind> _keywords = new()
     {
-        { "and", TokenType.And },
-        { "or", TokenType.Or },
-        { "nil", TokenType.Nil },
-        { "if", TokenType.If },
-        { "else", TokenType.Else },
-        { "while", TokenType.While },
-        { "for", TokenType.For },
-        { "fun", TokenType.Fun },
-        { "var", TokenType.Var },
-        { "class", TokenType.Class },
-        { "this", TokenType.This },
-        { "super", TokenType.Super },
-        { "return", TokenType.Return },
-        { "true", TokenType.True },
-        { "false", TokenType.False },
-        { "print", TokenType.Print }
+        { "and", TokenKind.And },
+        { "or", TokenKind.Or },
+        { "nil", TokenKind.Nil },
+        { "if", TokenKind.If },
+        { "else", TokenKind.Else },
+        { "while", TokenKind.While },
+        { "for", TokenKind.For },
+        { "fun", TokenKind.Fun },
+        { "var", TokenKind.Var },
+        { "class", TokenKind.Class },
+        { "this", TokenKind.This },
+        { "super", TokenKind.Super },
+        { "return", TokenKind.Return },
+        { "true", TokenKind.True },
+        { "false", TokenKind.False },
+        { "print", TokenKind.Print }
     };
 
     #endregion
@@ -40,7 +40,7 @@ public sealed record IdentifierRule : ITokenRule
 
     #region Methods
 
-    private bool IsValidChar(CodeCursor codeCursor)
+    private static bool IsValidChar(CodeCursor codeCursor)
     {
         if (codeCursor.IsAtEnd)
         {
@@ -64,16 +64,16 @@ public sealed record IdentifierRule : ITokenRule
                (char.IsAsciiLetter(character.Value) || character == '_');
     }
 
-    public Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
     {
-        var first = codeCursor.Consume();
+        var first = cursor.Consume();
 
         var strBuilder = new StringBuilder();
         strBuilder.Append(first.Char);
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (!IsValidChar(codeCursor))
+            if (!IsValidChar(cursor))
             {
                 var lexeme = strBuilder.ToString();
                 if (_keywords.TryGetValue(lexeme, out var type))
@@ -83,7 +83,7 @@ public sealed record IdentifierRule : ITokenRule
                         Column = first.Column,
                         Line = first.Line,
                         Lexeme = lexeme,
-                        Type = type
+                        Kind = type
                     };
                 }
 
@@ -92,18 +92,18 @@ public sealed record IdentifierRule : ITokenRule
                     Column = first.Column,
                     Line = first.Line,
                     Lexeme = lexeme,
-                    Type = TokenType.Identifier,
+                    Kind = TokenKind.Identifier,
                     Value = lexeme
                 };
             }
 
-            var next = codeCursor.Consume();
+            var next = cursor.Consume();
             strBuilder.Append(next.Char);
         }
 
         var msg = $"Identifier starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
                   $"maximum length of {MaxSize} characters.";
-        errors?.Add(new SyntaxError(first, msg));
+        errors?.Add(first, msg);
         return null;
     }
 

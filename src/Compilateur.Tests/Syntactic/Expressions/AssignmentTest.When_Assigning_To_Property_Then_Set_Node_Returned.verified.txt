@@ -1,0 +1,33 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Object: {
+          Token: {
+            Kind: Identifier,
+            Lexeme: a
+          }
+        },
+        Value: {
+          Token: {
+            Kind: Numeric,
+            Lexeme: 15,
+            Value: 15.0
+          }
+        },
+        Token: {
+          Kind: Identifier,
+          Lexeme: b
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: b
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

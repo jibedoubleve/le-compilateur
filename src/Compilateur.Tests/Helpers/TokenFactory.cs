@@ -15,7 +15,7 @@ public static class TokenFactory
             {
                 Column = 0,
                 Line = 0,
-                Type = TokenType.Identifier,
+                Kind = TokenKind.Identifier,
                 Value = "",
                 Lexeme = ""
             });
@@ -23,7 +23,7 @@ public static class TokenFactory
 
         list.Add(new Token
         {
-            Type = TokenType.Eof,
+            Kind = TokenKind.Eof,
             Line = 0,
             Column = 0,
             Lexeme = "$"

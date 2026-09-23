@@ -1,0 +1,21 @@
+﻿{
+  Statements: [
+    {
+      Initialiser: {
+        Token: {
+          Kind: Numeric,
+          Lexeme: 14,
+          Value: 14.0
+        }
+      },
+      Token: {
+        Kind: Identifier,
+        Lexeme: a
+      }
+    }
+  ],
+  Token: {
+    Kind: OpenCurlyBracket,
+    Lexeme: {
+  }
+}

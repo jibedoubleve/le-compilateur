@@ -1,0 +1,25 @@
+﻿{
+  Expression: {
+    Left: {
+      Token: {
+        Kind: Identifier,
+        Lexeme: foo
+      }
+    },
+    Right: {
+      Token: {
+        Kind: Numeric,
+        Lexeme: 4,
+        Value: 4.0
+      }
+    },
+    Token: {
+      Kind: GreaterThan,
+      Lexeme: >
+    }
+  },
+  Token: {
+    Kind: Return,
+    Lexeme: return
+  }
+}

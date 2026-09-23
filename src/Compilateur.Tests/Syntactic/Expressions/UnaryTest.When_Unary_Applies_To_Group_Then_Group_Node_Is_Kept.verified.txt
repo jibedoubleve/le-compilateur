@@ -1,0 +1,36 @@
+﻿{
+  Operand: {
+    Inner: {
+      Operand: {
+        Inner: {
+          Operand: {
+            Token: {
+              Kind: Identifier,
+              Lexeme: a
+            }
+          },
+          Token: {
+            Kind: Bang,
+            Lexeme: !
+          }
+        },
+        Token: {
+          Kind: OpenParenthesis,
+          Lexeme: (
+        }
+      },
+      Token: {
+        Kind: Bang,
+        Lexeme: !
+      }
+    },
+    Token: {
+      Kind: OpenParenthesis,
+      Lexeme: (
+    }
+  },
+  Token: {
+    Kind: Bang,
+    Lexeme: !
+  }
+}

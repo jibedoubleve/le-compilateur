@@ -1,0 +1,49 @@
+﻿{
+  Statements: [
+    {
+      Statements: [
+        {
+          Statements: [
+            {
+              Expression: {
+                Left: {
+                  Token: {
+                    Kind: Identifier,
+                    Lexeme: foo
+                  }
+                },
+                Right: {
+                  Token: {
+                    Kind: Numeric,
+                    Lexeme: 5,
+                    Value: 5.0
+                  }
+                },
+                Token: {
+                  Kind: Plus,
+                  Lexeme: +
+                }
+              },
+              Token: {
+                Kind: Plus,
+                Lexeme: +
+              }
+            }
+          ],
+          Token: {
+            Kind: OpenCurlyBracket,
+            Lexeme: {
+          }
+        }
+      ],
+      Token: {
+        Kind: OpenCurlyBracket,
+        Lexeme: {
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

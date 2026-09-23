@@ -1,0 +1,72 @@
+﻿{
+  Statements: [
+    {
+      Expression: {
+        Left: {
+          Inner: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 1,
+                Value: 1.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 2,
+                Value: 2.0
+              }
+            },
+            Token: {
+              Kind: Plus,
+              Lexeme: +
+            }
+          },
+          Token: {
+            Kind: OpenParenthesis,
+            Lexeme: (
+          }
+        },
+        Right: {
+          Inner: {
+            Left: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 3,
+                Value: 3.0
+              }
+            },
+            Right: {
+              Token: {
+                Kind: Numeric,
+                Lexeme: 4,
+                Value: 4.0
+              }
+            },
+            Token: {
+              Kind: Multiply,
+              Lexeme: *
+            }
+          },
+          Token: {
+            Kind: OpenParenthesis,
+            Lexeme: (
+          }
+        },
+        Token: {
+          Kind: Divided,
+          Lexeme: /
+        }
+      },
+      Token: {
+        Kind: Divided,
+        Lexeme: /
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

@@ -1,4 +1,4 @@
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -34,7 +34,7 @@ public class BlockStatementTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         Assert.Multiple(
@@ -44,7 +44,28 @@ public class BlockStatementTest
     }
 
     [Fact]
-    public Task When_Block_With_Multiple_Statements_Then_Tree_Returned()
+    public Task When_Block_Contains_Var_Declaration_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .BetweenCurlyBracket(b =>
+                          b.Var("a")
+                           .Equal()
+                           .Number(14)
+                           .Semicolon())
+                      .BuildParsingContext();
+        var parser = new StatementParser();
+
+        // act
+        var node = parser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Block_With_Multiple_Statements_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -56,14 +77,14 @@ public class BlockStatementTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Block_With_Simple_Print_Then_Tree_Returned()
+    public Task When_Block_With_Simple_Print_Then_Expected_Tree_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
@@ -73,26 +94,25 @@ public class BlockStatementTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Declaring_Fun_Then_Tree_Returned()
+    public Task When_Blocks_Are_Nested_Then_Node_Returned()
     {
         // arrange
         var context = new TokenCollectionBuilder()
-                      .BetweenCurlyBracket(b =>
-                          b.Fun("foo")
-                           .BetweenCurlyBracket(d =>
-                               d.Print("foo_far").Semicolon()))
+                      .OpenCurlyBracket().OpenCurlyBracket()
+                      .Identifier("foo").Plus().Number(5).Semicolon()
+                      .CloseCurlyBracket().CloseCurlyBracket()
                       .BuildParsingContext();
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);
@@ -109,7 +129,27 @@ public class BlockStatementTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Fun_Declared_In_Block_Then_Expected_Tree_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .BetweenCurlyBracket(b =>
+                          b.Fun("foo")
+                           .EmptyCall()
+                           .BetweenCurlyBracket(d =>
+                               d.Print("foo_far").Semicolon()))
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);
@@ -126,31 +166,13 @@ public class BlockStatementTest
 
         // act
         var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         Assert.Multiple(
             () => node.ShouldBeNull(),
             () => context.Errors.ShouldNotBeEmpty()
         );
-    }
-
-    [Fact]
-    public Task When_Recursive_Block_Then_Node_Returned()
-    {
-        // arrange
-        var context = new TokenCollectionBuilder()
-                      .OpenCurlyBracket().OpenCurlyBracket()
-                      .Identifier("foo").Plus().Number(5).Semicolon()
-                      .CloseCurlyBracket().CloseCurlyBracket()
-                      .BuildParsingContext();
-
-        // act
-        var node = ProgramParser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        return Verify(node);
     }
 
     #endregion

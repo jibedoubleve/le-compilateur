@@ -1,0 +1,6 @@
+﻿{
+  Token: {
+    Kind: Identifier,
+    Lexeme: MyClass
+  }
+}

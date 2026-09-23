@@ -1,0 +1,68 @@
+﻿{
+  Statements: [
+    {
+      Functions: [
+        {
+          Body: {
+            Statements: [
+              {
+                Expression: {
+                  Left: {
+                    Token: {
+                      Kind: Numeric,
+                      Lexeme: 1,
+                      Value: 1.0
+                    }
+                  },
+                  Right: {
+                    Token: {
+                      Kind: Numeric,
+                      Lexeme: 2,
+                      Value: 2.0
+                    }
+                  },
+                  Token: {
+                    Kind: Plus,
+                    Lexeme: +
+                  }
+                },
+                Token: {
+                  Kind: Plus,
+                  Lexeme: +
+                }
+              }
+            ],
+            Token: {
+              Kind: OpenCurlyBracket,
+              Lexeme: {
+            }
+          },
+          Token: {
+            Kind: Identifier,
+            Lexeme: bar
+          }
+        }
+      ],
+      Token: {
+        Kind: Identifier,
+        Lexeme: Foo
+      }
+    },
+    {
+      Value: {
+        Token: {
+          Kind: String,
+          Lexeme: Hello world
+        }
+      },
+      Token: {
+        Kind: Print,
+        Lexeme: print
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

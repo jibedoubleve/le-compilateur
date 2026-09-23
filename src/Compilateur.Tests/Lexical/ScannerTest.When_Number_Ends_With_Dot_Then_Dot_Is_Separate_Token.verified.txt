@@ -1,0 +1,20 @@
+﻿[
+  {
+    Column: 1,
+    Kind: Numeric,
+    Lexeme: 5,
+    Line: 1,
+    Value: 5.0
+  },
+  {
+    Column: 2,
+    Lexeme: .,
+    Line: 1
+  },
+  {
+    Column: 1,
+    Kind: Eof,
+    Lexeme: $,
+    Line: 2
+  }
+]

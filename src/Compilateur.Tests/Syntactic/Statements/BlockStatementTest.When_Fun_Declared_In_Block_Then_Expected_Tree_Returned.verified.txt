@@ -1,0 +1,42 @@
+﻿{
+  Statements: [
+    {
+      Statements: [
+        {
+          Body: {
+            Statements: [
+              {
+                Value: {
+                  Token: {
+                    Kind: String,
+                    Lexeme: foo_far
+                  }
+                },
+                Token: {
+                  Kind: Print,
+                  Lexeme: print
+                }
+              }
+            ],
+            Token: {
+              Kind: OpenCurlyBracket,
+              Lexeme: {
+            }
+          },
+          Token: {
+            Kind: Identifier,
+            Lexeme: foo
+          }
+        }
+      ],
+      Token: {
+        Kind: OpenCurlyBracket,
+        Lexeme: {
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}

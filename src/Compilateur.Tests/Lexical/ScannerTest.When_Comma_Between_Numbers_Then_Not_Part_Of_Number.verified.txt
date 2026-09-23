@@ -1,0 +1,47 @@
+﻿[
+  {
+    Column: 1,
+    Kind: Identifier,
+    Lexeme: f,
+    Line: 1,
+    Value: f
+  },
+  {
+    Column: 2,
+    Kind: OpenParenthesis,
+    Lexeme: (,
+    Line: 1
+  },
+  {
+    Column: 3,
+    Kind: Numeric,
+    Lexeme: 1,
+    Line: 1,
+    Value: 1.0
+  },
+  {
+    Column: 4,
+    Kind: Comma,
+    Lexeme: ,,
+    Line: 1
+  },
+  {
+    Column: 5,
+    Kind: Numeric,
+    Lexeme: 2,
+    Line: 1,
+    Value: 2.0
+  },
+  {
+    Column: 6,
+    Kind: CloseParenthesis,
+    Lexeme: ),
+    Line: 1
+  },
+  {
+    Column: 1,
+    Kind: Eof,
+    Lexeme: $,
+    Line: 2
+  }
+]

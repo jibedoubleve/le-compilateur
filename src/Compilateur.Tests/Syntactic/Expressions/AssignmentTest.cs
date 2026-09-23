@@ -1,7 +1,6 @@
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
-using Compilateur.Core.Syntactic.Rules.Expressions;
+using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -24,7 +23,7 @@ public class AssignmentTest
 
     #region Methods
 
-    public static IEnumerable<object[]> BuildInvalidExpression()
+    public static IEnumerable<object[]> BuildValidAssignments()
     {
         yield return
         [
@@ -49,68 +48,109 @@ public class AssignmentTest
     }
 
     [Fact]
-    public void When_Invalid_Tokens_Then_Error_Raised()
+    public void When_Assignment_Has_No_Value_Then_Error_Raised()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Equal()
+                      .Semicolon()
+                      .BuildParsingContext();
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+        
+        // assert
+        Assert.Multiple(
+            () => node.ShouldBeNull(),
+            () => context.Errors.ShouldNotBeEmpty(context.FormatErrors())
+        );
+    }
+    [Fact]
+    public void When_Assignment_Target_Is_Group_Then_Error_Raised()
+    {
+        // assert
+        var context = new TokenCollectionBuilder()
+                      .BetweenParentheses(b => b.Identifier("foo"))
+                      .Equal().Number(1)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        // act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        Assert.Multiple(
+            () => context.Errors.ShouldNotBeEmpty(),
+            () => node.ShouldBeNull()
+        );
+    }
+
+    [Fact]
+    public void When_Assignment_Target_Is_Literal_Then_Error_Raised()
     {
         // arrange
         var context = new TokenCollectionBuilder()
                       .Number(1)
                       .Equal()
                       .Number(2)
+                      .Semicolon()
                       .BuildParsingContext();
-        var parser = new ExpressionParser();
 
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        Assert.Multiple(
-            () => node.ShouldBeNull(),
-            () => context.Errors.ShouldNotBeEmpty()
-        );
-    }
-
-    [Theory]
-    [MemberData(nameof(BuildInvalidExpression))]
-    public void When_Valid_Expression_Then_Syntax_Tree_Returned(ParsingContext context)
-    {
-        // arrange
-        var parser = new ExpressionParser();
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        Assert.Multiple(
-            () => context.Errors.ShouldBeEmpty(context.FormatErrors()),
-            () => node.ShouldNotBeNull()
-        );
-    }
-
-    [Fact]
-    public void When_Var_Declared_And_Assigned_Then_Error_Raised()
-    {
-        // arrange
-        // var myVar = (1+6) 
-        var context = new TokenCollectionBuilder()
-                      .Var("myVar")
-                      .Equal()
-                      .BetweenParentheses(b => b.Number(1)
-                                                .Plus()
-                                                .Number(6))
-                      .BuildParsingContext();
-        var parser = new ExpressionParser();
-
-        // act
-        var node = parser.Parse(context);
-
-        _output.WriteFullContext(context, node);
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
             () => context.Errors.ShouldNotBeEmpty(context.FormatErrors()),
             () => node.ShouldBeNull()
         );
+    }
+
+    [Fact]
+    public Task When_Assignments_Are_Chained_Then_Tree_Is_Right_Associative()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Equal()
+                      .Identifier("b")
+                      .Equal()
+                      .Identifier("c")
+                      .Equal()
+                      .Number(15)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
+    }
+
+    [Fact]
+    public Task When_Assigning_To_Property_Then_Set_Node_Returned()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Identifier("a")
+                      .Dot()
+                      .Identifier("b")
+                      .Equal()
+                      .Number(15)
+                      .Semicolon()
+                      .BuildParsingContext();
+
+        //act
+        var node = ProgramParser.Parse(context);
+        _output.WriteSyntaxContext(context: context, node: node);
+
+        // assert
+        return Verify(node);
     }
 
     #endregion

@@ -15,7 +15,7 @@ public interface ITokenRule
 
     bool Matches(CodeCursor codeCursor);
 
-    Token? Scan(CodeCursor codeCursor, SyntaxErrorCollection? errors = null);
+    Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null);
 
     #endregion
 }

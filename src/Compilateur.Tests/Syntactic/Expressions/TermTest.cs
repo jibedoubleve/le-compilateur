@@ -1,5 +1,6 @@
 using Compilateur.Core.Syntactic;
-using Compilateur.Core.Syntactic.Rules;
+using Compilateur.Core.Syntactic.Parsers;
+using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;
@@ -21,29 +22,6 @@ public class TermTest
     #endregion
 
     #region Methods
-
-    [Fact]
-    public Task When_Parsing_Algebric_Equation_Then_Algebric_Logic_Is_Used()
-    {
-        // arrange
-        var context = new TokenCollectionBuilder()
-                      .Number(1)
-                      .Plus()
-                      .Number(9)
-                      .Multiply()
-                      .Number(2)
-                      .Plus()
-                      .Number(8)
-                      .BuildParsingContext();
-        var parser = new ExpressionParser();
-
-        // act
-        var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
-
-        // assert
-        return Verify(node);
-    }
 
     public static IEnumerable<object[]> BuildTermOperations()
     {
@@ -155,7 +133,7 @@ public class TermTest
     }
 
     [Fact]
-    public Task When_Complex_Expression_Parsed_Then_Valid_Node_Returned()
+    public Task When_Subtractions_Are_Chained_Then_Tree_Is_Left_Associative()
     {
         // arrange
 
@@ -172,39 +150,37 @@ public class TermTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Complex_Term_Operation_Then_No_Compilation_Error()
+    public Task When_Term_And_Factor_Mixed_Then_Factor_Binds_Tighter()
     {
         // arrange
-
-        // 10 - 3 - 2
         var context = new TokenCollectionBuilder()
                       .Number(1)
-                      .Minus().Number(2)
-                      .Minus().Number(3)
-                      .Minus().Number(4)
-                      .Minus().Number(5)
-                      .Minus().Number(6)
-                      .Semicolon()
+                      .Plus()
+                      .Number(9)
+                      .Multiply()
+                      .Number(2)
+                      .Plus()
+                      .Number(8)
                       .BuildParsingContext();
         var parser = new ExpressionParser();
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         return Verify(node);
     }
 
     [Fact]
-    public Task When_Two_Numbers_Follows_Then_Maximal_Munch()
+    public Task When_Token_Cannot_Extend_Expression_Then_Parsing_Stops_Before_It()
     {
         /* This parser should eat the 1+2 and ignore the rest
          * This is expected as the check of EOF or the ';'
@@ -224,7 +200,7 @@ public class TermTest
 
         // act
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
         Assert.Multiple(
@@ -237,7 +213,7 @@ public class TermTest
 
     [Theory]
     [MemberData(nameof(BuildTermOperations))]
-    public void When_Valid_Term_Operation_Then_Valid_Node_Returned(ParsingContext context)
+    public void When_Valid_Term_Operation_Then_Parser_Matches(ParsingContext context)
     {
         // arrange
         var parser = new ExpressionParser();
@@ -245,7 +221,7 @@ public class TermTest
         // act
         var match = parser.Matches(context);
         var node = parser.Parse(context);
-        _output.WriteFullContext(context, node);
+        _output.WriteSyntaxContext(context: context, node: node);
 
         // arrange
         match.ShouldBeTrue();

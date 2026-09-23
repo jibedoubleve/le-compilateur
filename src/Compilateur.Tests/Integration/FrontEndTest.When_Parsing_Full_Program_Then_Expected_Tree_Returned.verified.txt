@@ -1,0 +1,355 @@
+﻿{
+  Statements: [
+    {
+      Initialiser: {
+        Token: {
+          Column: 15,
+          Kind: Numeric,
+          Lexeme: 42,
+          Line: 2,
+          Value: 42.0
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: android,
+        Line: 2,
+        Value: android
+      }
+    },
+    {
+      Initialiser: {
+        Token: {
+          Column: 10,
+          Kind: Numeric,
+          Lexeme: 3.14,
+          Line: 4,
+          Value: 3.14
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: pi,
+        Line: 4,
+        Value: pi
+      }
+    },
+    {
+      Initialiser: {
+        Token: {
+          Column: 12,
+          Kind: String,
+          Lexeme: "hello world",
+          Line: 5,
+          Value: hello world
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: name,
+        Line: 5,
+        Value: name
+      }
+    },
+    {
+      Initialiser: {
+        Token: {
+          Column: 12,
+          Kind: True,
+          Lexeme: true,
+          Line: 6
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: flag,
+        Line: 6,
+        Value: flag
+      }
+    },
+    {
+      Initialiser: {
+        Token: {
+          Column: 15,
+          Kind: Nil,
+          Lexeme: nil,
+          Line: 7
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: nothing,
+        Line: 7,
+        Value: nothing
+      }
+    },
+    {
+      Condition: {
+        Left: {
+          Left: {
+            Token: {
+              Column: 5,
+              Kind: Identifier,
+              Lexeme: android,
+              Line: 10,
+              Value: android
+            }
+          },
+          Right: {
+            Token: {
+              Column: 16,
+              Kind: Numeric,
+              Lexeme: 10,
+              Line: 10,
+              Value: 10.0
+            }
+          },
+          Token: {
+            Column: 13,
+            Kind: GreaterThanOrEqual,
+            Lexeme: >=,
+            Line: 10
+          }
+        },
+        Right: {
+          Token: {
+            Column: 23,
+            Kind: Identifier,
+            Lexeme: flag,
+            Line: 10,
+            Value: flag
+          }
+        },
+        Token: {
+          Column: 19,
+          Kind: And,
+          Lexeme: and,
+          Line: 10
+        }
+      },
+      ElseBranch: {
+        Statements: [
+          {
+            Value: {
+              Token: {
+                Column: 11,
+                Kind: Identifier,
+                Lexeme: name,
+                Line: 13,
+                Value: name
+              }
+            },
+            Token: {
+              Column: 5,
+              Kind: Print,
+              Lexeme: print,
+              Line: 13
+            }
+          }
+        ],
+        Token: {
+          Column: 8,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 12
+        }
+      },
+      ThenBranch: {
+        Statements: [
+          {
+            Value: {
+              Left: {
+                Token: {
+                  Column: 11,
+                  Kind: Identifier,
+                  Lexeme: android,
+                  Line: 11,
+                  Value: android
+                }
+              },
+              Right: {
+                Token: {
+                  Column: 21,
+                  Kind: Identifier,
+                  Lexeme: pi,
+                  Line: 11,
+                  Value: pi
+                }
+              },
+              Token: {
+                Column: 19,
+                Kind: Plus,
+                Lexeme: +,
+                Line: 11
+              }
+            },
+            Token: {
+              Column: 5,
+              Kind: Print,
+              Lexeme: print,
+              Line: 11
+            }
+          }
+        ],
+        Token: {
+          Column: 29,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 10
+        }
+      },
+      Token: {
+        Column: 1,
+        Kind: If,
+        Lexeme: if,
+        Line: 10
+      }
+    },
+    {
+      Body: {
+        Statements: [
+          {
+            Expression: {
+              Left: {
+                Token: {
+                  Column: 12,
+                  Kind: String,
+                  Lexeme: "hi ",
+                  Line: 19,
+                  Value: hi 
+                }
+              },
+              Right: {
+                Token: {
+                  Column: 20,
+                  Kind: Identifier,
+                  Lexeme: who,
+                  Line: 19,
+                  Value: who
+                }
+              },
+              Token: {
+                Column: 18,
+                Kind: Plus,
+                Lexeme: +,
+                Line: 19
+              }
+            },
+            Token: {
+              Column: 5,
+              Kind: Return,
+              Lexeme: return,
+              Line: 19
+            }
+          }
+        ],
+        Token: {
+          Column: 16,
+          Kind: OpenCurlyBracket,
+          Lexeme: {,
+          Line: 18
+        }
+      },
+      Parameters: [
+        {
+          Token: {
+            Column: 11,
+            Kind: Identifier,
+            Lexeme: who,
+            Line: 18,
+            Value: who
+          }
+        }
+      ],
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: greet,
+        Line: 18,
+        Value: greet
+      }
+    },
+    {
+      Initialiser: {
+        Arguments: [
+          {
+            Token: {
+              Column: 20,
+              Kind: Identifier,
+              Lexeme: name,
+              Line: 22,
+              Value: name
+            }
+          }
+        ],
+        Callee: {
+          Token: {
+            Column: 14,
+            Kind: Identifier,
+            Lexeme: greet,
+            Line: 22,
+            Value: greet
+          }
+        },
+        Token: {
+          Column: 19,
+          Kind: OpenParenthesis,
+          Lexeme: (,
+          Line: 22
+        }
+      },
+      Token: {
+        Column: 5,
+        Kind: Identifier,
+        Lexeme: result,
+        Line: 22,
+        Value: result
+      }
+    },
+    {
+      Value: {
+        Left: {
+          Token: {
+            Column: 7,
+            Kind: Identifier,
+            Lexeme: result,
+            Line: 23,
+            Value: result
+          }
+        },
+        Right: {
+          Token: {
+            Column: 17,
+            Kind: String,
+            Lexeme: "bye",
+            Line: 23,
+            Value: bye
+          }
+        },
+        Token: {
+          Column: 14,
+          Kind: Inequality,
+          Lexeme: !=,
+          Line: 23
+        }
+      },
+      Token: {
+        Column: 1,
+        Kind: Print,
+        Lexeme: print,
+        Line: 23
+      }
+    }
+  ],
+  Token: {
+    Column: 1,
+    Kind: Eof,
+    Lexeme: $,
+    Line: 24
+  }
+}

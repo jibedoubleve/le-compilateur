@@ -1,0 +1,28 @@
+﻿{
+  Statements: [
+    {
+      Statements: [
+        {
+          Value: {
+            Token: {
+              Kind: String,
+              Lexeme: Hello_World
+            }
+          },
+          Token: {
+            Kind: Print,
+            Lexeme: print
+          }
+        }
+      ],
+      Token: {
+        Kind: OpenCurlyBracket,
+        Lexeme: {
+      }
+    }
+  ],
+  Token: {
+    Kind: Eof,
+    Lexeme: $
+  }
+}
