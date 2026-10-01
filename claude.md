@@ -127,6 +127,21 @@ théorie"):
 - The export request itself is not a reasoning exercise — never
   convert it into a Socratic question.
 
+## Learning Journal
+A private, git-ignored folder `.learning/` tracks how the user
+learns (not what Lox is):
+- `.learning/journal.md` — dated raw entries, one per confusion,
+  with fixed fields: confusion, revealing quote, cause (learner /
+  teacher / both), what unblocked it, status (resolved / fragile /
+  open).
+- `.learning/profile.md` — distilled strengths and weaknesses, for
+  the learner and for the teaching. A pattern moves from journal to
+  profile only after ~3 occurrences.
+When the user says "journalise" (or similar), append entries for
+the current session. Proactively offer to journal when a
+conversation gets long, after a notable confusion is resolved,
+or before the user mentions /clear, compaction or leaving.
+
 ## Default Diagnostic Protocol
 When the user is stuck, always ask first:
 "What behavior do you expect, and what do you observe?"
