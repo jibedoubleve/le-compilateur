@@ -4,17 +4,11 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("get")]
-public sealed class GetExpression : ExpressionNode
+public sealed partial class GetExpression(Token token, ExpressionNode o) : ExpressionNode(token)
 {
-    #region Constructors
-
-    public GetExpression(Token token, ExpressionNode @object) : base(token) => Object = @object;
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Object { get; }
+    public ExpressionNode Object { get; } = o;
 
     #endregion
 }

@@ -2,17 +2,11 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
-public sealed class PrintStatement : StatementNode
+public sealed partial class PrintStatement(Token token, ExpressionNode value) : StatementNode(token)
 {
-    #region Constructors
-
-    public PrintStatement(Token token, ExpressionNode value) : base(token) => Value = value;
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Value { get; }
+    public ExpressionNode Value { get; } = value;
 
     #endregion
 }

@@ -8,12 +8,12 @@ public static class ErrorFormater
 {
     #region Methods
 
-    public static string Format(this SyntaxErrorCollection errors)
+    public static string Format(this CompilationErrorCollection errors)
     {
         var builder = new StringBuilder();
         if (errors.Errors is { Count: 0 })
         {
-            builder.AppendLine("Compilation executed successfully.");
+            builder.AppendLine("Compilation executed without errors.");
             return builder.ToString();
         }
 

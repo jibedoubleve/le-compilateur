@@ -2,18 +2,11 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes;
 
-public sealed class ProgramNode : SyntaxNode
+public sealed partial class ProgramNode(Token token, IEnumerable<StatementNode> statements) : SyntaxNode(token)
 {
-    #region Constructors
-
-    public ProgramNode(Token token, IEnumerable<StatementNode> statements) : base(token) =>
-        Statements = [.. statements];
-
-    #endregion
-
     #region Properties
 
-    public IReadOnlyList<StatementNode> Statements { get; }
+    public IReadOnlyList<StatementNode> Statements { get; } = [.. statements];
 
     #endregion
 }

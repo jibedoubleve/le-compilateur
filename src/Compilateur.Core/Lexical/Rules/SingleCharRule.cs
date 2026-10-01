@@ -32,7 +32,7 @@ public abstract record SingleCharRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor) => codeCursor.Peek() == _lexeme;
 
-    public Token Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
+    public Token Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
     {
         var consumed = cursor.Consume();
         if (consumed.Char is null)

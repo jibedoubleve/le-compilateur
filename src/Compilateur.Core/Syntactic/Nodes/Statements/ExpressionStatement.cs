@@ -1,16 +1,10 @@
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
-public sealed class ExpressionStatement : StatementNode
+public sealed partial class ExpressionStatement(ExpressionNode expression) : StatementNode(expression.Token)
 {
-    #region Constructors
-
-    public ExpressionStatement(ExpressionNode expression) : base(expression.Token) => Expression = expression;
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Expression { get; }
+    public ExpressionNode Expression { get; } = expression;
 
     #endregion
 }

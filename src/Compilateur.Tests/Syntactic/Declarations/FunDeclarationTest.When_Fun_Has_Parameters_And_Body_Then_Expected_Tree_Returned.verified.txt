@@ -61,16 +61,12 @@
   },
   Parameters: [
     {
-      Token: {
-        Kind: Identifier,
-        Lexeme: a
-      }
+      Kind: Identifier,
+      Lexeme: a
     },
     {
-      Token: {
-        Kind: Identifier,
-        Lexeme: b
-      }
+      Kind: Identifier,
+      Lexeme: b
     }
   ],
   Token: {

@@ -22,7 +22,7 @@ public sealed record StringRule : ITokenRule
 
     public bool Matches(CodeCursor codeCursor) => codeCursor.Peek() == '"';
 
-    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
     {
         var first = cursor.Consume();
         var strBuilder = new StringBuilder();

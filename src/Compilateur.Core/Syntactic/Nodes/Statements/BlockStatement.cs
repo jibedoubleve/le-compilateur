@@ -4,18 +4,11 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
 [Description("block")]
-public sealed class BlockStatement : StatementNode
+public sealed partial class BlockStatement(Token token, IEnumerable<StatementNode> statements) : StatementNode(token)
 {
-    #region Constructors
-
-    public BlockStatement(Token token, IEnumerable<StatementNode> statements) : base(token) =>
-        Statements = [.. statements];
-
-    #endregion
-
     #region Properties
 
-    public IReadOnlyList<StatementNode> Statements { get; }
+    public IReadOnlyList<StatementNode> Statements { get; } = [.. statements];
 
     #endregion
 }

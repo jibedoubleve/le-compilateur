@@ -257,13 +257,11 @@
       },
       Parameters: [
         {
-          Token: {
-            Column: 11,
-            Kind: Identifier,
-            Lexeme: who,
-            Line: 18,
-            Value: who
-          }
+          Column: 11,
+          Kind: Identifier,
+          Lexeme: who,
+          Line: 18,
+          Value: who
         }
       ],
       Token: {

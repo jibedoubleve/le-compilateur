@@ -35,7 +35,7 @@ public record CommentMultiLineRule : ITokenRule
         return $"{codeCursor.Peek()}{codeCursor.PeekNext()}" == "/*";
     }
 
-    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
     {
         var first = cursor.Consume(); // Consume '/'
         cursor.Consume(); // Consume '*'

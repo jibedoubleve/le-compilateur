@@ -48,7 +48,7 @@ public record CommentSingleLineRule : ITokenRule
         return current == "//";
     }
 
-    public Token? Scan(CodeCursor cursor, SyntaxErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
     {
         if (cursor.IsAtEnd)
         {

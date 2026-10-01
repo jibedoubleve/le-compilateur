@@ -4,22 +4,13 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("assign")]
-public sealed class AssignExpression : ExpressionNode
+public sealed partial class AssignExpression(Token token, IdentifierExpression target, ExpressionNode value)
+    : ExpressionNode(token)
 {
-    #region Constructors
-
-    public AssignExpression(Token token, IdentifierExpression target, ExpressionNode value) : base(token)
-    {
-        Target = target;
-        Value = value;
-    }
-
-    #endregion
-
     #region Properties
 
-    public IdentifierExpression Target { get; }
-    public ExpressionNode Value { get; }
+    public IdentifierExpression Target { get; } = target;
+    public ExpressionNode Value { get; } = value;
 
     #endregion
 }

@@ -1,18 +1,19 @@
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Semantic;
 
 namespace Compilateur.Core.Syntactic.Nodes;
 
-public abstract class SyntaxNode
+public abstract class SyntaxNode(Token token)
 {
-    #region Constructors
+    #region Properties
 
-    protected SyntaxNode(Token token) => Token = token;
+    public Token Token { get; } = token;
 
     #endregion
 
-    #region Properties
+    #region Methods
 
-    public Token Token { get; }
+    public abstract void Accept(ISyntaxNodeVisitor visitor);
 
     #endregion
 }

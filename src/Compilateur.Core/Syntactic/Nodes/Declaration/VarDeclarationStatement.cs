@@ -4,18 +4,12 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Declaration;
 
 [Description("var")]
-public sealed class VarDeclarationStatement : StatementNode
+public sealed partial class VarDeclarationStatement(Token token, ExpressionNode? initialiser = null)
+    : StatementNode(token)
 {
-    #region Constructors
-
-    public VarDeclarationStatement(Token token, ExpressionNode? initialiser = null) : base(token)
-        => Initialiser = initialiser;
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode? Initialiser { get; }
+    public ExpressionNode? Initialiser { get; } = initialiser;
 
     #endregion
 }
