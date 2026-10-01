@@ -18,7 +18,7 @@ internal static class SyntaxNodeExtensions
         {
             BinaryExpression n                      => [n.Left, n.Right],
             VarDeclarationStatement n               => Optional(n.Initialiser),
-            FunctionDeclarationStatement n          => [.. n.Parameters, n.Body],
+            FunctionDeclarationStatement n          => [n.Body],
             AssignExpression n                      => [n.Target, n.Value],
             ProgramNode n                           => n.Statements,
             CallExpression n                        => [n.Callee, .. n.Arguments],
@@ -36,7 +36,6 @@ internal static class SyntaxNodeExtensions
             LogicalExpression n                     => [n.Left, n.Right],
             WhileStatement n                        => [.. Optional(n.Condition), n.Body],
             LiteralExpression
-                or ParameterNode
                 or IdentifierExpression
                 or SuperExpression
                 or ThisExpression => [],
@@ -63,7 +62,8 @@ internal static class SyntaxNodeExtensions
             var child = children[i];
             var isLast = i == children.Count - 1;
 
-            stringBuilder.AppendLine($"{prefix}{(isLast ? " └──" : " ├──")} {child.Token.Lexeme} {Describe(child)}");
+            stringBuilder.AppendLine(
+                $"{prefix}{(isLast ? " └──" : " ├──")} {child.Token.Lexeme}{Parameters(child)} {Describe(child)}");
             child.FormatChildren(stringBuilder, prefix + (isLast ? "    " : " │  "));
         }
     }
@@ -79,10 +79,27 @@ internal static class SyntaxNodeExtensions
 
     private static IEnumerable<SyntaxNode> Optional(SyntaxNode? node) => node is null ? [] : [node];
 
+    private static string Parameters(SyntaxNode child) =>
+        child switch
+        {
+            FunctionDeclarationStatement c => PrintParameters(c.Parameters.Select(x => x.Lexeme)),
+            CallExpression e               => PrintParameters(e.Arguments.Select(x => x.Token.Lexeme)),
+            _                              => string.Empty
+        };
+
+    private static string PrintParameters(IEnumerable<string> args)
+    {
+        var sb = new StringBuilder();
+        sb.Append('(');
+        sb.Append(string.Join(", ", args));
+        sb.Append(')');
+        return sb.ToString();
+    }
+
     public static string FormatTree(this SyntaxNode node)
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($" {node.Token.Lexeme} {Describe(node)}");
+        stringBuilder.AppendLine($" {node.Token.Lexeme}{Parameters(node)} {Describe(node)}");
         node.FormatChildren(stringBuilder, "");
         return stringBuilder.ToString();
     }

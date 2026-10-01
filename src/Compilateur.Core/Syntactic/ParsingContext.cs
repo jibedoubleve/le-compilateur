@@ -6,7 +6,7 @@ public class ParsingContext
 {
     #region Constructors
 
-    public ParsingContext(TokenCursor cursor, SyntaxErrorCollection? errors = null)
+    public ParsingContext(TokenCursor cursor, CompilationErrorCollection? errors = null)
     {
         Cursor = cursor;
         Errors = errors ?? [];
@@ -18,7 +18,7 @@ public class ParsingContext
 
     public TokenCursor Cursor { get; }
 
-    public SyntaxErrorCollection Errors { get; }
+    public CompilationErrorCollection Errors { get; }
 
     #endregion
 
@@ -27,8 +27,8 @@ public class ParsingContext
     public void AddError(string message)
         => Errors.Add(
             Cursor.IsEmpty || Cursor.IsAtEnd
-                ? new SyntaxError(message)
-                : new SyntaxError(Cursor.Peek(), message)
+                ? new CompilationError(message)
+                : new CompilationError(Cursor.Peek(), message)
         );
 
     #endregion

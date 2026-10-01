@@ -1,6 +1,7 @@
-using Compilateur.Core;
+using System.Text;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
+using Compilateur.Core.Semantic;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Helpers;
 using Compilateur.Core.Syntactic.Nodes;
@@ -41,14 +42,14 @@ public static class TestOutputHelperExtension
             output.WriteLine($"""
                               Code:
                               -----
-                              
+
                               {code}
-                              
+
                               Errors:
                               -------
-                              
+
                               {tokenization.Errors.Format()}
-                              
+
                               Tokens:
                               -------
                               """
@@ -60,15 +61,38 @@ public static class TestOutputHelperExtension
                              """);
             foreach (var token in tokenization.Tokens)
             {
-                
-                output.WriteLine($"| {token.Lexeme, 6} | {token.Kind, -18} |");
+                output.WriteLine($"| {token.Lexeme,6} | {token.Kind,-18} |");
             }
+        }
+
+        public void WriteSemanticContext(Binder binder)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("""
+
+                          Distance map:
+                          -------------
+                          |          Variable          | Distance |
+                          | -------------------------- | -------- |
+
+                          """);
+            foreach (var local in binder.ToLocals())
+            {
+                sb.AppendLine($"| {local.Name,26} | {local.Distance,8} |");
+            }
+
+            sb.AppendLine("""
+                          Errors:
+                          ------
+                          """);
+            sb.AppendLine(binder.Errors.Format());
+
+            output.WriteLine(sb.ToString());
         }
 
         public void WriteSyntaxContext(ParsingContext context, SyntaxNode? node = null)
         {
-            output.WriteCode(context)
-                ;
+            output.WriteCode(context);
             if (node != null) { output.WriteSyntaxTree(node); }
             else { output.WriteLine("No syntax tree to output."); }
 
@@ -77,4 +101,19 @@ public static class TestOutputHelperExtension
 
         #endregion
     }
+}
+
+public record Local(string Name, uint Distance);
+
+public static class DistanceMapExtensions
+{
+    #region Methods
+
+    public static IEnumerable<Local> ToLocals(this Binder binder)
+        => binder.DistanceMap.Select(x => new Local(
+            $"{x.Key.Token.Lexeme} ({x.Key.Token.Line},{x.Key.Token.Column})",
+            x.Value)
+        );
+
+    #endregion
 }

@@ -28,7 +28,7 @@ public class Scanner
 
     #region Methods
 
-    private void AddEmptyRuleError(CodeCursor cursor, SyntaxErrorCollection errors)
+    private void AddEmptyRuleError(CodeCursor cursor, CompilationErrorCollection errors)
     {
         var codeChar = cursor.Consume();
         var errorMsg = $"Character '{codeChar.Char}' is not supported";
@@ -38,7 +38,7 @@ public class Scanner
 
     public TokenizeResult Tokenize(string source)
     {
-        var errors = new SyntaxErrorCollection();
+        var errors = new CompilationErrorCollection();
         var tokens = new List<Token>();
         var stream = new CodeCursor(source);
 

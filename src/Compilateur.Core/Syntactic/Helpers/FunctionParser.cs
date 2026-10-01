@@ -19,12 +19,12 @@ public static class FunctionParser
 
     #region Methods
 
-    private static IEnumerable<ParameterNode>? ParseParameters(ParsingContext context)
+    private static IEnumerable<Token>? ParseParameters(ParsingContext context)
     {
         if (context.Cursor.IsPeekOfKind(TokenKind.OpenParenthesis))
         {
             context.Cursor.Consume(); // Consume '('
-            var parameters = new List<ParameterNode>();
+            var parameters = new List<Token>();
 
             var current = context.Cursor.Consume();
             switch (current.Kind)
@@ -32,7 +32,7 @@ public static class FunctionParser
                 case TokenKind.CloseParenthesis:
                     return [];
                 case TokenKind.Identifier:
-                    parameters.Add(new ParameterNode(current));
+                    parameters.Add(current);
                     if (!ValidateParameterSeparator(context)) { return null; }
 
                     break;
@@ -62,7 +62,7 @@ public static class FunctionParser
                     case TokenKind.Identifier:
                         if (!ValidateParameterSeparator(context)) { return null; }
 
-                        parameters.Add(new ParameterNode(current));
+                        parameters.Add(current);
                         break;
                     default:
                         context.AddError(
@@ -87,10 +87,10 @@ public static class FunctionParser
         return false;
     }
 
-    private static IEnumerable<ParameterNode>? ValidateParameters(
-        IEnumerable<ParameterNode> parameters, ParsingContext context)
+    private static IEnumerable<Token>? ValidateParameters(
+        IEnumerable<Token> parameters, ParsingContext context)
     {
-        var args = parameters as ParameterNode[] ?? [.. parameters];
+        var args = parameters as Token[] ?? [.. parameters];
         if (args.Length <= MaxParams) { return args; }
 
         context.AddError($"Maximum number of {MaxParams} parameters exceeded.");

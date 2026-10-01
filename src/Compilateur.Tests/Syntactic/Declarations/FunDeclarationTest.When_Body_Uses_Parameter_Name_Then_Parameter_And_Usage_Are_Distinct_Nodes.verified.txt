@@ -21,10 +21,8 @@
   },
   Parameters: [
     {
-      Token: {
-        Kind: Identifier,
-        Lexeme: a
-      }
+      Kind: Identifier,
+      Lexeme: a
     }
   ],
   Token: {

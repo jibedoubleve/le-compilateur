@@ -1,6 +1,7 @@
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
+using Compilateur.Core.Syntactic.Nodes.Expressions;
 using Shouldly;
 
 namespace Compilateur.Tests.CrossCutting;
@@ -25,7 +26,7 @@ public class ExtensionsTest
             Line = 0,
             Value = null
         };
-        var node = new TestNode(token);
+        var node = new LiteralExpression(token);
 
         // act
 
@@ -47,13 +48,4 @@ public class ExtensionsTest
     }
 
     #endregion
-
-    private class TestNode : SyntaxNode
-    {
-        #region Constructors
-
-        public TestNode(Token token) : base(token) { }
-
-        #endregion
-    }
 }

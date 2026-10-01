@@ -73,7 +73,7 @@ public class FrontEndTest
         var context = new ParsingContext(cursor, nodes.Errors);
         var node = ProgramParser.Parse(context);
 
-        _output.WriteSyntaxContext(context: context, node: node);
+        _output.WriteSyntaxContext(context, node);
 
         // assert
         return Verify(node);

@@ -3,18 +3,16 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
+/// <summary>
+///     A group is an expression between '(' and ')' used
+///     to override operator precedence.
+/// </summary>
 [Description("group")]
-public sealed class GroupExpressionNode : ExpressionNode
+public sealed partial class GroupExpressionNode(Token token, ExpressionNode inner) : ExpressionNode(token)
 {
-    #region Constructors
-
-    public GroupExpressionNode(Token token, ExpressionNode inner) : base(token) => Inner = inner;
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Inner { get; }
+    public ExpressionNode Inner { get; } = inner;
 
     #endregion
 }

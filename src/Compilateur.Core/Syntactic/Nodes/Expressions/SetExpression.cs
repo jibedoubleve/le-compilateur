@@ -4,22 +4,12 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("set")]
-public sealed class SetExpression : ExpressionNode
+public sealed partial class SetExpression(Token token, ExpressionNode o, ExpressionNode value) : ExpressionNode(token)
 {
-    #region Constructors
-
-    public SetExpression(Token token, ExpressionNode @object, ExpressionNode value) : base(token)
-    {
-        Object = @object;
-        Value = value;
-    }
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Object { get; }
-    public ExpressionNode Value { get; }
+    public ExpressionNode Object { get; } = o;
+    public ExpressionNode Value { get; } = value;
 
     #endregion
 }

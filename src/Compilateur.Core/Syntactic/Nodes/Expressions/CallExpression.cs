@@ -4,22 +4,13 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("call")]
-public sealed class CallExpression : ExpressionNode
+public sealed partial class CallExpression(Token token, ExpressionNode callee, ExpressionNode[] arguments)
+    : ExpressionNode(token)
 {
-    #region Constructors
-
-    public CallExpression(Token token, ExpressionNode callee, ExpressionNode[] arguments) : base(token)
-    {
-        Callee = callee;
-        Arguments = [.. arguments];
-    }
-
-    #endregion
-
     #region Properties
 
-    public IReadOnlyList<ExpressionNode> Arguments { get; }
-    public ExpressionNode Callee { get; }
+    public IReadOnlyList<ExpressionNode> Arguments { get; } = [.. arguments];
+    public ExpressionNode Callee { get; } = callee;
 
     #endregion
 }

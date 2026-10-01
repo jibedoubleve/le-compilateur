@@ -436,3 +436,6 @@ FodyWeavers.xsd
 .idea/projectSettingsUpdater.xml
 # Private learning journal (metacognition)
 .learning/
+
+# Project
+.docs/

@@ -4,23 +4,14 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("binary")]
-public sealed class BinaryExpression : ExpressionNode
+public sealed partial class BinaryExpression(Token token, ExpressionNode left, ExpressionNode right)
+    : ExpressionNode(token)
 {
-    #region Constructors
-
-    public BinaryExpression(Token token, ExpressionNode left, ExpressionNode right) : base(token)
-    {
-        Left = left;
-        Right = right;
-    }
-
-    #endregion
-
     #region Properties
 
-    public ExpressionNode Left { get; }
+    public ExpressionNode Left { get; } = left;
 
-    public ExpressionNode Right { get; }
+    public ExpressionNode Right { get; } = right;
 
     #endregion
 }
