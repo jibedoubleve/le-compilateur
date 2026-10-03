@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes;
 
 [Description("param")]
-public sealed class ParameterNode : SyntaxNode
+public sealed partial class ParameterNode : SyntaxNode
 {
     #region Constructors
 

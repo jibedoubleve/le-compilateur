@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Declaration;
 
 [Description("var")]
-public sealed class VarDeclarationStatement : StatementNode
+public sealed partial class VarDeclarationStatement : StatementNode
 {
     #region Constructors
 

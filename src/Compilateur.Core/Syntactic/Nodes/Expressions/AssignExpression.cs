@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("assign")]
-public sealed class AssignExpression : ExpressionNode
+public sealed partial class AssignExpression : ExpressionNode
 {
     #region Constructors
 

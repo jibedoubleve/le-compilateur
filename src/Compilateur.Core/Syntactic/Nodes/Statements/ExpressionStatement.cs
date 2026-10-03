@@ -1,6 +1,6 @@
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
-public sealed class ExpressionStatement : StatementNode
+public sealed partial class ExpressionStatement : StatementNode
 {
     #region Constructors
 

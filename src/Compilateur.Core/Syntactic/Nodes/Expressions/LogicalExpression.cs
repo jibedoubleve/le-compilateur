@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("logical")]
-public sealed class LogicalExpression : ExpressionNode
+public sealed partial class LogicalExpression : ExpressionNode
 {
     #region Constructors
 

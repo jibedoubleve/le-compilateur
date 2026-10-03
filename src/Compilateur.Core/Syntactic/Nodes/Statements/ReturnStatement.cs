@@ -2,7 +2,7 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
-public sealed class ReturnStatement : StatementNode
+public sealed partial class ReturnStatement : StatementNode
 {
     #region Constructors
 

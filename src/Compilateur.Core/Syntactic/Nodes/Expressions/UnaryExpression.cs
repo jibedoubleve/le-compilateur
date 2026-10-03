@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("unary")]
-public sealed class UnaryExpression : ExpressionNode
+public sealed partial class UnaryExpression : ExpressionNode
 {
     #region Constructors
 

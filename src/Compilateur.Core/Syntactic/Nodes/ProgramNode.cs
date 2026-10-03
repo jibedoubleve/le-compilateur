@@ -2,7 +2,7 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes;
 
-public sealed class ProgramNode : SyntaxNode
+public sealed partial class ProgramNode : SyntaxNode
 {
     #region Constructors
 

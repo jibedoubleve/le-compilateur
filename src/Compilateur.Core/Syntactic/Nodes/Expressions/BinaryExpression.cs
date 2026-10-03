@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("binary")]
-public sealed class BinaryExpression : ExpressionNode
+public sealed partial class BinaryExpression : ExpressionNode
 {
     #region Constructors
 

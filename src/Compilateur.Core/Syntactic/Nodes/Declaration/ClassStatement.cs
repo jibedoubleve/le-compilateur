@@ -5,7 +5,7 @@ using Compilateur.Core.Syntactic.Nodes.Expressions;
 namespace Compilateur.Core.Syntactic.Nodes.Declaration;
 
 [Description("class")]
-public sealed class ClassStatement : StatementNode
+public sealed partial class ClassStatement : StatementNode
 {
     #region Constructors
 

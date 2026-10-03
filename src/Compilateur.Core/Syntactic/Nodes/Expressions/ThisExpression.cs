@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("this")]
-public sealed class ThisExpression : ExpressionNode
+public sealed partial class ThisExpression : ExpressionNode
 {
     #region Constructors
 

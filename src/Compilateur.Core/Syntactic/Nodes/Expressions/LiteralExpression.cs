@@ -3,7 +3,7 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
-public sealed class LiteralExpression : ExpressionNode
+public sealed partial class LiteralExpression : ExpressionNode
 {
     #region Constructors
 

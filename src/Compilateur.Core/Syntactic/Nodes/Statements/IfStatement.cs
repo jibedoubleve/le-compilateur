@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
 [Description("id")]
-public sealed class IfStatement : StatementNode
+public sealed partial class IfStatement : StatementNode
 {
     #region Constructors
 

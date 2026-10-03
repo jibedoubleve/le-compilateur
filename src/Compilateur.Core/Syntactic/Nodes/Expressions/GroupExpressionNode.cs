@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("group")]
-public sealed class GroupExpressionNode : ExpressionNode
+public sealed partial class GroupExpressionNode : ExpressionNode
 {
     #region Constructors
 

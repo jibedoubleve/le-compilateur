@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("get")]
-public sealed class GetExpression : ExpressionNode
+public sealed partial class GetExpression : ExpressionNode
 {
     #region Constructors
 

@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("set")]
-public sealed class SetExpression : ExpressionNode
+public sealed partial class SetExpression : ExpressionNode
 {
     #region Constructors
 

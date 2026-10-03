@@ -5,7 +5,7 @@ using Compilateur.Core.Syntactic.Nodes.Statements;
 namespace Compilateur.Core.Syntactic.Nodes.Declaration;
 
 [Description("function")]
-public sealed class FunctionDeclarationStatement : StatementNode
+public sealed partial class FunctionDeclarationStatement : StatementNode
 {
     #region Constructors
 

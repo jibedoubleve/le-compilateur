@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
 [Description("while")]
-public sealed class WhileStatement : StatementNode
+public sealed partial class WhileStatement : StatementNode
 {
     #region Constructors
 

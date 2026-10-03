@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Statements;
 
 [Description("block")]
-public sealed class BlockStatement : StatementNode
+public sealed partial class BlockStatement : StatementNode
 {
     #region Constructors
 

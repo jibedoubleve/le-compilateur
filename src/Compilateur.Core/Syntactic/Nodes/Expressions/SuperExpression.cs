@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 namespace Compilateur.Core.Syntactic.Nodes.Expressions;
 
 [Description("super")]
-public sealed class SuperExpression : ExpressionNode
+public sealed partial class SuperExpression : ExpressionNode
 {
     #region Constructors
 
