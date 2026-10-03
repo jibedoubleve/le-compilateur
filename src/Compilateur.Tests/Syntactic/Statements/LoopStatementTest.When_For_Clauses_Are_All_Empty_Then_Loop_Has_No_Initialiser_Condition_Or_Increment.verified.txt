@@ -1,18 +1,34 @@
 ﻿{
   Statements: [
     {
-      Body: {
-        Value: {
+      Statements: [
+        {
+          Body: {
+            Statements: [
+              {
+                Value: {
+                  Token: {
+                    Kind: String,
+                    Lexeme: foo bar
+                  }
+                },
+                Token: {
+                  Kind: Print,
+                  Lexeme: print
+                }
+              }
+            ],
+            Token: {
+              Kind: For,
+              Lexeme: for
+            }
+          },
           Token: {
-            Kind: String,
-            Lexeme: foo bar
+            Kind: For,
+            Lexeme: for
           }
-        },
-        Token: {
-          Kind: Print,
-          Lexeme: print
         }
-      },
+      ],
       Token: {
         Kind: For,
         Lexeme: for
