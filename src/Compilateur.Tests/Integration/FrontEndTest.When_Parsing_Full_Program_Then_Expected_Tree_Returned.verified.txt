@@ -60,7 +60,8 @@
           Column: 12,
           Kind: True,
           Lexeme: true,
-          Line: 6
+          Line: 6,
+          Value: true
         }
       },
       Token: {

@@ -1,11 +1,8 @@
-using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Semantic;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -251,7 +248,7 @@ public class SemanticTest
         _output.WriteSyntaxContext(context, node);
 
         // -- binder
-        var binder = new Binder();
+        var binder = new Binder(context.Errors);
         binder.Visit(node!);
 
         _output.WriteSemanticContext(binder);
@@ -278,7 +275,7 @@ public class SemanticTest
         _output.WriteSyntaxContext(context, node);
 
         // -- binder
-        var binder = new Binder();
+        var binder = new Binder(context.Errors);
         binder.Visit(node!);
 
         _output.WriteSemanticContext(binder);
