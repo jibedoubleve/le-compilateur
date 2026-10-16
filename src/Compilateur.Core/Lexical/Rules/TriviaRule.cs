@@ -32,7 +32,7 @@ public sealed record TriviaRule : ITokenRule
         );
     }
 
-    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, ErrorCollection? errors = null)
     {
         cursor.Consume();
         return null;

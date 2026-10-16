@@ -7,7 +7,7 @@ public sealed record TokenizeResult
 {
     #region Properties
 
-    public CompilationErrorCollection Errors { get; init; } = [];
+    public ErrorCollection Errors { get; init; } = [];
     public bool HasErrors => Errors.Any();
     public required IReadOnlyCollection<Token> Tokens { get; init; }
 

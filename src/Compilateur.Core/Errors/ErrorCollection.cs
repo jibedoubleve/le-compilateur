@@ -4,7 +4,7 @@ using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Errors;
 
-public class CompilationErrorCollection : IEnumerable<CompilationError>
+public class ErrorCollection : IEnumerable<CompilationError>
 {
     #region Fields
 

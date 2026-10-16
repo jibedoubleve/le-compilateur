@@ -64,7 +64,7 @@ public sealed record IdentifierRule : ITokenRule
                (char.IsAsciiLetter(character.Value) || character == '_');
     }
 
-    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, ErrorCollection? errors = null)
     {
         var first = cursor.Consume();
 

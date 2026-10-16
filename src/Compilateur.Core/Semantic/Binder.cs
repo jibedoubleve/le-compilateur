@@ -27,7 +27,7 @@ public class Binder : ISyntaxNodeVisitor
 
     public ReadOnlyDictionary<SyntaxNode, uint> DistanceMap => _distanceMap.AsReadOnly();
 
-    public CompilationErrorCollection Errors { get; } = new();
+    public ErrorCollection Errors { get; } = new();
 
     #endregion
 

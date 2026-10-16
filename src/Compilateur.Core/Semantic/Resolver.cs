@@ -6,10 +6,11 @@ public class Resolver
 {
     #region Methods
 
-    public void Resolve(ProgramNode program)
+    public ResolveResult Resolve(ProgramNode program)
     {
         var binder = new Binder();
         program.Accept(binder);
+        return new ResolveResult(binder.Errors, binder.DistanceMap);
     }
 
     #endregion

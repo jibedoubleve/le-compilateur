@@ -6,7 +6,7 @@ public class ParsingContext
 {
     #region Constructors
 
-    public ParsingContext(TokenCursor cursor, CompilationErrorCollection? errors = null)
+    public ParsingContext(TokenCursor cursor, ErrorCollection? errors = null)
     {
         Cursor = cursor;
         Errors = errors ?? [];
@@ -18,7 +18,7 @@ public class ParsingContext
 
     public TokenCursor Cursor { get; }
 
-    public CompilationErrorCollection Errors { get; }
+    public ErrorCollection Errors { get; }
 
     #endregion
 
