@@ -1,5 +1,4 @@
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Semantic;
 
 namespace Compilateur.Core.Syntactic.Nodes;
 
@@ -13,7 +12,7 @@ public abstract class SyntaxNode(Token token)
 
     #region Methods
 
-    public abstract void Accept<T>(ISyntaxNodeVisitor<T> visitor);
+    public abstract T Accept<T>(ISyntaxNodeVisitor<T> visitor);
 
     #endregion
 }
