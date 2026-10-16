@@ -1,4 +1,5 @@
 using Compilateur.Core.Extensions;
+using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
 using Shouldly;
 using Xunit.Abstractions;
@@ -32,7 +33,7 @@ public class CommentsTest : ScannerTestBase
                              */
                             identifier
                             """;
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.Count.ShouldBe(2),
@@ -53,7 +54,7 @@ public class CommentsTest : ScannerTestBase
                              */
                             identifier
                             """;
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.Count.ShouldBe(2),
@@ -69,7 +70,7 @@ public class CommentsTest : ScannerTestBase
                              * and I never close them then
                              * an error should be raised.
                             """;
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
 
         _output.WriteLine(res.Errors.Format());
 
@@ -99,7 +100,7 @@ public class CommentsTest : ScannerTestBase
                 """)]
     public void When_Comments_Around_Code_Then_Code_Tokens_Are_Kept(string code)
     {
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
 
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
@@ -116,7 +117,7 @@ public class CommentsTest : ScannerTestBase
                             // Hello World
                             identifier
                             """;
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.Count.ShouldBe(2),

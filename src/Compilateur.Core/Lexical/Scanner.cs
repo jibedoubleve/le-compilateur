@@ -2,7 +2,6 @@ using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical.Rules;
 using Compilateur.Core.Lexical.Tokens;
-using Microsoft.Extensions.Logging;
 
 namespace Compilateur.Core.Lexical;
 
@@ -10,30 +9,55 @@ public class Scanner
 {
     #region Fields
 
-    private readonly ILogger<Scanner> _logger;
-
     private readonly IEnumerable<ITokenRule> _rules;
 
     #endregion
 
     #region Constructors
 
-    public Scanner(IEnumerable<ITokenRule> rules, ILogger<Scanner> logger)
-    {
-        _rules = rules;
-        _logger = logger;
-    }
+    public Scanner() =>
+        _rules =
+        [
+            new CommentMultiLineRule(),
+            new CommentSingleLineRule(),
+            new GreaterOrEqualRule(),
+            new LessThanOrEqualRule(),
+            new EqualityRule(),
+            new InequalityRule(),
+            new IdentifierRule(),
+            new NumericRule(),
+            new DotRule(),
+            new CommaRule(),
+            new SemiColonRule(),
+            new OpenBracketRule(),
+            new ClosingBracketRule(),
+            new OpenCurlyBracketRule(),
+            new ClosingBracketRule(),
+            new ClosingCurlyBracketRule(),
+            new BangRule(),
+            new GreaterThanRule(),
+            new LessThanOrEqualRule(),
+            new LessThanRule(),
+            new AssignmentRule(),
+            new PlusRule(),
+            new MinusRule(),
+            new MultiplyRule(),
+            new DividedRule(),
+            new StringRule(),
+            new TriviaRule()
+        ];
 
     #endregion
 
     #region Methods
 
-    private void AddEmptyRuleError(CodeCursor cursor, ErrorCollection errors)
+    private static void AddEmptyRuleError(CodeCursor cursor, ErrorCollection errors)
     {
         var codeChar = cursor.Consume();
-        var errorMsg = $"Character '{codeChar.Char}' is not supported";
-        errors.Add(codeChar, errorMsg);
-        _logger.LogWarning(errorMsg);
+        errors.Add(
+            codeChar,
+            $"Character '{codeChar.Char}' is not supported"
+        );
     }
 
     public TokenizeResult Tokenize(string source)
@@ -52,22 +76,9 @@ public class Scanner
             else
             {
                 var token = rule.Scan(stream, errors);
-                if (token is null)
-                {
-                    _logger.LogTrace(
-                        "[{RuleName}]: {{EMPTY}}",
-                        rule.GetType().Name
-                    );
-                }
-                else
+                if (token is not null)
                 {
                     tokens.Add(token);
-
-                    _logger.LogTrace(
-                        "[{RuleName}]: {TokenName}",
-                        rule.GetType().Name,
-                        token.Lexeme
-                    );
                 }
             }
         } while (!stream.IsAtEnd);

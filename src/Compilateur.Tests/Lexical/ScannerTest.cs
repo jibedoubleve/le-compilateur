@@ -1,3 +1,4 @@
+using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Tests.Helpers;
 using Shouldly;
@@ -28,7 +29,7 @@ public class ScannerTest : ScannerTestBase
         const string code = "f(1,2)";
 
         // act
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
 
         // assert
@@ -42,7 +43,7 @@ public class ScannerTest : ScannerTestBase
         const string code = "1.2.3.4";
 
         // act
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
 
         // assert
@@ -58,7 +59,7 @@ public class ScannerTest : ScannerTestBase
         var code = "5.";
 
         // act
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
         
         // assert
@@ -71,7 +72,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData(". ", TokenKind.Dot, ".")]
     public void When_Whitespace_Around_Token_Then_Whitespace_Is_Ignored(string code, TokenKind tokenKind, string expected)
     {
-        var tokenisation = Scanner.Tokenize(code);
+        var tokenisation = new Scanner().Tokenize(code);
 
         _output.WriteLexerContext(code, tokenisation);
 
@@ -86,7 +87,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData("²")]
     public void When_Unsupported_Character_Then_Single_Error_Raised(string code)
     {
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
 
         tokenization.Errors.ShouldHaveSingleItem();
@@ -143,7 +144,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData("\"undeux\"", TokenKind.String)]
     public void When_Single_Lexeme_Then_Expected_Token_Returned(string code, TokenKind tokenKind)
     {
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
 
         _output.WriteLexerContext(code, tokenization);
 
@@ -167,7 +168,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData("8", 1)]
     public void When_Number_Next_To_Semicolon_Then_Both_Are_Tokens(string code, int count)
     {
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
         Assert.Multiple(
             () => tokenization.Errors.ShouldBeEmpty(),
@@ -181,7 +182,7 @@ public class ScannerTest : ScannerTestBase
     [InlineData("9876.5432", 9876.5432)]
     public void When_Number_Then_Token_Value_Is_Double(string code, double value)
     {
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         Assert.Multiple(
             () => res.Errors.ShouldBeEmpty(),
             () => res.Tokens.Count.ShouldBe(2), // The numeric value and the EOF

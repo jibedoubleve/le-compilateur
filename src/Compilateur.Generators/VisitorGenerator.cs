@@ -32,12 +32,14 @@ public class VisitorGenerator : IIncrementalGenerator
     {
         var overloads = new StringBuilder();
         const string fileName = "ISyntaxNodeVisitor.g.cs";
-        
-        foreach (var type in nodes.Select(node => $"{node.Namespace}.{node.Name}"))
+
+        foreach (var type in nodes.Where(n => n is not null)
+                                  .Select(node => $"{node!.Namespace}.{node.Name}")
+                )
         {
             overloads.AppendLine($"    T Visit({type} node);");
         }
-        
+
         var code = $$"""
                      namespace Compilateur.Core.Syntactic;
 
@@ -46,7 +48,7 @@ public class VisitorGenerator : IIncrementalGenerator
                      {{overloads}}
                      }
                      """;
-        
+
         context.AddSource(fileName, code);
     }
 

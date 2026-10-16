@@ -1,5 +1,6 @@
 using System.Globalization;
 using Compilateur.Core.Extensions;
+using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Tests.Helpers;
 using Shouldly;
@@ -30,7 +31,7 @@ public class CodeTest : ScannerTestBase
         const string code = "";
 
         // act
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
 
         _output.WriteLine(res.Errors.Format());
 
@@ -51,7 +52,7 @@ public class CodeTest : ScannerTestBase
         var code = number.ToString(CultureInfo.InvariantCulture);
 
         // act
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
 
         // assert
@@ -70,7 +71,7 @@ public class CodeTest : ScannerTestBase
     [InlineData("hôtel")]
     public void When_Non_Ascii_In_Identifier_Then_Error_Raised(string code)
     {
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         res.Errors.ShouldNotBeEmpty();
     }
 
@@ -84,7 +85,7 @@ public class CodeTest : ScannerTestBase
         var code = number.ToString(CultureInfo.InvariantCulture);
 
         // act
-        var tokenization = Scanner.Tokenize(code);
+        var tokenization = new Scanner().Tokenize(code);
         _output.WriteLexerContext(code, tokenization);
 
         // assert
@@ -104,7 +105,7 @@ public class CodeTest : ScannerTestBase
     public void When_Identifier_Starts_With_Keyword_Then_Identifier_Token_Returned(
         string code, TokenKind[] tokenTypes, string[] lexemes)
     {
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         Assert.Multiple(
             () => res.Tokens.Count.ShouldBeGreaterThan(0),
             () => res.Tokens.Select(x => x.Kind).ShouldBe(tokenTypes),
@@ -141,7 +142,7 @@ public class CodeTest : ScannerTestBase
                             print result != "bye";
                             """;
 
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
 
         _output.WriteLine(res.Errors.Format());
 
@@ -155,7 +156,7 @@ public class CodeTest : ScannerTestBase
     public void When_String_Not_Ended_Then_Error_Raised(string code)
     {
         // act
-        var res = Scanner.Tokenize(code);
+        var res = new Scanner().Tokenize(code);
         _output.WriteLine(res.Errors.Format());
 
         // assert

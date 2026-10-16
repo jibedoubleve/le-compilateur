@@ -1,7 +1,6 @@
 using System.Text;
 using Compilateur.Core.Errors;
 using Compilateur.Core.Lexical.Tokens;
-using Microsoft.Extensions.Logging;
 
 namespace Compilateur.Core.Lexical.Rules;
 
@@ -12,13 +11,6 @@ public record CommentSingleLineRule : ITokenRule
     private const int MaxSize = 10_000;
 
     private readonly IEnumerable<char> _deadChars = ['\r', '\n'];
-    private readonly ILogger<CommentSingleLineRule> _logger;
-
-    #endregion
-
-    #region Constructors
-
-    public CommentSingleLineRule(ILogger<CommentSingleLineRule> logger) => _logger = logger;
 
     #endregion
 
@@ -61,15 +53,9 @@ public record CommentSingleLineRule : ITokenRule
 
         for (var i = 0; i < MaxSize; i++)
         {
-            if (cursor.IsAtEnd || IsEndOfLine(cursor))
-            {
-                _logger.LogDebug("Scanned comments:\n{Comments}", strBuilder.ToString());
-                return null;
-            }
+            if (cursor.IsAtEnd || IsEndOfLine(cursor)) { return null; }
 
             var current = cursor.Consume();
-
-            _logger.LogTrace("{Current}", current);
 
             strBuilder.Append(current);
         }

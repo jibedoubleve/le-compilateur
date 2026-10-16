@@ -25,16 +25,6 @@ public class FrontEndTest
 
     #region Methods
 
-    private Scanner CreateScanner()
-    {
-        var sc = new ServiceCollection();
-        var sp = sc.AddLogging(b => b.AddXunit(_output, LogLevel.Debug)
-                                     .SetMinimumLevel(LogLevel.Debug))
-                   .AddLexicalLayer()
-                   .BuildServiceProvider();
-        return sp.GetRequiredService<Scanner>();
-    }
-
     [Fact]
     public Task When_Parsing_Full_Program_Then_Expected_Tree_Returned()
     {
@@ -67,7 +57,7 @@ public class FrontEndTest
 
         // act
         // -- lexer
-        var nodes = CreateScanner().Tokenize(code);
+        var nodes = new Scanner().Tokenize(code);
         // -- parser
         var cursor = new TokenCursor(nodes.Tokens);
         var context = new ParsingContext(cursor, nodes.Errors);
