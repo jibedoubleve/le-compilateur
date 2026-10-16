@@ -21,7 +21,7 @@ public sealed record NumericRule : ITokenRule
         return !current.IsEmpty && char.IsAsciiDigit(current.Char!.Value);
     }
 
-    public Token? Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
+    public Token? Scan(CodeCursor cursor, ErrorCollection? errors = null)
     {
         var strBuilder = new StringBuilder();
 

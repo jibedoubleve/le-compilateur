@@ -8,7 +8,7 @@ public static class ErrorFormater
 {
     #region Methods
 
-    public static string Format(this CompilationErrorCollection errors)
+    public static string Format(this ErrorCollection errors)
     {
         var builder = new StringBuilder();
         if (errors.Errors is { Count: 0 })

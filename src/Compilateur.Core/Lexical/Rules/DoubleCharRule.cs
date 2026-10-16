@@ -44,7 +44,7 @@ public abstract record DoubleCharRule : ITokenRule
         return _lexeme == current;
     }
 
-    public Token Scan(CodeCursor cursor, CompilationErrorCollection? errors = null)
+    public Token Scan(CodeCursor cursor, ErrorCollection? errors = null)
     {
         var first = cursor.Consume();
         var second = cursor.Consume();
