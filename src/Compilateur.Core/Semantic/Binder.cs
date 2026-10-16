@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Compilateur.Core.Errors;
 using Compilateur.Core.Semantic.Helpers;
+using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
 using Compilateur.Core.Syntactic.Nodes.Expressions;
@@ -8,7 +9,7 @@ using Compilateur.Core.Syntactic.Nodes.Statements;
 
 namespace Compilateur.Core.Semantic;
 
-public class Binder : ISyntaxNodeVisitor
+public class Binder : ISyntaxNodeVisitor<Unit>
 {
     #region Fields
 
@@ -59,7 +60,7 @@ public class Binder : ISyntaxNodeVisitor
         }
     }
 
-    public void Visit(ClassStatement node)
+    public Unit Visit(ClassStatement node)
     {
         var enclosing = node.SuperClass is null
             ? _enclosing.EnterClass()
@@ -107,18 +108,21 @@ public class Binder : ISyntaxNodeVisitor
                 });
             }
         }
+
+        return Unit.Value;
     }
 
-    public void Visit(FunctionDeclarationStatement node)
+    public Unit Visit(FunctionDeclarationStatement node)
     {
         _scopes.OnCurrent(scope => {
             scope.Declare(node.Token.Lexeme);
             scope.Define(node.Token.Lexeme);
         });
         VisitFunctionBody(node);
+        return Unit.Value;
     }
 
-    public void Visit(VarDeclarationStatement node)
+    public Unit Visit(VarDeclarationStatement node)
     {
         var name = node.Token.Lexeme;
         _scopes.OnCurrent(scope => {
@@ -133,21 +137,24 @@ public class Binder : ISyntaxNodeVisitor
         node.Initialiser?.Accept(this);
 
         _scopes.OnCurrent(scope => scope?.Define(name));
+        return Unit.Value;
     }
 
-    public void Visit(AssignExpression node)
+    public Unit Visit(AssignExpression node)
     {
         node.Target.Accept(this);
         node.Value.Accept(this);
+        return Unit.Value;
     }
 
-    public void Visit(BinaryExpression node)
+    public Unit Visit(BinaryExpression node)
     {
         node.Left.Accept(this);
         node.Right.Accept(this);
+        return Unit.Value;
     }
 
-    public void Visit(CallExpression node)
+    public Unit Visit(CallExpression node)
     {
         node.Callee.Accept(this);
 
@@ -155,13 +162,24 @@ public class Binder : ISyntaxNodeVisitor
         {
             argument.Accept(this);
         }
+
+        return Unit.Value;
     }
 
-    public void Visit(GetExpression node) => node.Object.Accept(this);
+    public Unit Visit(GetExpression node)
+    {
+        node.Object.Accept(this);
+        return Unit.Value;
+    }
 
-    public void Visit(GroupExpressionNode node) => node.Inner.Accept(this);
+    public Unit Visit(GroupExpressionNode node)
+    {
+        node.Inner.Accept(this);
 
-    public void Visit(IdentifierExpression node)
+        return Unit.Value;
+    }
+
+    public Unit Visit(IdentifierExpression node)
     {
         _scopes.OnCurrent(scope => {
             if (scope.IsDeclared(node.Token.Lexeme) &&
@@ -175,26 +193,31 @@ public class Binder : ISyntaxNodeVisitor
             node,
             (n, d) => _distanceMap.Add(n, d)
         );
+
+        return Unit.Value;
     }
 
-    public void Visit(LiteralExpression node)
-    {
+    public Unit Visit(LiteralExpression node) =>
         /* Nothing to do for a literal */
-    }
+        Unit.Value;
 
-    public void Visit(LogicalExpression node)
+    public Unit Visit(LogicalExpression node)
     {
         node.Left.Accept(this);
         node.Right.Accept(this);
+
+        return Unit.Value;
     }
 
-    public void Visit(SetExpression node)
+    public Unit Visit(SetExpression node)
     {
         node.Object.Accept(this);
         node.Value.Accept(this);
+
+        return Unit.Value;
     }
 
-    public void Visit(SuperExpression node)
+    public Unit Visit(SuperExpression node)
     {
         switch (_enclosing.Class)
         {
@@ -207,9 +230,11 @@ public class Binder : ISyntaxNodeVisitor
         }
 
         _scopes.ComputeDistance(node, (n, d) => _distanceMap.Add(n, d));
+
+        return Unit.Value;
     }
 
-    public void Visit(ThisExpression node)
+    public Unit Visit(ThisExpression node)
     {
         if (_enclosing.Class is not (ClassType.Class or ClassType.Subclass))
         {
@@ -217,11 +242,19 @@ public class Binder : ISyntaxNodeVisitor
         }
 
         _scopes.ComputeDistance(node, (n, d) => _distanceMap.Add(n, d));
+
+        return Unit.Value;
     }
 
-    public void Visit(UnaryExpression node) => node.Operand.Accept(this);
+    public Unit Visit(UnaryExpression node)
+    {
+        node.Operand.Accept(this);
 
-    public void Visit(BlockStatement node) =>
+        return Unit.Value;
+    }
+
+    public Unit Visit(BlockStatement node)
+    {
         _scopes.Push(_ => {
             foreach (var stmt in node.Statements)
             {
@@ -229,18 +262,32 @@ public class Binder : ISyntaxNodeVisitor
             }
         });
 
-    public void Visit(ExpressionStatement node) => node.Expression.Accept(this);
+        return Unit.Value;
+    }
 
-    public void Visit(IfStatement node)
+    public Unit Visit(ExpressionStatement node)
+    {
+        node.Expression.Accept(this);
+        return Unit.Value;
+    }
+
+    public Unit Visit(IfStatement node)
     {
         node.Condition.Accept(this);
         node.ThenBranch.Accept(this);
         node.ElseBranch?.Accept(this);
+
+        return Unit.Value;
     }
 
-    public void Visit(PrintStatement node) => node.Value.Accept(this);
+    public Unit Visit(PrintStatement node)
+    {
+        node.Value.Accept(this);
 
-    public void Visit(ReturnStatement node)
+        return Unit.Value;
+    }
+
+    public Unit Visit(ReturnStatement node)
     {
         switch (_enclosing.Function)
         {
@@ -259,20 +306,25 @@ public class Binder : ISyntaxNodeVisitor
         }
 
         node.Expression?.Accept(this);
+
+        return Unit.Value;
     }
 
-    public void Visit(WhileStatement node)
+    public Unit Visit(WhileStatement node)
     {
         node.Condition?.Accept(this);
         node.Body.Accept(this);
+        return Unit.Value;
     }
 
-    public void Visit(ProgramNode node)
+    public Unit Visit(ProgramNode node)
     {
         foreach (var statement in node.Statements)
         {
             statement.Accept(this);
         }
+
+        return Unit.Value;
     }
 
     #endregion

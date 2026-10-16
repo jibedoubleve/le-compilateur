@@ -10,38 +10,38 @@ public class VisitorGenerator : IIncrementalGenerator
 {
     #region Methods
 
-    private static void GetCode(SourceProductionContext context, NodeInfo? node)
+    private static void GetAcceptCode(SourceProductionContext context, NodeInfo? node)
     {
         if (node is null) { return; }
 
         var fileName = $"{node.Name}.Accept.g.cs";
         var code = $$"""
-                     using Compilateur.Core.Semantic;
+                     using Compilateur.Core.Syntactic;
 
                      namespace {{node.Namespace}};
 
                      public partial class {{node.Name}}
                      {
-                         public override void Accept(ISyntaxNodeVisitor visitor) => visitor.Visit(this);
+                         public override void Accept<T>(ISyntaxNodeVisitor<T> visitor) => visitor.Visit(this);
                      }
                      """;
         context.AddSource(fileName, code);
     }
 
-    private void GetVisitorCode(SourceProductionContext context, ImmutableArray<NodeInfo?> nodes)
+    private static void GetVisitorCode(SourceProductionContext context, ImmutableArray<NodeInfo?> nodes)
     {
         var overloads = new StringBuilder();
         const string fileName = "ISyntaxNodeVisitor.g.cs";
         
         foreach (var type in nodes.Select(node => $"{node.Namespace}.{node.Name}"))
         {
-            overloads.AppendLine($"    void Visit({type} node);");
+            overloads.AppendLine($"    T Visit({type} node);");
         }
         
         var code = $$"""
-                     namespace Compilateur.Core.Semantic;
+                     namespace Compilateur.Core.Syntactic;
 
-                     public interface ISyntaxNodeVisitor
+                     public interface ISyntaxNodeVisitor<T>
                      {
                      {{overloads}}
                      }
@@ -84,7 +84,7 @@ public class VisitorGenerator : IIncrementalGenerator
     {
         var provider = context.SyntaxProvider.CreateSyntaxProvider(Predicate, Transform)
                               .Where(x => x is not null);
-        context.RegisterSourceOutput(provider, GetCode);
+        context.RegisterSourceOutput(provider, GetAcceptCode);
         context.RegisterSourceOutput(provider.Collect(), GetVisitorCode);
     }
 
