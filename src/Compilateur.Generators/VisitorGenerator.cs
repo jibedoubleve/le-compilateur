@@ -22,7 +22,7 @@ public class VisitorGenerator : IIncrementalGenerator
 
                      public partial class {{node.Name}}
                      {
-                         public override void Accept<T>(ISyntaxNodeVisitor<T> visitor) => visitor.Visit(this);
+                         public override T Accept<T>(ISyntaxNodeVisitor<T> visitor) => visitor.Visit(this);
                      }
                      """;
         context.AddSource(fileName, code);
