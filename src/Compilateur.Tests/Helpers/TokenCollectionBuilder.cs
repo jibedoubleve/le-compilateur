@@ -172,7 +172,16 @@ public sealed class TokenCollectionBuilder
     public TokenCollectionBuilder Or() => Symbol(TokenKind.Or);
     public TokenCollectionBuilder Plus() => Symbol(TokenKind.Plus);
 
-    public TokenCollectionBuilder Print(string output) => Symbol(TokenKind.Print).String(output);
+    public TokenCollectionBuilder Print(string? output)
+    {
+        var symbol = Symbol(TokenKind.Print);
+        if (output is not null)
+        {
+            symbol.String(output);
+        }
+
+        return symbol;
+    }
 
     public TokenCollectionBuilder Return() => Symbol(TokenKind.Return);
     public TokenCollectionBuilder Semicolon() => Symbol(TokenKind.Semicolon);

@@ -39,6 +39,26 @@ public class PrintStatementTest
             () => parser.Parse(context)
         );
     }
+    
+    [Fact]
+    public void When_Print_Empty_Then_Exception_Thrown()
+    {
+        // arrange
+        var context = new TokenCollectionBuilder()
+                      .Print(null)
+                      .Semicolon()
+                      .BuildParsingContext();
+        var parser = new PrintStatementParser();
+
+        _output.WriteSyntaxContext(context);
+        
+        // act
+         _ = parser.Parse(context);
+         _output.WriteSyntaxContext(context);
+         
+         // assert 
+         context.Errors.ShouldNotBeEmpty();
+    }
 
     [Fact]
     public Task When_Print_Expression_Then_Node_Returned()

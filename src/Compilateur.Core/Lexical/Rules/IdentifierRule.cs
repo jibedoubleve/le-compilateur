@@ -40,6 +40,14 @@ public sealed record IdentifierRule : ITokenRule
 
     #region Methods
 
+    private object? GetValue(string lexeme) =>
+        lexeme switch
+        {
+            "true"  => true,
+            "false" => false,
+            _       => null
+        };
+
     private static bool IsValidChar(CodeCursor codeCursor)
     {
         if (codeCursor.IsAtEnd)
@@ -83,7 +91,8 @@ public sealed record IdentifierRule : ITokenRule
                         Column = first.Column,
                         Line = first.Line,
                         Lexeme = lexeme,
-                        Kind = type
+                        Kind = type,
+                        Value = GetValue(lexeme)
                     };
                 }
 

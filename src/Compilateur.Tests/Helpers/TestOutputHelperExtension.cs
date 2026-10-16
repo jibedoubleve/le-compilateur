@@ -1,4 +1,5 @@
 using System.Text;
+using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Semantic;
@@ -36,6 +37,14 @@ public static class TestOutputHelperExtension
                 node.FormatTree()
             );
         }
+
+        public void WriteErrors(ErrorCollection errors) =>
+            output.WriteLine($"""
+                              Errors:
+                              -------
+
+                              {errors.Format()}
+                              """);
 
         public void WriteLexerContext(string code, TokenizeResult tokenization)
         {
