@@ -13,7 +13,7 @@ public abstract class SyntaxNode(Token token)
 
     #region Methods
 
-    public abstract void Accept(ISyntaxNodeVisitor visitor);
+    public abstract void Accept<T>(ISyntaxNodeVisitor<T> visitor);
 
     #endregion
 }
