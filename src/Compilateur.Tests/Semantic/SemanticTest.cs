@@ -27,16 +27,6 @@ public class SemanticTest
 
     #region Methods
 
-    private Scanner CreateScanner()
-    {
-        var sc = new ServiceCollection();
-        var sp = sc.AddLogging(b => b.AddXunit(_output, LogLevel.Debug)
-                                     .SetMinimumLevel(LogLevel.Debug))
-                   .AddLexicalLayer()
-                   .BuildServiceProvider();
-        return sp.GetRequiredService<Scanner>();
-    }
-
     public static IEnumerable<object[]> BuildInvalidCode()
     {
         yield return
@@ -251,7 +241,7 @@ public class SemanticTest
 
         // act
         // -- lexer
-        var nodes = CreateScanner().Tokenize(code);
+        var nodes = new Scanner().Tokenize(code);
 
         // -- parser
         var cursor = new TokenCursor(nodes.Tokens);
@@ -278,7 +268,7 @@ public class SemanticTest
 
         // act
         // -- lexer
-        var nodes = CreateScanner().Tokenize(code);
+        var nodes = new Scanner().Tokenize(code);
 
         // -- parser
         var cursor = new TokenCursor(nodes.Tokens);
