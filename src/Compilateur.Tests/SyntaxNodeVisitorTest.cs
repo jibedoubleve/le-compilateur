@@ -1,17 +1,14 @@
-using System.Reflection;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
 using Compilateur.Core.Syntactic.Nodes.Expressions;
 using Compilateur.Core.Syntactic.Nodes.Statements;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Shouldly;
-using Binder = Compilateur.Core.Semantic.Binder;
 
 namespace Compilateur.Tests;
 
-public class TextSyntacNodeVisitor : ISyntaxNodeVisitor<int>
+public class TextSyntaxNodeVisitor : ISyntaxNodeVisitor<int>
 {
     #region Fields
 
@@ -21,7 +18,7 @@ public class TextSyntacNodeVisitor : ISyntaxNodeVisitor<int>
 
     #region Constructors
 
-    public TextSyntacNodeVisitor(int value) => _value = value;
+    public TextSyntaxNodeVisitor(int value) => _value = value;
 
     #endregion
 
@@ -83,7 +80,7 @@ public class SyntaxNodeVisitorTest
     {
         // arrange
         const int val = 42;
-        var visitor = new TextSyntacNodeVisitor(val);
+        var visitor = new TextSyntaxNodeVisitor(val);
 
         var token = new Token
         {
@@ -93,7 +90,6 @@ public class SyntaxNodeVisitorTest
             Lexeme = "",
             Value = 44
         };
-        var id = new IdentifierExpression(token);
 
         var program = new ProgramNode(token, []);
 
