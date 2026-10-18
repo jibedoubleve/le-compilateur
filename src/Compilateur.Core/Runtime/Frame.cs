@@ -24,14 +24,16 @@ public class Frame
 
     public bool Contains(string name) => _bindings.ContainsKey(name);
 
-    public void Define(string name, object? value = null)
+    public bool Define(string name, object? value = null)
     {
-        // If I'm in the global frame and the var
-        // already exists then update its value
-        if (Parent == null && !_bindings.TryAdd(name, value))
+        // If in global scope, then override if exists
+        if (Parent is null)
         {
             _bindings[name] = value;
+            return true;
         }
+
+        return _bindings.TryAdd(name, value);
     }
 
     public object? Get(string name) => _bindings[name];

@@ -6,12 +6,19 @@ public class Environment
 {
     #region Properties
 
-    public Frame Current { get; } = new();
-    public Frame Global => Current;
+    private Frame Global => Current;
+
+    public Frame Current { get; private set; } = new();
 
     #endregion
 
     #region Methods
+
+    private void PopFrame() =>
+        Current = Current.Parent
+                  ?? throw new InvalidOperationException("Cannot exit the global frame.");
+
+    private void PushFrame() => Current = new Frame(Current);
 
     private static bool TryFind(string lexeme, Frame frame, out object? result)
     {
@@ -33,8 +40,34 @@ public class Environment
         }
     }
 
+    public IDisposable EnterFrame() => new FrameLifecycle(this);
 
     public bool TryFind(Token token, out object? result) => TryFind(token.Lexeme, Current, out result);
 
     #endregion
+
+    private sealed class FrameLifecycle : IDisposable
+    {
+        #region Fields
+
+        private readonly Environment _env;
+
+        #endregion
+
+        #region Constructors
+
+        public FrameLifecycle(Environment env)
+        {
+            _env = env;
+            _env.PushFrame();
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Dispose() => _env.PopFrame();
+
+        #endregion
+    }
 }
