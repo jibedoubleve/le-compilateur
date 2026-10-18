@@ -248,7 +248,7 @@ public class SemanticTest
         _output.WriteSyntaxContext(context, node);
 
         // -- binder
-        var binder = new Binder(context.Errors);
+        var binder = new Resolver(context.Errors);
         binder.Visit(node!);
 
         _output.WriteSemanticContext(binder);
@@ -275,7 +275,7 @@ public class SemanticTest
         _output.WriteSyntaxContext(context, node);
 
         // -- binder
-        var binder = new Binder(context.Errors);
+        var binder = new Resolver(context.Errors);
         binder.Visit(node!);
 
         _output.WriteSemanticContext(binder);

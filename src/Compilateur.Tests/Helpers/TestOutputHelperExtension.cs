@@ -74,7 +74,7 @@ public static class TestOutputHelperExtension
             }
         }
 
-        public void WriteSemanticContext(Binder binder)
+        public void WriteSemanticContext(Resolver resolver)
         {
             var sb = new StringBuilder();
             sb.AppendLine("""
@@ -85,7 +85,7 @@ public static class TestOutputHelperExtension
                           | -------------------------- | -------- |
 
                           """);
-            foreach (var local in binder.ToLocals())
+            foreach (var local in resolver.ToLocals())
             {
                 sb.AppendLine($"| {local.Name,26} | {local.Distance,8} |");
             }
@@ -94,7 +94,7 @@ public static class TestOutputHelperExtension
                           Errors:
                           ------
                           """);
-            sb.AppendLine(binder.Errors.Format());
+            sb.AppendLine(resolver.Errors.Format());
 
             output.WriteLine(sb.ToString());
         }
@@ -118,8 +118,8 @@ public static class DistanceMapExtensions
 {
     #region Methods
 
-    public static IEnumerable<Local> ToLocals(this Binder binder)
-        => binder.DistanceMap.Select(x => new Local(
+    public static IEnumerable<Local> ToLocals(this Resolver resolver)
+        => resolver.DistanceMap.Select(x => new Local(
             $"{x.Key.Token.Lexeme} ({x.Key.Token.Line},{x.Key.Token.Column})",
             x.Value)
         );
