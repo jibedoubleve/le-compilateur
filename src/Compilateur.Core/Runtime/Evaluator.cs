@@ -14,8 +14,9 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 {
     #region Fields
 
-    private readonly TextWriter _textWriter;
     private readonly Environment _env = new();
+
+    private readonly TextWriter _textWriter;
 
     #endregion
 
@@ -61,8 +62,10 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var value = node.Initialiser?.Accept(this);
         var name = node.Token.Lexeme;
 
-        _env.Current.Define(name, value);
-        return null;
+        var isSuccess = _env.Current.Define(name, value);
+        return isSuccess
+            ? null
+            : throw new RuntimeException(Errors);
     }
 
     public object? Visit(AssignExpression node) => throw new NotImplementedException();
@@ -111,10 +114,9 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         {
             return value;
         }
-        
+
         Errors.Add(node.Token, $"Unknown identifier {node.Token.Lexeme}");
         throw new RuntimeException(Errors);
-        
     }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
@@ -147,9 +149,20 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
             _   => throw new UnreachableException()
         };
 
-    public object? Visit(BlockStatement node) => throw new NotImplementedException();
+    public object? Visit(BlockStatement node)
+    {
+        using (_env.EnterFrame())
+        {
+            foreach (var stmt in node.Statements)
+            {
+                stmt.Accept(this);
+            }
+        }
 
-    public object? Visit(ExpressionStatement node) => throw new NotImplementedException();
+        return null;
+    }
+
+    public object? Visit(ExpressionStatement node) => node.Expression.Accept(this);
 
     public object? Visit(IfStatement node) => throw new NotImplementedException();
 
