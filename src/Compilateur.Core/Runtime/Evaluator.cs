@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Globalization;
 using Compilateur.Core.Errors;
+using Compilateur.Core.Runtime.Extensions;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
@@ -13,6 +15,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
     #region Fields
 
     private readonly TextWriter _textWriter;
+    private readonly Environment _env = new();
 
     #endregion
 
@@ -53,7 +56,14 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(FunctionDeclarationStatement node) => throw new NotImplementedException();
 
-    public object? Visit(VarDeclarationStatement node) => throw new NotImplementedException();
+    public object? Visit(VarDeclarationStatement node)
+    {
+        var value = node.Initialiser?.Accept(this);
+        var name = node.Token.Lexeme;
+
+        _env.Current.Define(name, value);
+        return null;
+    }
 
     public object? Visit(AssignExpression node) => throw new NotImplementedException();
 
@@ -93,13 +103,35 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(GetExpression node) => throw new NotImplementedException();
 
-    public object? Visit(GroupExpressionNode node) => throw new NotImplementedException();
+    public object? Visit(GroupExpressionNode node) => node.Inner.Accept(this);
 
-    public object? Visit(IdentifierExpression node) => throw new NotImplementedException();
+    public object? Visit(IdentifierExpression node)
+    {
+        if (_env.TryFind(node.Token, out var value))
+        {
+            return value;
+        }
+        
+        Errors.Add(node.Token, $"Unknown identifier {node.Token.Lexeme}");
+        throw new RuntimeException(Errors);
+        
+    }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
 
-    public object? Visit(LogicalExpression node) => throw new NotImplementedException();
+    public object? Visit(LogicalExpression node)
+    {
+        var left = node.Left.Accept(this);
+
+        return node.Token.Lexeme switch
+        {
+            "and" => !left.AsBool() ? left : Eval(node.Right),
+            "or"  => left.AsBool() ? left : Eval(node.Right),
+            _     => throw new UnreachableException()
+        };
+
+        object? Eval(ExpressionNode n) => n.Accept(this);
+    }
 
     public object? Visit(SetExpression node) => throw new NotImplementedException();
 
@@ -107,7 +139,13 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(ThisExpression node) => throw new NotImplementedException();
 
-    public object? Visit(UnaryExpression node) => throw new NotImplementedException();
+    public object? Visit(UnaryExpression node) =>
+        node.Token.Lexeme switch
+        {
+            "-" => this.Negate(node.Operand),
+            "!" => this.Not(node.Operand),
+            _   => throw new UnreachableException()
+        };
 
     public object? Visit(BlockStatement node) => throw new NotImplementedException();
 
@@ -118,7 +156,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
     public object? Visit(PrintStatement node)
     {
         var output = node.Value.Accept(this);
-        
+
         _textWriter.WriteLine(Stringify(output));
         return null;
     }

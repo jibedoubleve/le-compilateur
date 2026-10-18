@@ -12,65 +12,84 @@ namespace Compilateur.Tests.Helpers;
 
 public static class TestOutputHelperExtension
 {
-    extension(ITestOutputHelper output)
+    extension(ITestOutputHelper outputHelper)
     {
         #region Methods
 
         private void WriteCode(ParsingContext context)
-            => output.WriteLine($"""
-                                 Code:
-                                 ----- 
-                                 {context.Cursor}
-                                 """);
+            => outputHelper.WriteLine($"""
+                                       Code:
+                                       ----- 
+                                       {context.Cursor}
+                                       """);
 
         private void WriteSyntaxTree(SyntaxNode? node)
         {
             if (node is null)
             {
-                output.WriteLine("Syntax tree: EMPTY.");
+                outputHelper.WriteLine("Syntax tree: EMPTY.");
                 return;
             }
 
-            output.WriteLine("Syntax tree:");
-            output.WriteLine("------------");
-            output.WriteLine(
+            outputHelper.WriteLine("Syntax tree:");
+            outputHelper.WriteLine("------------");
+            outputHelper.WriteLine(
                 node.FormatTree()
             );
         }
 
         public void WriteErrors(ErrorCollection errors) =>
-            output.WriteLine($"""
-                              Errors:
-                              -------
+            outputHelper.WriteLine($"""
+                                    Errors:
+                                    -------
 
-                              {errors.Format()}
-                              """);
+                                    {errors.Format()}
+                                    """);
+
+        public void WriteInterpreterContext(string code, string output, ErrorCollection errors) =>
+            outputHelper.WriteLine($"""
+                                    Code:
+                                    -----
+
+                                    {code}
+
+                                    Output:
+                                    -------
+
+                                    {output}                              
+                                    Errors:
+                                    -------
+
+                                    {errors.Format()}
+
+                                    """
+            );
 
         public void WriteLexerContext(string code, TokenizeResult tokenization)
         {
-            output.WriteLine($"""
-                              Code:
-                              -----
+            outputHelper.WriteLine($"""
+                                    Code:
+                                    -----
 
-                              {code}
+                                    {code}
 
-                              Errors:
-                              -------
+                                    Errors:
+                                    -------
 
-                              {tokenization.Errors.Format()}
+                                    {tokenization.Errors.Format()}
 
-                              Tokens:
-                              -------
-                              """
+                                    Tokens:
+                                    -------
+                                    """
             );
 
-            output.WriteLine("""
-                             | Lexeme | Kind               |
-                             | ------ | ------------------ |
-                             """);
+            outputHelper.WriteLine("""
+                                   | Lexeme | Kind               |
+                                   | ------ | ------------------ |
+                                   """);
             foreach (var token in tokenization.Tokens)
             {
-                output.WriteLine($"| {token.Lexeme,6} | {token.Kind,-18} |");
+                outputHelper.WriteLine($"| {token.Lexeme,6} | {token.Kind,-18} |");
             }
         }
 
@@ -96,16 +115,16 @@ public static class TestOutputHelperExtension
                           """);
             sb.AppendLine(resolver.Errors.Format());
 
-            output.WriteLine(sb.ToString());
+            outputHelper.WriteLine(sb.ToString());
         }
 
         public void WriteSyntaxContext(ParsingContext context, SyntaxNode? node = null)
         {
-            output.WriteCode(context);
-            if (node != null) { output.WriteSyntaxTree(node); }
-            else { output.WriteLine("No syntax tree to output."); }
+            outputHelper.WriteCode(context);
+            if (node != null) { outputHelper.WriteSyntaxTree(node); }
+            else { outputHelper.WriteLine("No syntax tree to output."); }
 
-            output.WriteLine(context.FormatErrors());
+            outputHelper.WriteLine(context.FormatErrors());
         }
 
         #endregion

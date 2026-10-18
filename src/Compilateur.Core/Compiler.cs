@@ -24,7 +24,7 @@ public class Compiler
         var context = new ParsingContext(cursor, nodes.Errors);
         var node = ProgramParser.Parse(context);
 
-        var binder = new Binder(context.Errors);
+        var binder = new Resolver(context.Errors);
 
         if (node is null) { return context.Errors;}
         
