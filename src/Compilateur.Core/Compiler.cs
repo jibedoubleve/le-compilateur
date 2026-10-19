@@ -1,5 +1,4 @@
-﻿using Compilateur.Core.Errors;
-using Compilateur.Core.Lexical;
+﻿using Compilateur.Core.Lexical;
 using Compilateur.Core.Runtime;
 using Compilateur.Core.Semantic;
 using Compilateur.Core.Syntactic;
@@ -9,31 +8,55 @@ namespace Compilateur.Core;
 
 public class Compiler
 {
+    #region Fields
+
     private readonly TextWriter _output;
+
+    #endregion
+
+    #region Constructors
 
     public Compiler(TextWriter output) => _output = output;
 
     public Compiler() => _output = Console.Out;
 
+    #endregion
+
     #region Methods
 
-    public  ErrorCollection Compile(string code)
+    public Analysis Analyse(string code)
     {
+        // Lexical
         var nodes = new Scanner().Tokenize(code);
         var cursor = new TokenCursor(nodes.Tokens);
+
+        // Syntactic
         var context = new ParsingContext(cursor, nodes.Errors);
-        var node = ProgramParser.Parse(context);
+        var ast = ProgramParser.Parse(context);
 
-        var binder = new Resolver(context.Errors);
+        if (ast is null) { return Analysis.Error(context.Errors); }
 
-        if (node is null) { return context.Errors;}
-        
-        binder.Visit(node);
+        // Semantic
+        var resolver = new Resolver(context.Errors);
+        resolver.Visit(ast);
 
-        var interpreter = new Interpreter(binder.Errors, _output);
-        return interpreter.Interpret(node);
+        // Aggregates syntactic & semantic error
+        // and returns if any
+        return context.Errors.Any()
+            ? Analysis.Error(context.Errors)
+            : Analysis.Success(ast);
     }
 
+    public void Run(Analysis analysis)
+    {
+        if (analysis.HasErrors)
+        {
+            throw new ArgumentException("Invalid analysis", nameof(analysis));
+        }
+
+        var interpreter = new Interpreter(analysis.Errors, _output);
+        interpreter.Interpret(analysis.Ast!);
+    }
 
     #endregion
 }

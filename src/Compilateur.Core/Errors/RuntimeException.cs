@@ -1,16 +1,10 @@
 namespace Compilateur.Core.Errors;
 
-public class RuntimeException : Exception
+public class RuntimeException(ErrorCollection errors) : Exception(errors.Last().Message)
 {
-    #region Constructors
-
-    public RuntimeException(ErrorCollection errors) => Errors = errors;
-
-    #endregion
-
     #region Properties
 
-    public ErrorCollection Errors { get; }
+    public ErrorCollection Errors { get; } = errors;
 
     #endregion
 }
