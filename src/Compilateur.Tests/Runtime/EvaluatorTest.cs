@@ -23,6 +23,19 @@ public class EvaluatorTest
 
     #region Methods
 
+    public static IEnumerable<object[]> BuildInvalidAst()
+    {
+        yield return
+        [
+            """
+            {
+                var a = 1;
+                var a = 2;
+            }
+            """
+        ];
+    }
+
     public static IEnumerable<object[]> BuildInvalidCode()
     {
         yield return
@@ -37,20 +50,19 @@ public class EvaluatorTest
             print 1 - "hello world";
             """
         ];
-        yield return
-        [
-            """
-            {
-                var a = 1;
-                var a = 2;
-            }
-            """
-        ];
 
         yield return
         [
             """
             print b;
+            """
+        ];
+        yield return
+        [
+            """
+            for (var i = 0; i < 2; i = i + 1)
+              print i;
+            print i;
             """
         ];
     }
@@ -225,36 +237,48 @@ public class EvaluatorTest
             """,
             """
             2
-            
+
             """
         ];
-//         yield return
-//         [
-//             """
-//             if (true) print "then";
-//              else print "else";
-//             """,
-//             "then"
-//         ];
-//         yield return
-//         [
-//             """
-//             var i = 0;
-//             while (i < 3) 
-//             {
-//               print i; i = i + 1; 
-//             }
-//             """,
-//             "0 1 2"
-//         ];
-//         yield return
-//         [
-//             """
-//             for (var i = 0; i < 2; i = i + 1) 
-//               print i;
-//             """,
-//             "0 1"
-//         ];
+        yield return
+        [
+            """
+            if (true) print "then";
+             else print "else";
+            """,
+            """
+            then
+
+            """
+        ];
+        yield return
+        [
+            """
+            var i = 0;
+            while (i < 3) 
+            {
+              print i; i = i + 1; 
+            }
+            """,
+            """
+            0
+            1
+            2
+
+            """
+        ];
+         yield return
+         [
+             """
+             for (var i = 0; i < 2; i = i + 1) 
+               print i;
+             """,
+             """
+             0
+             1
+             
+             """
+         ];
 //         yield return
 //         [
 //             """
@@ -341,6 +365,20 @@ public class EvaluatorTest
     }
 
     [Theory]
+    [MemberData(nameof(BuildInvalidAst))]
+    public void When_Invalid_Ast_Then_Argument_Exception_Is_Thrown(string code)
+    {
+        // arrange 
+        var compiler = new Compiler();
+
+        // act & assert
+        var analysis = compiler.Analyse(code);
+        Assert.Throws<ArgumentException>(() => compiler.Run(analysis));
+
+        _output.WriteErrors(analysis.Errors);
+    }
+
+    [Theory]
     [MemberData(nameof(BuildInvalidCode))]
     public void When_Invalid_Code_Then_Exception_Is_Thrown(string code)
     {
@@ -348,7 +386,8 @@ public class EvaluatorTest
         var compiler = new Compiler();
 
         // act & assert
-        var ex = Assert.Throws<RuntimeException>(() => compiler.Compile(code));
+        var analysis = compiler.Analyse(code);
+        var ex = Assert.Throws<RuntimeException>(() => compiler.Run(analysis));
 
         _output.WriteErrors(ex.Errors);
     }
@@ -369,13 +408,14 @@ public class EvaluatorTest
             var compiler = new Compiler(textWriter);
 
             //act
-            var errors = compiler.Compile(code);
+            var analysis = compiler.Analyse(code);
+            compiler.Run(analysis);
 
-            _output.WriteErrors(errors);
+            _output.WriteErrors(analysis.Errors);
 
             // assert
             Assert.Multiple(
-                () => errors.ShouldBeEmpty(),
+                () => analysis.Errors.ShouldBeEmpty(),
                 () => textWriter.ToString().ShouldBe("1.5\r\n")
             );
         }
@@ -395,13 +435,14 @@ public class EvaluatorTest
         var compiler = new Compiler(textWriter);
 
         //act
-        var errors = compiler.Compile(code);
+        var analysis = compiler.Analyse(code);
+        compiler.Run(analysis);
 
-        _output.WriteErrors(errors);
+        _output.WriteErrors(analysis.Errors);
 
         // assert
         Assert.Multiple(
-            () => errors.ShouldBeEmpty(),
+            () => analysis.Errors.ShouldBeEmpty(),
             () => textWriter.ToString().ShouldBe($"{value}\r\n")
         );
     }
@@ -416,13 +457,14 @@ public class EvaluatorTest
         var compiler = new Compiler(textWriter);
 
         // act & assert
-        var compilation = compiler.Compile(code);
+        var analysis = compiler.Analyse(code);
+        compiler.Run(analysis);
 
-        _output.WriteInterpreterContext(code, output, compilation);
+        _output.WriteInterpreterContext(code, output, analysis.Errors);
 
         // assert
         Assert.Multiple(
-            () => compilation.ShouldBeEmpty(),
+            () => analysis.Errors.ShouldBeEmpty(),
             () => textWriter.ToString().ShouldBe(output)
         );
     }

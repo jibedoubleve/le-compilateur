@@ -63,9 +63,10 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var name = node.Token.Lexeme;
 
         var isSuccess = _env.TryDefine(name, value);
+
         return isSuccess
             ? null
-            : throw new RuntimeException(Errors);
+            : throw new UnreachableException();
     }
 
     public object? Visit(AssignExpression node)
@@ -101,12 +102,16 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
         return (node.Token.Lexeme, left, right) switch
         {
-            ("+", double x, double y) => x + y,
-            ("+", string x, string y) => x + y,
-            ("-", double x, double y) => x - y,
-            ("*", double x, double y) => x * y,
-            ("/", double x, double y) => x / y,
-            _                         => Fail()
+            ("+", double x, double y)  => x + y,
+            ("+", string x, string y)  => x + y,
+            ("-", double x, double y)  => x - y,
+            ("*", double x, double y)  => x * y,
+            ("/", double x, double y)  => x / y,
+            ("<", double x, double y)  => x < y,
+            ("<=", double x, double y) => x <= y,
+            (">", double x, double y)  => x > y,
+            (">=", double x, double y) => x >= y,
+            _                          => Fail()
         };
 
         object Fail()
@@ -178,7 +183,13 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(ExpressionStatement node) => node.Expression.Accept(this);
 
-    public object? Visit(IfStatement node) => throw new NotImplementedException();
+    public object? Visit(IfStatement node)
+    {
+        var condition = node.Condition.Accept(this);
+        return condition.AsBool()
+            ? node.ThenBranch.Accept(this)
+            : node.ElseBranch?.Accept(this);
+    }
 
     public object? Visit(PrintStatement node)
     {
@@ -190,7 +201,15 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(ReturnStatement node) => throw new NotImplementedException();
 
-    public object? Visit(WhileStatement node) => throw new NotImplementedException();
+    public object? Visit(WhileStatement node)
+    {
+        while (node.Condition?.Accept(this).AsBool() ?? true)
+        {
+            node.Body.Accept(this);
+        }
+
+        return null;
+    }
 
     public object? Visit(ProgramNode node)
     {
