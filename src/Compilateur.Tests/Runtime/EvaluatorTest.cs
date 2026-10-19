@@ -46,7 +46,7 @@ public class EvaluatorTest
             }
             """
         ];
-        
+
         yield return
         [
             """
@@ -163,40 +163,71 @@ public class EvaluatorTest
 
             """
         ];
-         // yield return
-         // [
-         //     """
-         //     var a = 1;
-         //     a = 2; 
-         //     print a;
-         //     """,
-         //     "2"
-         // ];
-         // yield return
-         // [
-         //     """
-         //     var a = 1;
-         //     a = a + 1;
-         //     print a;
-         //     """,
-         //     "2"
-         // ];
-         yield return
-         [
-             """
-             var a = 1;
-             {
-                 var a = 2;
-                 print a;
-             }
-             print a;
-             """,
-             """
-             2
-             1
-             
-             """
-         ];
+        yield return
+        [
+            """
+            var a = 1;
+            a = 2; 
+            print a;
+            """,
+            """
+            2
+
+            """
+        ];
+        yield return
+        [
+            """
+            var a = 1;
+            a = a + 1;
+            print a;
+            """,
+            """
+            2
+
+            """
+        ];
+        yield return
+        [
+            """
+            var a = 1;
+            {
+                var a = 2;
+                print a;
+            }
+            print a;
+            """,
+            """
+            2
+            1
+
+            """
+        ];
+        yield return
+        [
+            """
+            var a = 1;
+            {
+              a = 2;
+            }
+            print a;
+            """,
+            """
+            2
+
+            """
+        ];
+        yield return
+        [
+            """
+            var a = 1; 
+            print a = 2;
+            """,
+            """
+            2
+            
+            """
+        ];
 //         yield return
 //         [
 //             """

@@ -62,13 +62,27 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var value = node.Initialiser?.Accept(this);
         var name = node.Token.Lexeme;
 
-        var isSuccess = _env.Current.Define(name, value);
+        var isSuccess = _env.TryDefine(name, value);
         return isSuccess
             ? null
             : throw new RuntimeException(Errors);
     }
 
-    public object? Visit(AssignExpression node) => throw new NotImplementedException();
+    public object? Visit(AssignExpression node)
+    {
+        var target = node.Target.Token;
+        var value = node.Value.Accept(this);
+
+        var success = _env.TryAssign(target, value);
+
+        if (!success)
+        {
+            Errors.Add(node.Token, $"Undefined variable '{target.Lexeme}'.");
+            throw new RuntimeException(Errors);
+        }
+
+        return value;
+    }
 
     public object? Visit(BinaryExpression node)
     {
@@ -110,7 +124,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(IdentifierExpression node)
     {
-        if (_env.TryFind(node.Token, out var value))
+        if (_env.TryGetValue(node.Token, out var value))
         {
             return value;
         }

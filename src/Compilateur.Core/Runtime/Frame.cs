@@ -38,5 +38,13 @@ public class Frame
 
     public object? Get(string name) => _bindings[name];
 
+    public bool Update(string name, object? value)
+    {
+        if (!_bindings.ContainsKey(name)) { return false; }
+
+        _bindings[name] = value;
+        return true;
+    }
+
     #endregion
 }

@@ -4,23 +4,21 @@ namespace Compilateur.Core.Runtime;
 
 public class Environment
 {
-    #region Properties
+    #region Fields
 
-    private Frame Global => Current;
-
-    public Frame Current { get; private set; } = new();
+    private Frame _current = new();
 
     #endregion
 
     #region Methods
 
     private void PopFrame() =>
-        Current = Current.Parent
-                  ?? throw new InvalidOperationException("Cannot exit the global frame.");
+        _current = _current.Parent
+                   ?? throw new InvalidOperationException("Cannot exit the global frame.");
 
-    private void PushFrame() => Current = new Frame(Current);
+    private void PushFrame() => _current = new Frame(_current);
 
-    private static bool TryFind(string lexeme, Frame frame, out object? result)
+    private static bool TryGetValue(string lexeme, Frame frame, out object? result)
     {
         while (true)
         {
@@ -42,7 +40,22 @@ public class Environment
 
     public IDisposable EnterFrame() => new FrameLifecycle(this);
 
-    public bool TryFind(Token token, out object? result) => TryFind(token.Lexeme, Current, out result);
+    public bool TryDefine(string name, object? value) => _current.Define(name, value);
+
+    public bool TryGetValue(Token token, out object? result) => TryGetValue(token.Lexeme, _current, out result);
+
+    public bool TryAssign(Token token, object? value)
+    {
+        var frame = _current;
+        while (frame is not null)
+        {
+            var found = frame.Update(token.Lexeme, value);
+            if (!found) { frame = frame.Parent; }
+            else { return true; }
+        }
+
+        return false;
+    }
 
     #endregion
 
