@@ -53,9 +53,7 @@ public class EvaluatorTest
 
         yield return
         [
-            """
-            print b;
-            """
+            "print b;"
         ];
         yield return
         [
@@ -267,37 +265,106 @@ public class EvaluatorTest
 
             """
         ];
-         yield return
-         [
-             """
-             for (var i = 0; i < 2; i = i + 1) 
-               print i;
-             """,
-             """
-             0
-             1
-             
-             """
-         ];
-//         yield return
-//         [
-//             """
-//             fun f(x) 
-//             {
-//               print x; 
-//             }
-//             f(5);
-//             """,
-//             "5"
-//         ];
-//         yield return
-//         [
-//             """
-//             fun f() { return 7; }
-//             print f();
-//             """,
-//             "7"
-//         ];
+        yield return
+        [
+            """
+            for (var i = 0; i < 2; i = i + 1) 
+              print i;
+            """,
+            """
+            0
+            1
+
+            """
+        ];
+        yield return
+        [
+            """
+            fun f(x) 
+            {
+              print x; 
+            }
+            f(5);
+            """,
+            """
+            5
+
+            """
+        ];
+        yield return
+        [
+            """
+            fun f(a)
+            {
+                print a; 
+            }
+            {
+                var x = 1;
+                f(x); 
+            }
+            """,
+            """
+            1
+
+            """
+        ];
+        yield return
+        [
+            """
+            fun f() {}
+            {
+                var y = 1;
+                f();
+                print y; 
+            }
+            """,
+            """
+            1
+
+            """
+        ];
+        yield return
+        [
+            """
+            var x = 15;
+            fun f()
+            {
+                print x; 
+            }
+            {
+                var x = 999;
+                f(); 
+            }
+            """,
+            """
+            15
+            
+            """
+        ];
+        yield return
+        [
+            """
+            fun f() {} 
+            {
+                f(); 
+            }
+            var a = 1;
+            var a = 2;
+            print a;
+            """,
+            """
+            2
+            
+            """
+        ];
+        //  yield return
+        //  [
+        //      """
+        //      fun f() { return 7; }
+        //      print f();
+        //      """,
+        //      "7"
+        //  ];
 //         yield return
 //         [
 //             """
