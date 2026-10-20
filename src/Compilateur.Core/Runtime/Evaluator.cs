@@ -55,7 +55,15 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     public object? Visit(ClassStatement node) => throw new NotImplementedException();
 
-    public object? Visit(FunctionDeclarationStatement node) => throw new NotImplementedException();
+    public object? Visit(FunctionDeclarationStatement node)
+    {
+        var fun = new LoxFunction(
+            node,
+            _env.CurrentFrame
+        );
+        _env.TryDefine(node.Token.Lexeme, fun);
+        return null;
+    }
 
     public object? Visit(VarDeclarationStatement node)
     {
@@ -121,7 +129,41 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         }
     }
 
-    public object? Visit(CallExpression node) => throw new NotImplementedException();
+    public object? Visit(CallExpression node)
+    {
+        if (node.Callee.Accept(this) is not LoxFunction fun)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var arguments = node.Arguments
+                            .Select( a => a.Accept(this) )
+                            .ToList();
+        
+        using (_env.EnterFrame(fun.Closure))
+        {
+            var parameters = fun.Function.Parameters;
+
+            if (fun.Arity != arguments.Count)
+            {
+                Errors.Add(
+                    node.Token,
+                    $"Expected {fun.Arity} arguments but got {arguments.Count}."
+                );
+                throw new RuntimeException(Errors);
+            }
+
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                _env.TryDefine(
+                    parameters[i].Lexeme,
+                    arguments[i]
+                );
+            }
+
+            return fun.Function.Body.Accept(this);
+        }
+    }
 
     public object? Visit(GetExpression node) => throw new NotImplementedException();
 
