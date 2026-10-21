@@ -66,7 +66,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
         }
     }
 
-    public Unit Visit(ClassStatement node)
+    public Unit Visit(ClassDeclarationStatement node)
     {
         var enclosing = node.SuperClass is null
             ? _enclosing.EnterClass()

@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using System.Globalization;
 using Compilateur.Core.Errors;
+using Compilateur.Core.Extensions;
 using Compilateur.Core.Runtime.Extensions;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
@@ -44,16 +44,61 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     #region Methods
 
-    private static string Stringify(object? obj) =>
-        obj switch
-        {
-            bool b   => b.ToString().ToLower(),
-            null     => "nil",
-            double d => d.ToString(CultureInfo.InvariantCulture),
-            _        => obj.ToString() ?? string.Empty
-        };
+    private object? VisitLoxCtor(LoxClass @class, CallExpression node)
+    {
+        var instance = new LoxInstance(@class);
+        var ctor = instance.GetProperty("init");
 
-    public object? Visit(ClassStatement node) => throw new NotImplementedException();
+        if (ctor is LoxFunction fun) { VisitLoxFunction(fun, node); }
+        else if (node.Arguments.Count > 0)
+        {
+            Errors.Add(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
+            throw new RuntimeException(Errors);
+        }
+
+        return instance;
+    }
+
+    private object? VisitLoxFunction(LoxFunction fun, CallExpression node)
+    {
+        // Evaluate the arguments out of the closure.
+        var arguments = node.Arguments
+                            .Select(a => a.Accept(this))
+                            .ToList();
+        using (_env.EnterFrame(fun.Closure))
+        {
+            var parameters = fun.Declaration.Parameters;
+
+            if (fun.Arity != arguments.Count)
+            {
+                Errors.Add(
+                    node.Token,
+                    $"Expected {fun.Arity} arguments but got {arguments.Count}."
+                );
+                throw new RuntimeException(Errors);
+            }
+
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                _env.TryDefine(
+                    parameters[i].Lexeme,
+                    arguments[i]
+                );
+            }
+
+            return fun.Declaration.Body.Accept(this);
+        }
+    }
+
+    public object? Visit(ClassDeclarationStatement node)
+    {
+        var @class = new LoxClass(
+            node,
+            _env.CurrentFrame
+        );
+        _env.TryDefine(node.Token.Lexeme, @class);
+        return null;
+    }
 
     public object? Visit(FunctionDeclarationStatement node)
     {
@@ -133,44 +178,27 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
     {
         try
         {
-            if (node.Callee.Accept(this) is not LoxFunction fun)
+            var callee = node.Callee.Accept(this);
+
+            return callee switch
             {
-                throw new InvalidOperationException();
-            }
-
-            // Evaluate the arguments out of the closure.
-            var arguments = node.Arguments
-                                .Select(a => a.Accept(this))
-                                .ToList();
-
-            using (_env.EnterFrame(fun.Closure))
-            {
-                var parameters = fun.Function.Parameters;
-
-                if (fun.Arity != arguments.Count)
-                {
-                    Errors.Add(
-                        node.Token,
-                        $"Expected {fun.Arity} arguments but got {arguments.Count}."
-                    );
-                    throw new RuntimeException(Errors);
-                }
-
-                for (var i = 0; i < parameters.Count; i++)
-                {
-                    _env.TryDefine(
-                        parameters[i].Lexeme,
-                        arguments[i]
-                    );
-                }
-
-                return fun.Function.Body.Accept(this);
-            }
+                LoxFunction fun => VisitLoxFunction(fun, node),
+                LoxClass @class => VisitLoxCtor(@class, node),
+                _               => throw new UnreachableException()
+            };
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
     }
 
-    public object? Visit(GetExpression node) => throw new NotImplementedException();
+    public object? Visit(GetExpression node)
+    {
+        var obj = node.Object.Accept(this);
+        return obj switch
+        {
+            LoxInstance i => i.GetProperty(node.Token.Lexeme),
+            _             => throw new UnreachableException()
+        };
+    }
 
     public object? Visit(GroupExpressionNode node) => node.Inner.Accept(this);
 
@@ -201,11 +229,30 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         object? Eval(ExpressionNode n) => n.Accept(this);
     }
 
-    public object? Visit(SetExpression node) => throw new NotImplementedException();
+    public object? Visit(SetExpression node)
+    {
+        var obj = node.Object.Accept(this);
+
+        if (obj is not LoxInstance instance)
+        {
+            throw new UnreachableException();
+        }
+
+        instance.AddField(
+            node.Token.Lexeme,
+            node.Value.Accept(this)
+        );
+
+        return null;
+    }
 
     public object? Visit(SuperExpression node) => throw new NotImplementedException();
 
-    public object? Visit(ThisExpression node) => throw new NotImplementedException();
+    public object? Visit(ThisExpression node)
+    {
+        _env.TryGetValue("this", out var value);
+        return value ?? throw new UnreachableException();
+    }
 
     public object? Visit(UnaryExpression node) =>
         node.Token.Lexeme switch
@@ -242,16 +289,16 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
     {
         var output = node.Value.Accept(this);
 
-        _textWriter.WriteLine(Stringify(output));
+        _textWriter.WriteLine(output.Stringify());
         return null;
     }
 
-    public object? Visit(ReturnStatement node) =>
+    public object Visit(ReturnStatement node) =>
         /* Stops execution of statements up to the call
          * This is caught in Visit(CallExpression)
          */
         throw new ReturnException(
-            node.Expression?.Token.Value
+            node.Expression?.Accept(this)
         );
 
     public object? Visit(WhileStatement node)
@@ -273,15 +320,6 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
         return null;
     }
-
-    #endregion
-}
-
-public class ReturnException(object? returnValue) : Exception
-{
-    #region Properties
-
-    public object? ReturnValue { get; } = returnValue;
 
     #endregion
 }

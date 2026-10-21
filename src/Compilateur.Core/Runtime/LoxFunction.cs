@@ -2,7 +2,23 @@ using Compilateur.Core.Syntactic.Nodes.Declaration;
 
 namespace Compilateur.Core.Runtime;
 
-public record LoxFunction(FunctionDeclarationStatement Function, Frame Closure)
+public class LoxFunction
 {
-    public int Arity => Function.Parameters.Count;
+    #region Constructors
+
+    public LoxFunction(FunctionDeclarationStatement declaration, Frame closure)
+    {
+        Declaration = declaration;
+        Closure = closure;
+    }
+
+    #endregion
+
+    #region Properties
+
+    public int Arity => Declaration.Parameters.Count;
+    public Frame Closure { get; }
+    public FunctionDeclarationStatement Declaration { get; }
+
+    #endregion
 }

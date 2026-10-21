@@ -1,0 +1,51 @@
+using Compilateur.Core.Syntactic.Nodes.Declaration;
+
+namespace Compilateur.Core.Runtime;
+
+public class LoxInstance
+{
+    #region Fields
+
+    private readonly Dictionary<string, object?> _variables = new();
+
+    #endregion
+
+    #region Constructors
+
+    public LoxInstance(LoxClass @class)
+    {
+        Class = @class;
+    }
+
+    #endregion
+
+    #region Properties
+
+    public LoxClass Class { get; }
+
+    #endregion
+
+    #region Methods
+
+    public void AddField(string name, object? value) => _variables[name] = value;
+
+    public object? GetProperty(string name)
+    {
+        var field = _variables.GetValueOrDefault(name);
+        if (field is not null) { return field; }
+
+        return Class.Declaration.Functions
+                    .Where(f => f.Token.Lexeme == name)
+                    .Select(GetFunc)
+                    .SingleOrDefault();
+
+        LoxFunction GetFunc(FunctionDeclarationStatement fun)
+        {
+            var frame = new Frame(Class.Closure);
+            frame.Define("this", this);
+            return new LoxFunction(fun, frame);
+        }
+    }
+
+    #endregion
+}

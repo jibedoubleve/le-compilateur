@@ -5,11 +5,11 @@ using Compilateur.Core.Syntactic.Nodes.Expressions;
 
 namespace Compilateur.Core.Syntactic.Parsers.Declarations;
 
-internal class ClassDeclarationParser : Parser<ClassStatement>
+internal class ClassDeclarationParser : Parser<ClassDeclarationStatement>
 {
     #region Methods
 
-    protected override ClassStatement? ParseCore(ParsingContext context)
+    protected override ClassDeclarationStatement? ParseCore(ParsingContext context)
     {
         context.Cursor.Consume(); // consume the 'class'
         var className = context.Cursor.Peek();
@@ -67,7 +67,7 @@ internal class ClassDeclarationParser : Parser<ClassStatement>
             children.Add(node);
         }
 
-        return new ClassStatement(className, superClass, [.. children]);
+        return new ClassDeclarationStatement(className, superClass, [.. children]);
     }
 
     public override bool Matches(ParsingContext context) => context.Cursor.IsPeekOfKind(TokenKind.Class);
