@@ -357,14 +357,17 @@ public class EvaluatorTest
             
             """
         ];
-        //  yield return
-        //  [
-        //      """
-        //      fun f() { return 7; }
-        //      print f();
-        //      """,
-        //      "7"
-        //  ];
+        yield return
+        [
+            """
+            fun f() { return 7; }
+            print f();
+            """,
+            """
+            7
+            
+            """
+        ];
 //         yield return
 //         [
 //             """
