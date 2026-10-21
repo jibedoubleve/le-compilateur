@@ -26,7 +26,7 @@ internal static class SyntaxNodeExtensions
             SetExpression n                         => [n.Object, n.Value],
             IfStatement { ElseBranch: { } @else } n => [n.Condition, n.ThenBranch, @else],
             IfStatement n                           => [n.Condition, n.ThenBranch],
-            ClassStatement n                        => [.. Optional(n.SuperClass), .. n.Functions],
+            ClassDeclarationStatement n                        => [.. Optional(n.SuperClass), .. n.Functions],
             GetExpression n                         => [n.Object],
             GroupExpressionNode n                   => [n.Inner],
             ReturnStatement n                       => Optional(n.Expression),

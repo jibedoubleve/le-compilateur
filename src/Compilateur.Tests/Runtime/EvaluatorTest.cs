@@ -50,7 +50,6 @@ public class EvaluatorTest
             print 1 - "hello world";
             """
         ];
-
         yield return
         [
             "print b;"
@@ -61,6 +60,13 @@ public class EvaluatorTest
             for (var i = 0; i < 2; i = i + 1)
               print i;
             print i;
+            """
+        ];
+        yield return
+        [
+            """
+            class A {}
+            A(1);
             """
         ];
     }
@@ -338,7 +344,7 @@ public class EvaluatorTest
             """,
             """
             15
-            
+
             """
         ];
         yield return
@@ -354,7 +360,7 @@ public class EvaluatorTest
             """,
             """
             2
-            
+
             """
         ];
         yield return
@@ -365,73 +371,121 @@ public class EvaluatorTest
             """,
             """
             7
-            
+
             """
         ];
-//         yield return
-//         [
-//             """
-//             class A {} 
-//             print A;
-//             """,
-//             "A"
-//         ];
-//         yield return
-//         [
-//             """
-//             class A {}
-//             print A();
-//             """,
-//             "A instance"
-//         ];
-//         yield return
-//         [
-//             """
-//             class A {}
-//             var a = A();
-//             a.x = 3;
-//             print a.x;
-//             """,
-//             "3"
-//         ];
-//         yield return
-//         [
-//             """
-//             class A
-//             { 
-//               m()
-//               {
-//                   return this.v;
-//               }
-//             }
-//             var a = A();
-//             a.v = 4;
-//             print a.m();
-//             """,
-//             "4"
-//         ];
-//         yield return
-//         [
-//             """
-//             class A
-//             {
-//                 m() 
-//                 {
-//                    return "A"; 
-//                 } 
-//             } 
-//             class B < A 
-//             { 
-//                 m() 
-//                 {
-//                     return super.m();
-//                 }
-//             } 
-//
-//             print B().m();
-//             """,
-//             "A"
-//         ];
+        yield return
+        [
+            """
+            class A {} 
+            print A;
+            """,
+            """
+            A
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A {}
+            print A();
+            """,
+            """
+            A instance
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A {}
+            var a = A();
+            a.x = 3;
+            print a.x;
+            """,
+            """
+            3
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A
+            { 
+              m()
+              {
+                  return this.v;
+              }
+            }
+            var a = A();
+            a.v = 4;
+            print a.m();
+            """,
+            """
+            4
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A {
+               m()
+               {
+                   fun g(){ return this.x; } 
+                   return g; 
+               } 
+            }
+            var a = A();
+            a.x = 4;
+            print a.m()();
+            """,
+            """
+            4
+
+            """
+        ];
+        yield return
+        [
+            """
+            class B
+            {
+                init(x) { this.x = x; } 
+            } 
+            print B(3).x;
+            """,
+            """
+            3
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A
+            {
+                m() 
+                {
+                   return "A"; 
+                } 
+            } 
+            class B < A 
+            { 
+                m() 
+                {
+                    return super.m();
+                }
+            } 
+
+            print B().m();
+            """,
+            """
+            A
+
+            """
+        ];
     }
 
     [Theory]
@@ -525,6 +579,14 @@ public class EvaluatorTest
         output = output.ReplaceLineEndings();
         var textWriter = new StringWriter();
         var compiler = new Compiler(textWriter);
+
+        _output.WriteLine($"""
+                           Code:
+                           -----
+                           
+                           {code}
+                           """
+        );
 
         // act & assert
         var analysis = compiler.Analyse(code);

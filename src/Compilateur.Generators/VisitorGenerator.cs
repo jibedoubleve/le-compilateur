@@ -16,13 +16,15 @@ public class VisitorGenerator : IIncrementalGenerator
 
         var fileName = $"{node.Name}.Accept.g.cs";
         var code = $$"""
+                     using System.Diagnostics;
                      using Compilateur.Core.Syntactic;
 
                      namespace {{node.Namespace}};
 
                      public partial class {{node.Name}}
                      {
-                         public override T Accept<T>(ISyntaxNodeVisitor<T> visitor) => visitor.Visit(this);
+                        [StackTraceHidden, DebuggerNonUserCode, DebuggerStepThrough] 
+                        public override T Accept<T>(ISyntaxNodeVisitor<T> visitor) => visitor.Visit(this);
                      }
                      """;
         context.AddSource(fileName, code);

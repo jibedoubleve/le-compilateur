@@ -5,7 +5,7 @@ using Compilateur.Core.Syntactic.Nodes.Expressions;
 namespace Compilateur.Core.Syntactic.Nodes.Declaration;
 
 [Description("class")]
-public sealed partial class ClassStatement(
+public sealed partial class ClassDeclarationStatement(
     Token token,
     IdentifierExpression? superClass,
     IEnumerable<FunctionDeclarationStatement> functions)

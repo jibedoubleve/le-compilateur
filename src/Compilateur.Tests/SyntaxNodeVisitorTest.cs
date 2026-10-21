@@ -24,7 +24,7 @@ public class TextSyntaxNodeVisitor : ISyntaxNodeVisitor<int>
 
     #region Methods
 
-    public int Visit(ClassStatement node) => _value;
+    public int Visit(ClassDeclarationStatement node) => _value;
 
     public int Visit(FunctionDeclarationStatement node) => _value;
 
