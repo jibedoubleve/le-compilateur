@@ -46,12 +46,8 @@ public static class TestOutputHelperExtension
                                     {errors.Format()}
                                     """);
 
-        public void WriteInterpreterContext(string code, string output, ErrorCollection errors) =>
+        public void WriteInterpreterContext(string output, ErrorCollection errors) =>
             outputHelper.WriteLine($"""
-                                    Code:
-                                    -----
-
-                                    {code}
 
                                     Output:
                                     -------

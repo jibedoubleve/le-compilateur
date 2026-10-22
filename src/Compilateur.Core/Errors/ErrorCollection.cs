@@ -34,5 +34,13 @@ public class ErrorCollection : IEnumerable<CompilationError>
 
     public IEnumerator<CompilationError> GetEnumerator() => _errors.GetEnumerator();
 
+    public RuntimeException RuntimeException(Token? token, string message)
+    {
+        _errors.Add(token is not null
+            ? new CompilationError(token, message)
+            : new CompilationError(message));
+        return new RuntimeException(this);
+    }
+
     #endregion
 }
