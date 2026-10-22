@@ -1,5 +1,3 @@
-using Compilateur.Core.Syntactic.Nodes.Declaration;
-
 namespace Compilateur.Core.Runtime;
 
 public class LoxInstance
@@ -12,10 +10,7 @@ public class LoxInstance
 
     #region Constructors
 
-    public LoxInstance(LoxClass @class)
-    {
-        Class = @class;
-    }
+    public LoxInstance(LoxClass @class) => Class = @class;
 
     #endregion
 
@@ -34,17 +29,11 @@ public class LoxInstance
         var field = _variables.GetValueOrDefault(name);
         if (field is not null) { return field; }
 
-        return Class.Declaration.Functions
-                    .Where(f => f.Token.Lexeme == name)
-                    .Select(GetFunc)
-                    .SingleOrDefault();
+        var fun = Class.FindMethod(name);
+        if (fun is null) { return null; }
 
-        LoxFunction GetFunc(FunctionDeclarationStatement fun)
-        {
-            var frame = new Frame(Class.Closure);
-            frame.Define("this", this);
-            return new LoxFunction(fun, frame);
-        }
+        fun.Closure.Define("this", this);
+        return fun;
     }
 
     #endregion

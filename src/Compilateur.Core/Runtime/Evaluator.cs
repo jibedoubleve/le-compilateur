@@ -52,8 +52,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         if (ctor is LoxFunction fun) { VisitLoxFunction(fun, node); }
         else if (node.Arguments.Count > 0)
         {
-            Errors.Add(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
-            throw new RuntimeException(Errors);
+            throw Errors.RuntimeException(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
         }
 
         return instance;
@@ -71,11 +70,10 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
             if (fun.Arity != arguments.Count)
             {
-                Errors.Add(
+                throw Errors.RuntimeException(
                     node.Token,
                     $"Expected {fun.Arity} arguments but got {arguments.Count}."
                 );
-                throw new RuntimeException(Errors);
             }
 
             for (var i = 0; i < parameters.Count; i++)
@@ -94,7 +92,8 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
     {
         var @class = new LoxClass(
             node,
-            _env.CurrentFrame
+            _env.CurrentFrame,
+            Errors
         );
         _env.TryDefine(node.Token.Lexeme, @class);
         return null;
@@ -131,8 +130,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
         if (!success)
         {
-            Errors.Add(node.Token, $"Undefined variable '{target.Lexeme}'.");
-            throw new RuntimeException(Errors);
+            Errors.RuntimeException(node.Token, $"Undefined variable '{target.Lexeme}'.");
         }
 
         return value;
@@ -149,8 +147,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
                 ? "Operands must be two numbers or two strings."
                 : "Operands must be numbers.";
 
-            Errors.Add(node.Token, msg);
-            throw new RuntimeException(Errors);
+            throw Errors.RuntimeException(node.Token, msg);
         }
 
         return (node.Token.Lexeme, left, right) switch
@@ -169,8 +166,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
         object Fail()
         {
-            Errors.Add(node.Token, $"Unsupported operator '{node.Token.Lexeme}'.");
-            throw new RuntimeException(Errors);
+            throw Errors.RuntimeException(node.Token, $"Unsupported operator '{node.Token.Lexeme}'.");
         }
     }
 
@@ -209,8 +205,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
             return value;
         }
 
-        Errors.Add(node.Token, $"Unknown identifier {node.Token.Lexeme}");
-        throw new RuntimeException(Errors);
+        throw Errors.RuntimeException(node.Token, $"Unknown identifier {node.Token.Lexeme}");
     }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
@@ -246,7 +241,22 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         return null;
     }
 
-    public object? Visit(SuperExpression node) => throw new NotImplementedException();
+    public object? Visit(SuperExpression node)
+    {
+        _env.TryGetValue("super", out var super);
+        if (super is not LoxClass superClass) { throw new UnreachableException(); }
+
+        var method = superClass.FindMethod(node.Method.Lexeme);
+        if (method is null)
+        {
+            throw Errors.RuntimeException(
+                node.Token,
+                $"Method '{node.Method.Lexeme}' not found."
+            );
+        }
+
+        return method;
+    }
 
     public object? Visit(ThisExpression node)
     {

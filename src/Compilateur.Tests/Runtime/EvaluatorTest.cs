@@ -468,7 +468,7 @@ public class EvaluatorTest
             {
                 m() 
                 {
-                   return "A"; 
+                   return "A: hello world"; 
                 } 
             } 
             class B < A 
@@ -482,9 +482,69 @@ public class EvaluatorTest
             print B().m();
             """,
             """
+            A: hello world
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A 
+            {
+                method() { print "A"; } 
+            }
+            
+            class B < A 
+            {
+                method() { print "B"; }
+                test() { super.method(); }
+            }
+            
+            class C < B { }
+
+            C().test();
+            """,
+            """
             A
 
             """
+        ];
+        yield return
+        [
+            """
+            class A {} 
+            // --
+            {
+                class B < A {} 
+                print B; 
+            } 
+            """,
+            """
+            B
+
+            """
+        ];
+        yield return [
+        """
+        fun makeA() 
+        {
+            var x = "A";
+            class A
+            {
+                m() { return x; }
+            } 
+        return A; }
+        
+        var A = makeA();
+        
+        class B < A {}
+        
+        print B().m();
+        """,
+        """
+        A
+        
+        """
         ];
     }
 
@@ -583,7 +643,7 @@ public class EvaluatorTest
         _output.WriteLine($"""
                            Code:
                            -----
-                           
+
                            {code}
                            """
         );
@@ -592,7 +652,7 @@ public class EvaluatorTest
         var analysis = compiler.Analyse(code);
         compiler.Run(analysis);
 
-        _output.WriteInterpreterContext(code, output, analysis.Errors);
+        _output.WriteInterpreterContext(output, analysis.Errors);
 
         // assert
         Assert.Multiple(

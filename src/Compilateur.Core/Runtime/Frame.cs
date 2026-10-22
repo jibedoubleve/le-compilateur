@@ -36,7 +36,19 @@ public class Frame
         return _bindings.TryAdd(name, value);
     }
 
-    public object? Get(string name) => _bindings[name];
+    public object? Get(string name)
+    {
+        var bindings = _bindings;
+        while (true)
+        {
+            if (bindings?.TryGetValue(name, out var value) ?? false)
+            {
+                return value;
+            }
+
+            bindings = Parent?._bindings;
+        }
+    }
 
     public bool Update(string name, object? value)
     {
