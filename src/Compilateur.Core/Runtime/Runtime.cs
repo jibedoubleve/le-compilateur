@@ -10,7 +10,7 @@ using Compilateur.Core.Syntactic.Nodes.Statements;
 
 namespace Compilateur.Core.Runtime;
 
-public class Evaluator : ISyntaxNodeVisitor<object?>
+public class Runtime : ISyntaxNodeVisitor<object?>
 {
     #region Fields
 
@@ -22,13 +22,13 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
 
     #region Constructors
 
-    public Evaluator(ErrorCollection errors)
+    public Runtime(ErrorCollection errors)
     {
         Errors = errors;
         _textWriter = Console.Out;
     }
 
-    public Evaluator(ErrorCollection errors, TextWriter textWriter)
+    public Runtime(ErrorCollection errors, TextWriter textWriter)
     {
         Errors = errors;
         _textWriter = textWriter;
