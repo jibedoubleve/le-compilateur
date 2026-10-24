@@ -1,6 +1,7 @@
 using System.Collections;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
+using Compilateur.Core.Syntactic.Nodes;
 
 namespace Compilateur.Core.Errors;
 
@@ -34,10 +35,10 @@ public class ErrorCollection : IEnumerable<CompilationError>
 
     public IEnumerator<CompilationError> GetEnumerator() => _errors.GetEnumerator();
 
-    public RuntimeException RuntimeException(Token? token, string message)
+    public RuntimeException RuntimeException(ExpressionNode? node, string message)
     {
-        _errors.Add(token is not null
-            ? new CompilationError(token, message)
+        _errors.Add(node?.Token is not null
+            ? new CompilationError(node.Token, message)
             : new CompilationError(message));
         return new RuntimeException(this);
     }

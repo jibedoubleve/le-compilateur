@@ -22,7 +22,7 @@ public class LoxClass
 
         if (closure.Get(super.Token.Lexeme) is not LoxClass loxClassSuper)
         {
-            throw errors.RuntimeException(super.Token, "Superclass must be a class.");
+            throw errors.RuntimeException(super, "Superclass must be a class.");
         }
 
         Closure = new Frame(closure);
