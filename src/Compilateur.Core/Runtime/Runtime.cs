@@ -199,7 +199,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             {
                 LoxFunction fun => VisitLoxFunction(fun, node),
                 LoxClass @class => VisitLoxCtor(@class, node),
-                _               => throw new UnreachableException()
+                _               => throw Errors.RuntimeException(node.Token, "Can only call functions and classes.")
             };
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
