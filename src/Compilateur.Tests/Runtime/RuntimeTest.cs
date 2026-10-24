@@ -768,7 +768,7 @@ public class RuntimeTest
         // act & assert
         var analysis = compiler.Analyse(code);
 
-        _output.WriteInterpreterContext(analysis.Errors);
+        _output.WriteAnalysisErrors(analysis.Errors);
 
         compiler.Run(analysis);
         // assert
