@@ -18,10 +18,11 @@ public class TestParser
 
     #region Methods
 
-    public (StringBuilder Code, StringBuilder Output) ReadFile()
+    public (StringBuilder Code, StringBuilder Output, StringBuilder Errors) ReadFile()
     {
         var code = new StringBuilder();
         var output = new StringBuilder();
+        var errors = new StringBuilder();
 
         foreach (var line in File.ReadAllLines(_path))
         {
@@ -31,9 +32,15 @@ public class TestParser
             {
                 output.AppendLine(m.Groups[1].Value);
             }
+            
+            m = LoxExtractor.ErrorAt().Match(line);
+            if (m.Success)
+            {
+                errors.AppendLine(m.Groups[1].Value);
+            }
         }
 
-        return (code, output);
+        return (code, output, errors);
     }
 
     #endregion

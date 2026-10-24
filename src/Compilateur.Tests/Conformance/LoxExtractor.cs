@@ -9,5 +9,8 @@ public static partial class LoxExtractor
     [GeneratedRegex("// expect: (.*)")]
     public static partial Regex Expect();
 
+    [GeneratedRegex("// Error at '.*?': (.*)")]
+    public static partial Regex ErrorAt();
+
     #endregion
 }
