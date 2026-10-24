@@ -493,13 +493,13 @@ public class EvaluatorTest
             {
                 method() { print "A"; } 
             }
-            
+
             class B < A 
             {
                 method() { print "B"; }
                 test() { super.method(); }
             }
-            
+
             class C < B { }
 
             C().test();
@@ -524,27 +524,97 @@ public class EvaluatorTest
 
             """
         ];
-        yield return [
-        """
-        fun makeA() 
-        {
-            var x = "A";
-            class A
+        yield return
+        [
+            """
+            fun makeA() 
             {
-                m() { return x; }
-            } 
-        return A; }
-        
-        var A = makeA();
-        
-        class B < A {}
-        
-        print B().m();
-        """,
-        """
-        A
-        
-        """
+                var x = "A";
+                class A
+                {
+                    m() { return x; }
+                } 
+            return A; }
+
+            var A = makeA();
+
+            class B < A {}
+
+            print B().m();
+            """,
+            """
+            A
+
+            """
+        ];
+        yield return
+        [
+            """
+            print 1 == 1;
+            """,
+            """
+            true
+
+            """
+        ];
+        yield return
+        [
+            """
+            print 1 == "1";
+            """,
+            """
+            false
+
+            """
+        ];
+        yield return
+        [
+            """
+            print 1 != "1";
+            """,
+            """
+            true
+
+            """
+        ];
+        yield return
+        [
+            """
+            print nil == nil;
+            """,
+            """
+            true
+
+            """
+        ];
+        yield return
+        [
+            """
+            print nil != nil;
+            """,
+            """
+            false
+
+            """
+        ];
+        yield return
+        [
+            """
+            print nil != true;
+            """,
+            """
+            true
+
+            """
+        ];        yield return
+        [
+            """
+            print nil == true;
+            """,
+            """
+            false
+
+            """
         ];
     }
 
@@ -650,10 +720,10 @@ public class EvaluatorTest
 
         // act & assert
         var analysis = compiler.Analyse(code);
-        compiler.Run(analysis);
 
         _output.WriteInterpreterContext(output, analysis.Errors);
 
+        compiler.Run(analysis);
         // assert
         Assert.Multiple(
             () => analysis.Errors.ShouldBeEmpty(),
