@@ -24,6 +24,7 @@ public class Compiler
 
     #region Methods
 
+#pragma warning disable S2325
     public Analysis Analyse(string code)
     {
         // Lexical
@@ -46,6 +47,7 @@ public class Compiler
             ? Analysis.Error(context.Errors)
             : Analysis.Success(ast);
     }
+#pragma warning restore S2325
 
     public void Run(Analysis analysis)
     {

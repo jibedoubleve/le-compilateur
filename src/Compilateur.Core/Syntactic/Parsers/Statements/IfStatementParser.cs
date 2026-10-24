@@ -18,12 +18,6 @@ public class IfStatementParser : Parser<StatementNode>
 
     #region Methods
 
-    private static bool HasCloseParenthesis(ParsingContext context)
-        => context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis);
-
-    private static bool HasOpenParenthesis(ParsingContext context)
-        => context.Cursor.IsPeekOfKind(TokenKind.OpenParenthesis);
-
     public override bool Matches(ParsingContext context) => context.Cursor.IsPeekOfKind(TokenKind.If);
 
     protected override StatementNode? ParseCore(ParsingContext context)

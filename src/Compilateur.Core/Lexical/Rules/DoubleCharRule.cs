@@ -14,7 +14,7 @@ public abstract record DoubleCharRule : ITokenRule
 
     #region Constructors
 
-    public DoubleCharRule(string lexeme, TokenKind tokenKind)
+    protected DoubleCharRule(string lexeme, TokenKind tokenKind)
     {
         if (lexeme.Length != 2)
         {
