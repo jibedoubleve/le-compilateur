@@ -142,12 +142,9 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
         var success = _env.TryAssign(target, value);
 
-        if (!success)
-        {
-            Errors.RuntimeException(node.Token, $"Undefined variable '{target.Lexeme}'.");
-        }
-
-        return value;
+        return success
+            ? value
+            : throw Errors.RuntimeException(node.Token, $"Undefined variable '{target.Lexeme}'.");
     }
 
     public object? Visit(BinaryExpression node)
