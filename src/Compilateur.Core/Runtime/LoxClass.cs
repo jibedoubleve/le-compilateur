@@ -44,10 +44,11 @@ public class LoxClass
 
     public LoxFunction? FindMethod(string name)
     {
+        var isCtor = name == "init";
         var method = Declaration.Functions.SingleOrDefault(f => f.Token.Lexeme == name);
         if (method is not null)
         {
-            return new LoxFunction(method, Closure);
+            return new LoxFunction(method, Closure, isCtor);
         }
 
         if (_super is null) { return null; }
@@ -55,7 +56,7 @@ public class LoxClass
         method = _super.Declaration.Functions.SingleOrDefault(f => f.Token.Lexeme == name);
         if (method is not null)
         {
-            return new LoxFunction(method, _super.Closure);
+            return new LoxFunction(method, _super.Closure, isCtor);
         }
 
         return null;

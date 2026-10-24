@@ -6,10 +6,11 @@ public class LoxFunction
 {
     #region Constructors
 
-    public LoxFunction(FunctionDeclarationStatement declaration, Frame closure)
+    public LoxFunction(FunctionDeclarationStatement declaration, Frame closure, bool isInitialiser = false)
     {
         Declaration = declaration;
         Closure = closure;
+        IsInitialiser = isInitialiser;
     }
 
     #endregion
@@ -19,6 +20,7 @@ public class LoxFunction
     public int Arity => Declaration.Parameters.Count;
     public Frame Closure { get; }
     public FunctionDeclarationStatement Declaration { get; }
+    public bool IsInitialiser { get; }
 
     #endregion
 }

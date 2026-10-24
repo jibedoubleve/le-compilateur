@@ -167,7 +167,6 @@ public class EvaluatorTest
 
             """
         ];
-
         yield return
         [
             """
@@ -606,13 +605,61 @@ public class EvaluatorTest
             true
 
             """
-        ];        yield return
+        ];
+        yield return
         [
             """
             print nil == true;
             """,
             """
             false
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A 
+            { 
+                init() { return; } 
+            } 
+            print A();
+            """,
+            """
+            A instance
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A 
+            { 
+                init() { return; } 
+            } 
+            var a = A();
+            print a.init();
+            """,
+            """
+            A instance
+
+            """
+        ];
+        yield return
+        [
+            """
+            class A {
+              init(n) { this.n = n; }
+              get() { return this.n; }
+            }
+            var a = A(1);
+            var b = A(2);
+            var g = a.get;
+            b.get;
+            print g();
+            """,
+            """
+            1
 
             """
         ];
@@ -721,7 +768,7 @@ public class EvaluatorTest
         // act & assert
         var analysis = compiler.Analyse(code);
 
-        _output.WriteInterpreterContext(output, analysis.Errors);
+        _output.WriteInterpreterContext(analysis.Errors);
 
         compiler.Run(analysis);
         // assert
