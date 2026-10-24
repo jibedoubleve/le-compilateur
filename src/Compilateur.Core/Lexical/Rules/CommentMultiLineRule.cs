@@ -19,7 +19,7 @@ public record CommentMultiLineRule : ITokenRule
 
     #region Methods
 
-    private bool EndOfComments(CodeCursor codeCursor)
+    private static bool EndOfComments(CodeCursor codeCursor)
     {
         var current = $"{codeCursor.Peek()}{codeCursor.PeekNext()}";
         return current == "*/";

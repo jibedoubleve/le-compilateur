@@ -14,7 +14,7 @@ public abstract record SingleCharRule : ITokenRule
 
     #region Constructors
 
-    public SingleCharRule(char lexeme, TokenKind tokenKind)
+    protected SingleCharRule(char lexeme, TokenKind tokenKind)
     {
         _lexeme = lexeme;
         _tokenKind = tokenKind;
@@ -44,7 +44,7 @@ public abstract record SingleCharRule : ITokenRule
         {
             Column = consumed.Column,
             Line = consumed.Line,
-            Lexeme = consumed.Char!.ToString()!,
+            Lexeme = consumed.Char.ToString()!,
             Kind = _tokenKind,
             Value = null
         };

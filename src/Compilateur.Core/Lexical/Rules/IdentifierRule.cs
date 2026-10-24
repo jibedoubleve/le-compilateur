@@ -40,7 +40,7 @@ public sealed record IdentifierRule : ITokenRule
 
     #region Methods
 
-    private object? GetValue(string lexeme) =>
+    private static object? GetValue(string lexeme) =>
         lexeme switch
         {
             "true"  => true,

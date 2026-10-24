@@ -1,6 +1,6 @@
 namespace Compilateur.Core;
 
-public interface ICursor<T>
+public interface ICursor<out T>
 {
     #region Properties
 

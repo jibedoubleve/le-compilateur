@@ -40,6 +40,12 @@ public record CommentSingleLineRule : ITokenRule
         return current == "//";
     }
 
+    /// <summary>
+    /// Drops the comments, they are not saved
+    /// </summary>
+    /// <param name="cursor">The token cursor</param>
+    /// <param name="errors">Any lexical error is added into this error container</param>
+    /// <returns><c>null</c> i any case, the return type is not meant to be used.</returns>
     public Token? Scan(CodeCursor cursor, ErrorCollection? errors = null)
     {
         if (cursor.IsAtEnd)
@@ -47,17 +53,14 @@ public record CommentSingleLineRule : ITokenRule
             return null;
         }
 
-        var strBuilder = new StringBuilder();
-        strBuilder.Append(cursor.Consume()); // Consume '/'
-        strBuilder.Append(cursor.Consume()); // Consume second '/'
+        cursor.Consume(); // Consume '/'
+        cursor.Consume(); // Consume second '/'
 
         for (var i = 0; i < MaxSize; i++)
         {
             if (cursor.IsAtEnd || IsEndOfLine(cursor)) { return null; }
 
-            var current = cursor.Consume();
-
-            strBuilder.Append(current);
+            cursor.Consume();
         }
 
         return null;

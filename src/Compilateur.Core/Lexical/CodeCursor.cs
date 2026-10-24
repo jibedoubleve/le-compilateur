@@ -34,12 +34,9 @@ public sealed class CodeCursor : ICursor<CodeChar>
         var current = Peek();
         var hasNext = TryPeekNext(out var next);
 
-        if (hasNext)
+        if (hasNext && current.Char == '\r' && next!.Char == '\n')
         {
-            if (current.Char == '\r' && next!.Char == '\n')
-            {
-                return (true, 2);
-            }
+            return (true, 2);
         }
 
         return NewLines.Contains(current.Char)
