@@ -141,7 +141,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var left = node.Left.Accept(this);
         var right = node.Right.Accept(this);
 
-        if (left?.GetType() != right?.GetType())
+        if (!IsLogicalOp() && left?.GetType() != right?.GetType())
         {
             var msg = node.Token.Lexeme == "+"
                 ? "Operands must be two numbers or two strings."
@@ -161,12 +161,17 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
             ("<=", double x, double y) => x <= y,
             (">", double x, double y)  => x > y,
             (">=", double x, double y) => x >= y,
+            ("==", var x, var y)       => Equals(x, y),
+            ("!=", var x, var y)       => !Equals(x, y),
             _                          => Fail()
         };
 
-        object Fail()
+        object Fail() => throw Errors.RuntimeException(node.Token, $"Unsupported operator '{node.Token.Lexeme}'.");
+
+        bool IsLogicalOp()
         {
-            throw Errors.RuntimeException(node.Token, $"Unsupported operator '{node.Token.Lexeme}'.");
+            IEnumerable<string> logicalOps = ["==", "!="];
+            return logicalOps.Contains(node.Token.Lexeme);
         }
     }
 
