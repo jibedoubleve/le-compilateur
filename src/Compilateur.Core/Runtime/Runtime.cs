@@ -53,7 +53,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
         return node.Arguments.Count == 0
             ? instance
-            : throw Errors.RuntimeException(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
+            : throw Errors.RuntimeException(node, $"Expected 0 arguments but got {node.Arguments.Count}.");
     }
 
     private object? VisitLoxFunction(LoxFunction fun, CallExpression node)
@@ -69,10 +69,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
             if (fun.Arity != arguments.Count)
             {
-                throw Errors.RuntimeException(
-                    node.Token,
-                    $"Expected {fun.Arity} arguments but got {arguments.Count}."
-                );
+                throw Errors.RuntimeException(node, $"Expected {fun.Arity} arguments but got {arguments.Count}.");
             }
 
             for (var i = 0; i < parameters.Count; i++)
@@ -144,7 +141,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
         return success
             ? value
-            : throw Errors.RuntimeException(node.Token, $"Undefined variable '{target.Lexeme}'.");
+            : throw Errors.RuntimeException(node, $"Undefined variable '{target.Lexeme}'.");
     }
 
     public object? Visit(BinaryExpression node)
@@ -158,7 +155,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
                 ? "Operands must be two numbers or two strings."
                 : "Operands must be numbers.";
 
-            throw Errors.RuntimeException(node.Token, msg);
+            throw Errors.RuntimeException(node, msg);
         }
 
         return (node.Token.Lexeme, left, right) switch
@@ -177,7 +174,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             _                          => Fail()
         };
 
-        object Fail() => throw Errors.RuntimeException(node.Token, $"Unsupported operator '{node.Token.Lexeme}'.");
+        object Fail() => throw Errors.RuntimeException(node, $"Unsupported operator '{node.Token.Lexeme}'.");
 
         bool IsLogicalOp()
         {
@@ -196,7 +193,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             {
                 LoxFunction fun => VisitLoxFunction(fun, node),
                 LoxClass @class => VisitLoxCtor(@class, node),
-                _               => throw Errors.RuntimeException(node.Token, "Can only call functions and classes.")
+                _               => throw Errors.RuntimeException(node, "Can only call functions and classes.")
             };
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
@@ -221,7 +218,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             return value;
         }
 
-        throw Errors.RuntimeException(node.Token, $"Unknown identifier {node.Token.Lexeme}");
+        throw Errors.RuntimeException(node, $"Unknown identifier {node.Token.Lexeme}");
     }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
@@ -265,10 +262,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         var method = superClass.FindMethod(node.Method.Lexeme);
         if (method is null)
         {
-            throw Errors.RuntimeException(
-                node.Token,
-                $"Method '{node.Method.Lexeme}' not found."
-            );
+            throw Errors.RuntimeException(node, $"Method '{node.Method.Lexeme}' not found.");
         }
 
         return method;
