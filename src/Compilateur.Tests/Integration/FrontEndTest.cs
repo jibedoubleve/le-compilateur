@@ -9,6 +9,7 @@ using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Integration;
 
+//Todo: send it to the parser tests
 public class FrontEndTest
 {
     #region Fields
