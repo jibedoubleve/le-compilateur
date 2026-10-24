@@ -27,7 +27,7 @@ public class ConformanceTest
         string fileName, string code, string output, string errors, string? runtimeError)
     {
         _output.WriteLine($"""
-                           ======== Testing file {fileName} ========
+                           ======== Testing file '{fileName}' ========
                            """
         );
         _output.WriteLine("""

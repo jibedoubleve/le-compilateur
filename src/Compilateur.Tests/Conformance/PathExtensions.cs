@@ -6,8 +6,14 @@ public static class PathExtensions
 {
     #region Methods
 
-    public static TestContext ReadFile(
-        this string path)
+    private static string GetFileName(string path)
+    {
+        var fileName = Path.GetFileName(path);
+        var dirName = Path.GetFileName(Path.GetDirectoryName(path));
+        return Path.Combine(dirName ?? ".\\", fileName);
+    }
+
+    public static TestContext ReadFile(this string path)
     {
         var code = new StringBuilder();
         var output = new StringBuilder();
@@ -36,14 +42,13 @@ public static class PathExtensions
         }
 
         return new TestContext(
-            Path.GetFileName(path),
+            GetFileName(path),
             code,
             output,
             errors,
             runtimeError
         );
     }
-
 
     #endregion
 }
