@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Runtime;
 
-public class EvaluatorTest
+public class RuntimeTest
 {
     #region Fields
 
@@ -17,7 +17,7 @@ public class EvaluatorTest
 
     #region Constructors
 
-    public EvaluatorTest(ITestOutputHelper output) => _output = output;
+    public RuntimeTest(ITestOutputHelper output) => _output = output;
 
     #endregion
 

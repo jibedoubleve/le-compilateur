@@ -7,27 +7,27 @@ public static class EvaluatorExtension
 {
     #region Methods
 
-    extension(Evaluator evaluator)
+    extension(Runtime runtime)
     {
         private object? HandleUnsupportedType(Token token, object? value)
         {
-            evaluator.Errors.Add(token, $"Unsupported type '{value?.GetType().Name ?? "null"}'");
+            runtime.Errors.Add(token, $"Unsupported type '{value?.GetType().Name ?? "null"}'");
             return null;
         }
 
         public object? Negate(ExpressionNode node)
         {
-            var value = node.Accept(evaluator);
+            var value = node.Accept(runtime);
             return value switch
             {
                 double d => 0 - d,
-                _        => evaluator.HandleUnsupportedType(node.Token, value)
+                _        => runtime.HandleUnsupportedType(node.Token, value)
             };
         }
 
         public object Not(ExpressionNode node)
         {
-            var value = node.Accept(evaluator);
+            var value = node.Accept(runtime);
             return value switch
             {
                 null   => true, // null is false. Not false is then true

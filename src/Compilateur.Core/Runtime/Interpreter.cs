@@ -37,7 +37,7 @@ public class Interpreter
 
     public ErrorCollection Interpret(ProgramNode program)
     {
-        var evaluator = new Evaluator(Errors, _textWriter);
+        var evaluator = new Runtime(Errors, _textWriter);
         program.Accept(evaluator);
         return evaluator.Errors;
     }
