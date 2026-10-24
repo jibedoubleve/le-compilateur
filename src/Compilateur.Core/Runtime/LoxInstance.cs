@@ -32,8 +32,9 @@ public class LoxInstance
         var fun = Class.FindMethod(name);
         if (fun is null) { return null; }
 
-        fun.Closure.Define("this", this);
-        return fun;
+        var frame = new Frame(fun.Closure);
+        frame.Define("this", this);
+        return new LoxFunction(fun.Declaration, frame, fun.IsInitialiser);
     }
 
     #endregion

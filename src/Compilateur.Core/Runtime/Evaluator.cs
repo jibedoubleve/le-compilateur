@@ -49,13 +49,11 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var instance = new LoxInstance(@class);
         var ctor = instance.GetProperty("init");
 
-        if (ctor is LoxFunction fun) { VisitLoxFunction(fun, node); }
-        else if (node.Arguments.Count > 0)
-        {
-            throw Errors.RuntimeException(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
-        }
+        if (ctor is LoxFunction fun) { return VisitLoxFunction(fun, node); }
 
-        return instance;
+        return node.Arguments.Count == 0
+            ? instance
+            : throw Errors.RuntimeException(node.Token, $"Expected 0 arguments but got {node.Arguments.Count}.");
     }
 
     private object? VisitLoxFunction(LoxFunction fun, CallExpression node)
@@ -64,6 +62,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         var arguments = node.Arguments
                             .Select(a => a.Accept(this))
                             .ToList();
+
         using (_env.EnterFrame(fun.Closure))
         {
             var parameters = fun.Declaration.Parameters;
@@ -84,7 +83,22 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
                 );
             }
 
-            return fun.Declaration.Body.Accept(this);
+            var result = RunFunction();
+            return fun.IsInitialiser
+                ? _env.CurrentFrame.Get("this")
+                : result;
+        }
+
+        object? RunFunction()
+        {
+            try
+            {
+                return fun.Declaration.Body.Accept(this);
+            }
+            catch (ReturnException ex)
+            {
+                return ex.ReturnValue;
+            }
         }
     }
 
@@ -246,7 +260,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         return null;
     }
 
-    public object? Visit(SuperExpression node)
+    public object Visit(SuperExpression node)
     {
         _env.TryGetValue("super", out var super);
         if (super is not LoxClass superClass) { throw new UnreachableException(); }
@@ -263,7 +277,7 @@ public class Evaluator : ISyntaxNodeVisitor<object?>
         return method;
     }
 
-    public object? Visit(ThisExpression node)
+    public object Visit(ThisExpression node)
     {
         _env.TryGetValue("this", out var value);
         return value ?? throw new UnreachableException();
