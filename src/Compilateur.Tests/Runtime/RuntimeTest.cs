@@ -69,6 +69,12 @@ public class RuntimeTest
             A(1);
             """
         ];
+        yield return
+        [
+            """
+            class B < Unreal {}
+            """
+        ];
     }
 
     public static IEnumerable<object[]> BuildPrintCode()
