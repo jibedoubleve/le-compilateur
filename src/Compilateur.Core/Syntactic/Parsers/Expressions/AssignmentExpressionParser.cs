@@ -29,7 +29,7 @@ internal class AssignmentExpressionParser : PrecedenceParser<OrExpressionParser>
             _                       => null
         };
 
-        if (result is null) { context.AddError("Invalid assignment target."); }
+        if (result is null) { context.AddError(operation, "Invalid assignment target."); }
 
         return result;
     }

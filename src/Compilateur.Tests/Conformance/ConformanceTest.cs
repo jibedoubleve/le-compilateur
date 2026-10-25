@@ -25,7 +25,7 @@ public class ConformanceTest
     #region Methods
 
     private void OutputInformation(
-        string fileName, string code, string output, string errors, string? runtimeError)
+        string fileName, string code, string output, string? staticErrors, string? runtimeError)
     {
         _output.WriteLine($"""
                            ======== Testing file '{fileName}' ========
@@ -46,14 +46,14 @@ public class ConformanceTest
             _output.WriteLine(output);
         }
 
-        if (!string.IsNullOrWhiteSpace(errors))
+        if (!string.IsNullOrWhiteSpace(staticErrors))
         {
             _output.WriteLine("""
                               Expected errors:
                               ================
                               """);
 
-            _output.WriteLine(errors);
+            _output.WriteLine(staticErrors);
         }
 
         if (!string.IsNullOrWhiteSpace(runtimeError))
@@ -68,25 +68,32 @@ public class ConformanceTest
     }
 
 
-    private static void WithCompilationError(Analysis analysis, string expectedErrors)
+    private static void WithStaticError(Analysis analysis, IEnumerable<StaticError> expectedErrors)
     {
-        var retrievedErrors = new StringBuilder();
-        _ = analysis.Errors
-                    .Select(m => retrievedErrors.Append(m.Message))
-                    .ToList();
-
-        retrievedErrors.ToString().TrimEnd()
-                       .ShouldBe(expectedErrors);
+        var expected = expectedErrors.ToList();
+        var errors = analysis.Errors.ToList();
+        
+        analysis.Errors.Count().ShouldBe(expected.Count);
+        
+        for (var i = 0; i < expected.Count; i++)
+        {
+            errors[i].Message.ShouldBe(expected[i].Message);
+            errors[i].Variable.ShouldBe(expected[i].Variable);
+        }
     }
 
-    private static void WithRuntimeError(Compiler compiler, string code, string runtimeError)
+    private static void WithRuntimeError(Compiler compiler, string code, IEnumerable<string> staticError)
     {
         // act
         var analysis = compiler.Analyse(code);
         var ex = Assert.Throws<RuntimeException>(() => compiler.Run(analysis));
 
         // assert
-        ex.Message.ShouldBe(runtimeError);
+        var err = staticError.LastOrDefault();
+        Assert.Multiple(
+            () => err.ShouldNotBeNull(),
+            () => ex.Message.ShouldBe(err)
+        );
     }
 
     public static IEnumerable<object?[]> RetrieveTests()
@@ -94,59 +101,52 @@ public class ConformanceTest
         const string path = "../../../Conformance/Lox";
         foreach (var file in Directory.GetFiles(path, "*.lox", SearchOption.AllDirectories))
         {
-            var c = file.ReadFile();
-            yield return
-            [
-                c.FileName,
-                c.Code.ToString(),
-                c.Output.ToString(),
-                c.Errors?.ToString(),
-                c.RuntimeError
-            ];
+            yield return [file];
         }
     }
 
     [Theory]
     [MemberData(nameof(RetrieveTests))]
-    public void When_Compiling_Code_Then_Expected_Result_Is_Returned(
-        string fileName, string code, string expectedOutput, string compilationErrors, string? runtimeError)
+    public void When_Compiling_Code_Then_Expected_Result_Is_Returned(string path)
     {
         // arrange
-        var expected = new StringWriter(new StringBuilder(expectedOutput));
-        compilationErrors = compilationErrors.TrimEnd();
+        var (fileName, code, expected, runtimeErrors, staticErrors)
+            = LoxFileHelper.ReadFile(path);
+        
+        staticErrors = staticErrors.ToList();
+        runtimeErrors = runtimeErrors.ToList();
 
         OutputInformation(
             fileName,
             code,
-            expected.ToString(),
-            compilationErrors,
-            runtimeError
+            expected,
+            string.Join(Environment.NewLine, runtimeErrors),
+            staticErrors.LastOrDefault()?.Message
         );
 
         var output = new StringWriter();
         var compiler = new Compiler(output);
 
         // act
-        if (!string.IsNullOrWhiteSpace(runtimeError))
+        var analysis = compiler.Analyse(code);
+        _output.WriteAnalysisErrors(analysis.Errors);
+        
+        if (staticErrors.Any())
         {
-            WithRuntimeError(compiler, code, runtimeError);
+            WithStaticError(analysis, staticErrors);
             return;
         }
 
-        var analysis = compiler.Analyse(code);
-
-        _output.WriteAnalysisErrors(analysis.Errors);
-
-        if (!string.IsNullOrEmpty(compilationErrors))
+        if (runtimeErrors.Any())
         {
-            WithCompilationError(analysis, compilationErrors);
+            WithRuntimeError(compiler, code, runtimeErrors);
             return;
         }
 
         compiler.Run(analysis);
 
         // assert
-        output.ToString().ShouldBe(expected.ToString());
+        output.ToString().ShouldBe(expected);
     }
 
     #endregion

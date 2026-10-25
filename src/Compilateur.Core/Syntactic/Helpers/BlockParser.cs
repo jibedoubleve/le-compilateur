@@ -33,7 +33,7 @@ public static class BlockParser
 
                 if (!DeclarationParser.Matches(context))
                 {
-                    context.AddError($"Expected a declaration or a statement, found {context.Cursor.Peek().Lexeme}.");
+                    context.AddError($"Expect a declaration or a statement, found {context.Cursor.Peek().Lexeme}.");
                     return null;
                 }
 
@@ -46,7 +46,7 @@ public static class BlockParser
             return new BlockStatement(firstToken, [.. children]);
         }
 
-        context.AddError("Expected '{' before block body.");
+        context.AddError("Expect '{' before block body.");
         return null;
     }
 

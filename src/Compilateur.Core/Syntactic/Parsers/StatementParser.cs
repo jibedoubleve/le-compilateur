@@ -30,7 +30,7 @@ public class StatementParser : IParser<StatementNode>
         var parser = Parsers.SingleOrDefault(p => p.Matches(context));
         if (parser is not null) { return parser.Parse(context); }
 
-        context.AddError($"Expected a statement, found '{context.Cursor.Peek().Lexeme}'.");
+        context.AddError("Expect expression.");
         return null;
     }
 
