@@ -42,24 +42,31 @@ public class LoxClass
 
     #region Methods
 
+    private static LoxFunction? FindMethod(LoxClass @this, string name, bool isCtor)
+    {
+        var super = @this._super;
+        while (super is not null)
+        {
+            var method = super.FindMethod(name)?.Declaration;
+            if (method is not null)
+            {
+                return new LoxFunction(method, super.Closure, isCtor);
+            }
+
+            super = super._super;
+        }
+
+        return null;
+    }
+
     public LoxFunction? FindMethod(string name)
     {
         var isCtor = name == "init";
         var method = Declaration.Functions.SingleOrDefault(f => f.Token.Lexeme == name);
-        if (method is not null)
-        {
-            return new LoxFunction(method, Closure, isCtor);
-        }
 
-        if (_super is null) { return null; }
-
-        method = _super.Declaration.Functions.SingleOrDefault(f => f.Token.Lexeme == name);
-        if (method is not null)
-        {
-            return new LoxFunction(method, _super.Closure, isCtor);
-        }
-
-        return null;
+        return method is not null
+            ? new LoxFunction(method, Closure, isCtor)
+            : FindMethod(this, name, isCtor);
     }
 
     #endregion

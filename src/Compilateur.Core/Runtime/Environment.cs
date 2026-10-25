@@ -61,6 +61,7 @@ public class Environment
     public bool TryDefine(string name, object? value) => CurrentFrame.Define(name, value);
 
     public bool TryGetValue(Token token, out object? result) => TryGetValue(token.Lexeme, out result);
+    
     public bool TryGetValue(string lexeme, out object? result) => TryGetValue(lexeme, CurrentFrame, out result);
 
     #endregion
