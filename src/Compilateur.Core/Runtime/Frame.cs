@@ -38,16 +38,19 @@ public class Frame
 
     public object? Get(string name)
     {
-        var bindings = _bindings;
-        while (true)
+        var frame = this;
+
+        while (frame is not null)
         {
-            if (bindings?.TryGetValue(name, out var value) ?? false)
+            if (frame?._bindings.TryGetValue(name, out var value) ?? false)
             {
                 return value;
             }
 
-            bindings = Parent?._bindings;
+            frame = frame?.Parent;
         }
+
+        return null;
     }
 
     public bool Update(string name, object? value)
