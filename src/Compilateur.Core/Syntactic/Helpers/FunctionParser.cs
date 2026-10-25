@@ -75,7 +75,7 @@ public static class FunctionParser
             return ValidateParameters(parameters, context);
         }
 
-        context.AddError("Expected '(' after function name.");
+        context.AddError("Expect '(' after function name.");
         return null;
     }
 
@@ -83,7 +83,7 @@ public static class FunctionParser
     {
         if (context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis, TokenKind.Comma)) { return true; }
 
-        context.AddError($"Expected identifier, ',' or ')', found '{context.Cursor.Peek().Lexeme}'.");
+        context.AddError($"Expect identifier, ',' or ')', found '{context.Cursor.Peek().Lexeme}'.");
         return false;
     }
 

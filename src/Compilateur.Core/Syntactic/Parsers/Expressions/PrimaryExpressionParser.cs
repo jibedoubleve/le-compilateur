@@ -69,7 +69,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
     {
         if (!Matches(context))
         {
-            context.AddError($"Expect expression, but found {context.Cursor.Peek().Lexeme}.");
+            context.AddError("Expect expression.");
             return null;
         }
 
@@ -98,7 +98,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
 
         if (!context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis))
         {
-            context.AddError($"Expected ')' after expression but found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError($"Expect ')' after expression but found '{context.Cursor.Peek().Lexeme}'.");
             return null;
         }
 

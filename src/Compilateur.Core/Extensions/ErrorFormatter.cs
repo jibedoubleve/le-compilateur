@@ -18,11 +18,11 @@ public static class ErrorFormater
         }
 
         builder.AppendLine("Compilation executed with errors:");
-        builder.AppendLine("| line | col  | error                      ");
-        builder.AppendLine("|------|------|----------------------------");
+        builder.AppendLine("| line | col  | variable      | error                      ");
+        builder.AppendLine("|------|------|---------------|----------------------------");
         foreach (var error in errors)
         {
-            var line = $"| {error.Line,4} | {error.Column,4} | {error.Message} ";
+            var line = $"| {error.Line,4} | {error.Column,4} | {error.Variable,13} | {error.Message} ";
             builder.AppendLine(line);
         }
 

@@ -28,7 +28,7 @@ public static class ParsingContextExtension
         {
             if (!context.Cursor.IsPeekOfKind(kind))
             {
-                context.AddError($"Expected '{kind.ToLexeme()}' but found '{context.Cursor.Peek().Lexeme}'");
+                context.AddError($"Expect '{kind.ToLexeme()}' but found '{context.Cursor.Peek().Lexeme}'");
                 return false;
             }
 
@@ -80,6 +80,13 @@ public static class ParsingContextExtension
                 return true;
             }
 
+            if (!ExpressionParser.Matches(context))
+            {
+                output = null;
+                context.AddError("Expect expression.");
+                return false;
+            }
+
             var statement = ExpressionStatementParser.Parse(context);
             if (statement is null)
             {
@@ -106,7 +113,7 @@ public static class ParsingContextExtension
                 return node;
             }
 
-            context.AddError($"Expected ';' but found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError("Expect ';' after expression.");
             return null;
         }
 

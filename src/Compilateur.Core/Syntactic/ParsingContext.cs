@@ -1,4 +1,5 @@
 using Compilateur.Core.Errors;
+using Compilateur.Core.Lexical.Tokens;
 
 namespace Compilateur.Core.Syntactic;
 
@@ -30,6 +31,9 @@ public class ParsingContext
                 ? new CompilationError(message)
                 : new CompilationError(Cursor.Peek(), message)
         );
+
+    public void AddError(Token token, string message)
+        => Errors.Add(new CompilationError(token, message));
 
     #endregion
 }
