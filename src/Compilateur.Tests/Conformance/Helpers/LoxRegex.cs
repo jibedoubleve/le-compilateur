@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Compilateur.Tests.Conformance;
+namespace Compilateur.Tests.Conformance.Helpers;
 
 public static partial class LoxRegex
 {

@@ -24,17 +24,29 @@ public class LoxInstance
 
     public void AddField(string name, object? value) => _variables[name] = value;
 
-    public object? GetProperty(string name)
+    public bool TryGetProperty(string name, out object? value)
     {
-        var field = _variables.GetValueOrDefault(name);
-        if (field is not null) { return field; }
+        var hasProperty = _variables.ContainsKey(name);
+        
+        var field = hasProperty ? _variables[name]  : null;
 
+        if (hasProperty)
+        {
+            value = field;
+            return true;
+        }
+        
         var fun = Class.FindMethod(name);
-        if (fun is null) { return null; }
+        if (fun is not null)
+        {
+            var frame = new Frame(fun.Closure);
+            frame.Define("this", this);
+            value = new LoxFunction(fun.Declaration, frame, fun.IsInitialiser);
+            return true;
+        }
 
-        var frame = new Frame(fun.Closure);
-        frame.Define("this", this);
-        return new LoxFunction(fun.Declaration, frame, fun.IsInitialiser);
+        value = null;
+        return false;
     }
 
     #endregion

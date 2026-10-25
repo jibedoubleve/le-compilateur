@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Compilateur.Tests.Conformance;
+namespace Compilateur.Tests.Conformance.Helpers;
 
 public static class PathExtensions
 {
@@ -23,22 +23,24 @@ public static class PathExtensions
         foreach (var line in File.ReadAllLines(path))
         {
             code.AppendLine(line);
-            var m = LoxRegex.Expect().Match(line);
+            var m = Helpers.LoxRegex.Expect().Match(line);
             if (m.Success)
             {
                 output.AppendLine(m.Groups[1].Value);
             }
 
-            m = LoxRegex.ErrorAt().Match(line);
+            m = Helpers.LoxRegex.ErrorAt().Match(line);
             if (m.Success)
             {
                 errors.AppendLine(m.Groups[1].Value);
             }
 
-            m = LoxRegex.RuntimeErrorAt().Match(line);
-            runtimeError = m.Success
-                ? m.Groups[1].Value
-                : null;
+            m = Helpers.LoxRegex.RuntimeErrorAt().Match(line);
+            if(runtimeError is null && m.Success)
+            {
+                runtimeError = m.Groups[1].Value;
+            }
+                
         }
 
         return new TestContext(

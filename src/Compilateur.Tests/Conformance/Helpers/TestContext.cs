@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Compilateur.Tests.Conformance;
+namespace Compilateur.Tests.Conformance.Helpers;
 
 public record TestContext(
     string FileName,
