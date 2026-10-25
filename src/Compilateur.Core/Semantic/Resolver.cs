@@ -40,12 +40,12 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
 
     #region Methods
 
-    private void VisitFunctionBody(FunctionDeclarationStatement node)
+    private void VisitFunctionBody(FunctionDeclarationStatement node, bool isMethod = false)
     {
-        var enter = node.Token.Lexeme switch
+        var enter = (node.Token.Lexeme, isMethod) switch
         {
-            "init" => _enclosing.EnterInitialiser(),
-            _      => _enclosing.EnterFunction()
+            ("init", true) => _enclosing.EnterInitialiser(),
+            _              => _enclosing.EnterFunction()
         };
         using (enter)
         {
@@ -109,7 +109,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
 
                     foreach (var function in node.Functions)
                     {
-                        VisitFunctionBody(function);
+                        VisitFunctionBody(function, isMethod: true);
                     }
                 });
             }
@@ -299,7 +299,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
 
                 if (node.Expression is not null)
                 {
-                    Errors.Add(node.Token, "Can't return value from initializer.");
+                    Errors.Add(node.Token, "Can't return a value from an initializer.");
                 }
 
                 break;
