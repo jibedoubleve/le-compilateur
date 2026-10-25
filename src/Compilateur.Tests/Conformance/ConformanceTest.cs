@@ -1,6 +1,7 @@
 using System.Text;
 using Compilateur.Core;
 using Compilateur.Core.Errors;
+using Compilateur.Tests.Conformance.Helpers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
 using Xunit.Abstractions;

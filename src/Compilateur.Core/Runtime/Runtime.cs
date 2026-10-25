@@ -47,7 +47,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
     private object? VisitLoxCtor(LoxClass @class, CallExpression node)
     {
         var instance = new LoxInstance(@class);
-        var ctor = instance.GetProperty("init");
+        instance.TryGetProperty("init", out var ctor);
 
         if (ctor is LoxFunction fun) { return VisitLoxFunction(fun, node); }
 
@@ -204,9 +204,14 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         var obj = node.Object.Accept(this);
         return obj switch
         {
-            LoxInstance i => i.GetProperty(node.Token.Lexeme),
-            _             => throw new UnreachableException()
+            LoxInstance i => GetProperty(i),
+            _             => throw Errors.RuntimeException(node, "Only instances have properties.")
         };
+
+        object? GetProperty(LoxInstance instance) =>
+            instance.TryGetProperty(node.Token.Lexeme, out var result)
+                ? result
+                : throw Errors.RuntimeException(node, $"Undefined property '{node.Token.Lexeme}'.");
     }
 
     public object? Visit(GroupExpressionNode node) => node.Inner.Accept(this);
@@ -218,7 +223,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             return value;
         }
 
-        throw Errors.RuntimeException(node, $"Unknown identifier {node.Token.Lexeme}");
+        throw Errors.RuntimeException(node, $"Undefined variable '{node.Token.Lexeme}'.");
     }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
@@ -243,15 +248,16 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
         if (obj is not LoxInstance instance)
         {
-            throw new UnreachableException();
+            throw Errors.RuntimeException(node, "Only instances have fields.");
         }
 
+        var value = node.Value.Accept(this);
         instance.AddField(
             node.Token.Lexeme,
-            node.Value.Accept(this)
+            value
         );
 
-        return null;
+        return value;
     }
 
     public object Visit(SuperExpression node)

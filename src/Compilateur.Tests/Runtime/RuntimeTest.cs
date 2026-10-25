@@ -669,6 +669,41 @@ public class RuntimeTest
 
             """
         ];
+        yield return
+        [
+            """
+            class Foo
+            {
+                init() 
+                {
+                    this.bar = nil; 
+                }    
+            }
+            print Foo().bar;
+            """,
+            """
+            nil
+            
+            """
+        ];
+        yield return
+        [
+            """
+            class Foo
+            {
+                init() 
+                {
+                    this.bar = nil; 
+                }
+                bar() { print "hello world"; }    
+            }
+            print Foo().bar;
+            """,
+            """
+            nil
+            
+            """
+        ];
     }
 
     [Theory]
