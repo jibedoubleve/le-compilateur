@@ -1,5 +1,4 @@
 using Compilateur.Core.Lexical.Tokens;
-using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
 
 namespace Compilateur.Core.Syntactic.Helpers;
@@ -11,12 +10,6 @@ namespace Compilateur.Core.Syntactic.Helpers;
 /// </summary>
 public static class FunctionParser
 {
-    #region Fields
-
-    private const int MaxParams = 255;
-
-    #endregion
-
     #region Methods
 
     private static IEnumerable<Token>? ParseParameters(ParsingContext context)
@@ -83,7 +76,7 @@ public static class FunctionParser
     {
         if (context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis, TokenKind.Comma)) { return true; }
 
-        context.AddError($"Expect identifier, ',' or ')', found '{context.Cursor.Peek().Lexeme}'.");
+        context.AddError("Expect ')' after parameters.");
         return false;
     }
 
@@ -91,9 +84,12 @@ public static class FunctionParser
         IEnumerable<Token> parameters, ParsingContext context)
     {
         var args = parameters as Token[] ?? [.. parameters];
-        if (args.Length <= MaxParams) { return args; }
+        if (args.Length <= Maximum.Params) { return args; }
 
-        context.AddError($"Maximum number of {MaxParams} parameters exceeded.");
+        context.AddError(
+            args.Last(),
+            $"Can't have more than {Maximum.Params} parameters."
+        );
         return null;
     }
 
@@ -110,13 +106,20 @@ public static class FunctionParser
 
         context.Cursor.Consume(); // Consume the identifier
 
+
         var parameters = ParseParameters(context);
         if (parameters is null) { return null; }
 
-        var block = BlockParser.Parse(context);
-        if (block is null) { return null; }
+        if (!context.Cursor.IsPeekOfKind(TokenKind.OpenCurlyBracket))
+        {
+            context.AddError("Expect '{' before function body.");
+            return null;
+        }
 
-        return new FunctionDeclarationStatement(funcName, parameters ?? [], block);
+        var block = BlockParser.Parse(context);
+        return block is null
+            ? null
+            : new FunctionDeclarationStatement(funcName, parameters, block);
     }
 
     #endregion
