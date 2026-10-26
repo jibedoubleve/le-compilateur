@@ -31,7 +31,7 @@ public sealed record StringRule : ITokenRule
         {
             if (cursor.IsAtEnd)
             {
-                errors?.Add(first, "Reached end of file before closing quotes (\")");
+                errors?.Add(first, "Unterminated string.");
                 return null;
             }
 
@@ -53,9 +53,7 @@ public sealed record StringRule : ITokenRule
             strBuilder.Append(next.Char);
         }
 
-        var msg =
-            $"String starting with '{first.Char}' at line {first.Line}, column {first.Column} exceeds the " +
-            $"maximum length of {MaxSize} characters.";
+        var msg = $"Maximum length of {MaxSize} characters reached.";
         errors?.Add(first, msg);
         return null;
 
