@@ -27,7 +27,7 @@ public class DeclarationParser : IParser<StatementNode>
         var parser = Parsers.SingleOrDefault(p => p.Matches(context));
         if (parser is null)
         {
-            context.AddError($"Expected a declaration or a statement, found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError("Expect expression.");
             return null;
         }
 

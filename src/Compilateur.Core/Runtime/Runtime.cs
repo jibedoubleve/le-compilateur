@@ -103,18 +103,20 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
         return (node.Token.Lexeme, left, right) switch
         {
-            ("+", double x, double y)  => x + y,
-            ("+", string x, string y)  => x + y,
-            ("-", double x, double y)  => x - y,
-            ("*", double x, double y)  => x * y,
-            ("/", double x, double y)  => x / y,
-            ("<", double x, double y)  => x < y,
-            ("<=", double x, double y) => x <= y,
-            (">", double x, double y)  => x > y,
-            (">=", double x, double y) => x >= y,
-            ("==", var x, var y)       => Equals(x, y),
-            ("!=", var x, var y)       => !Equals(x, y),
-            _                          => Fail()
+            ("+", double x, double y)      => x + y,
+            ("+", string x, string y)      => x + y,
+            ("-", double x, double y)      => x - y,
+            ("*", double x, double y)      => x * y,
+            ("/", double x, double y)      => x / y,
+            ("<", double x, double y)      => x < y,
+            ("<=", double x, double y)     => x <= y,
+            (">", double x, double y)      => x > y,
+            (">=", double x, double y)     => x >= y,
+            ("==", double.NaN, double.NaN) => false,
+            ("!=", double.NaN, double.NaN) => true,
+            ("==", var x, var y)           => Equals(x, y),
+            ("!=", var x, var y)           => !Equals(x, y),
+            _                              => Fail()
         };
 
         object Fail() => throw Errors.RuntimeException(node, $"Unsupported operator '{node.Token.Lexeme}'.");
@@ -141,7 +143,6 @@ public class Runtime : ISyntaxNodeVisitor<object?>
                                 .Select(a => a.Accept(this))
                                 .ToArray();
             return callable.Call(this, node, arguments);
-
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
     }
