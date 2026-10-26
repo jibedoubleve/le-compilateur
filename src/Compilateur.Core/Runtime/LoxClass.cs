@@ -1,9 +1,10 @@
 using Compilateur.Core.Errors;
+using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
 
 namespace Compilateur.Core.Runtime;
 
-public class LoxClass
+public class LoxClass : ILoxCallable
 {
     #region Fields
 
@@ -34,6 +35,8 @@ public class LoxClass
 
     #region Properties
 
+    public int Arity => FindMethod("init")?.Arity ?? 0;
+
     public Frame Closure { get; }
 
     public ClassDeclarationStatement Declaration { get; }
@@ -57,6 +60,21 @@ public class LoxClass
         }
 
         return null;
+    }
+
+    public object? Call(Runtime runtime, ExpressionNode node, object?[] args)
+    {
+        if (Arity != args.Length)
+        {
+            throw runtime.Errors.RuntimeException(node, $"Expected {Arity} arguments but got {args.Length}.");
+        }
+
+        var instance = new LoxInstance(this);
+        instance.TryGetProperty("init", out var ctor);
+
+        if (ctor is ILoxCallable fun) { return fun.Call(runtime, node, args); }
+
+        return instance;
     }
 
     public LoxFunction? FindMethod(string name)

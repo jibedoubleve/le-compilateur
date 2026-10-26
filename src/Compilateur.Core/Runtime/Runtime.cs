@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Runtime.Extensions;
+using Compilateur.Core.Runtime.Native;
 using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
@@ -14,29 +15,26 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 {
     #region Fields
 
-    private readonly Environment _env = new();
-
     private readonly TextWriter _textWriter;
 
     #endregion
 
     #region Constructors
 
-    public Runtime(ErrorCollection errors)
-    {
-        Errors = errors;
-        _textWriter = Console.Out;
-    }
+    public Runtime(ErrorCollection errors) : this(errors, Console.Out) { }
 
     public Runtime(ErrorCollection errors, TextWriter textWriter)
     {
         Errors = errors;
         _textWriter = textWriter;
+        Environment.CurrentFrame.Define("clock", new ClockFunction());
     }
 
     #endregion
 
     #region Properties
+
+    public Environment Environment { get; } = new();
 
     public ErrorCollection Errors { get; }
 
@@ -44,69 +42,14 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     #region Methods
 
-    private object? VisitLoxCtor(LoxClass @class, CallExpression node)
-    {
-        var instance = new LoxInstance(@class);
-        instance.TryGetProperty("init", out var ctor);
-
-        if (ctor is LoxFunction fun) { return VisitLoxFunction(fun, node); }
-
-        return node.Arguments.Count == 0
-            ? instance
-            : throw Errors.RuntimeException(node, $"Expected 0 arguments but got {node.Arguments.Count}.");
-    }
-
-    private object? VisitLoxFunction(LoxFunction fun, CallExpression node)
-    {
-        // Evaluate the arguments out of the closure.
-        var arguments = node.Arguments
-                            .Select(a => a.Accept(this))
-                            .ToList();
-
-        using (_env.EnterFrame(fun.Closure))
-        {
-            var parameters = fun.Declaration.Parameters;
-
-            if (fun.Arity != arguments.Count)
-            {
-                throw Errors.RuntimeException(node, $"Expected {fun.Arity} arguments but got {arguments.Count}.");
-            }
-
-            for (var i = 0; i < parameters.Count; i++)
-            {
-                _env.TryDefine(
-                    parameters[i].Lexeme,
-                    arguments[i]
-                );
-            }
-
-            var result = RunFunction();
-            return fun.IsInitialiser
-                ? _env.CurrentFrame.Get("this")
-                : result;
-        }
-
-        object? RunFunction()
-        {
-            try
-            {
-                return fun.Declaration.Body.Accept(this);
-            }
-            catch (ReturnException ex)
-            {
-                return ex.ReturnValue;
-            }
-        }
-    }
-
     public object? Visit(ClassDeclarationStatement node)
     {
         var @class = new LoxClass(
             node,
-            _env.CurrentFrame,
+            Environment.CurrentFrame,
             Errors
         );
-        _env.TryDefine(node.Token.Lexeme, @class);
+        Environment.TryDefine(node.Token.Lexeme, @class);
         return null;
     }
 
@@ -114,9 +57,9 @@ public class Runtime : ISyntaxNodeVisitor<object?>
     {
         var fun = new LoxFunction(
             node,
-            _env.CurrentFrame
+            Environment.CurrentFrame
         );
-        _env.TryDefine(node.Token.Lexeme, fun);
+        Environment.TryDefine(node.Token.Lexeme, fun);
         return null;
     }
 
@@ -125,7 +68,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         var value = node.Initialiser?.Accept(this);
         var name = node.Token.Lexeme;
 
-        var isSuccess = _env.TryDefine(name, value);
+        var isSuccess = Environment.TryDefine(name, value);
 
         return isSuccess
             ? null
@@ -137,7 +80,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         var target = node.Target.Token;
         var value = node.Value.Accept(this);
 
-        var success = _env.TryAssign(target, value);
+        var success = Environment.TryAssign(target, value);
 
         return success
             ? value
@@ -189,12 +132,16 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         {
             var callee = node.Callee.Accept(this);
 
-            return callee switch
+            if (callee is not ILoxCallable callable)
             {
-                LoxFunction fun => VisitLoxFunction(fun, node),
-                LoxClass @class => VisitLoxCtor(@class, node),
-                _               => throw Errors.RuntimeException(node, "Can only call functions and classes.")
-            };
+                throw Errors.RuntimeException(node, "Can only call functions and classes.");
+            }
+
+            var arguments = node.Arguments
+                                .Select(a => a.Accept(this))
+                                .ToArray();
+            return callable.Call(this, node, arguments);
+
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
     }
@@ -218,7 +165,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object? Visit(IdentifierExpression node)
     {
-        if (_env.TryGetValue(node.Token, out var value))
+        if (Environment.TryGetValue(node.Token, out var value))
         {
             return value;
         }
@@ -262,7 +209,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object Visit(SuperExpression node)
     {
-        _env.TryGetValue("super", out var super);
+        Environment.TryGetValue("super", out var super);
         if (super is not LoxClass superClass) { throw new UnreachableException(); }
 
         var method = superClass.FindMethod(node.Method.Lexeme);
@@ -276,7 +223,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object Visit(ThisExpression node)
     {
-        _env.TryGetValue("this", out var value);
+        Environment.TryGetValue("this", out var value);
         return value ?? throw new UnreachableException();
     }
 
@@ -290,7 +237,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object? Visit(BlockStatement node)
     {
-        using (_env.EnterFrame())
+        using (Environment.EnterFrame())
         {
             foreach (var stmt in node.Statements)
             {

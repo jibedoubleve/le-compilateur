@@ -164,6 +164,14 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
     {
         node.Callee.Accept(this);
 
+        if (node.Arguments.Count > Maximum.Args)
+        {
+            Errors.Add(
+                node.Arguments.Last().Token,
+                $"Can't have more than {Maximum.Args} arguments."
+            );
+        }
+        
         foreach (var argument in node.Arguments)
         {
             argument.Accept(this);
