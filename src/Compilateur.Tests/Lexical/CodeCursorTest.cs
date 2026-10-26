@@ -3,6 +3,7 @@ using Shouldly;
 
 namespace Compilateur.Tests.Lexical;
 
+[Trait("Lexical", "Lexical")]
 public class CodeCursorTest
 {
     #region Methods

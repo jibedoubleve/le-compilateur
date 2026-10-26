@@ -1,10 +1,8 @@
-using System.Text;
 using Compilateur.Core;
 using Compilateur.Core.Errors;
 using Compilateur.Tests.Conformance.Helpers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Conformance;
 
@@ -29,17 +27,20 @@ public class ConformanceTest
     {
         _output.WriteLine($"""
                            ======== Testing file '{fileName}' ========
+                           
                            """
         );
         _output.WriteLine("""
                           CODE
                           ====
+                          
                           """);
         _output.WriteLine(code);
 
         if (!string.IsNullOrWhiteSpace(output))
         {
             _output.WriteLine("""
+                              
                               Expected output:
                               ================
                               """);
@@ -49,6 +50,7 @@ public class ConformanceTest
         if (!string.IsNullOrWhiteSpace(staticErrors))
         {
             _output.WriteLine("""
+                              
                               Expected errors:
                               ================
                               """);
@@ -59,26 +61,12 @@ public class ConformanceTest
         if (!string.IsNullOrWhiteSpace(runtimeError))
         {
             _output.WriteLine("""
+                              
                               Expected runtime errors:
                               ========================
                               """);
 
             _output.WriteLine(runtimeError);
-        }
-    }
-
-
-    private static void WithStaticError(Analysis analysis, IEnumerable<StaticError> expectedErrors)
-    {
-        var expected = expectedErrors.ToList();
-        var errors = analysis.Errors.ToList();
-        
-        analysis.Errors.Count().ShouldBe(expected.Count);
-        
-        for (var i = 0; i < expected.Count; i++)
-        {
-            errors[i].Message.ShouldBe(expected[i].Message);
-            errors[i].Variable.ShouldBe(expected[i].Variable);
         }
     }
 
@@ -95,13 +83,29 @@ public class ConformanceTest
             () => ex.Message.ShouldBe(err)
         );
     }
+    
+    private static void WithStaticError(Analysis analysis, IEnumerable<StaticError> expectedErrors)
+    {
+        var expected = expectedErrors.ToList();
+        var errors = analysis.Errors.ToList();
 
-    public static IEnumerable<object?[]> RetrieveTests()
+        analysis.Errors.Count().ShouldBe(expected.Count);
+
+        for (var i = 0; i < expected.Count; i++)
+        {
+            errors[i].Message.ShouldBe(expected[i].Message);
+            errors[i].Variable.ShouldBe(expected[i].Variable);
+        }
+    }
+
+    public static IEnumerable<TheoryDataRow> RetrieveTests()
     {
         const string path = "../../../Conformance/Lox";
         foreach (var file in Directory.GetFiles(path, "*.lox", SearchOption.AllDirectories))
         {
-            yield return [file];
+            var dataRow = new TheoryDataRow(file);
+            dataRow.WithTrait(nameof(ConformanceTest),Path.GetFileName(Path.GetDirectoryName(file)));
+            yield return dataRow;
         }
     }
 
@@ -112,7 +116,7 @@ public class ConformanceTest
         // arrange
         var (fileName, code, expected, runtimeErrors, staticErrors)
             = LoxFileHelper.ReadFile(path);
-        
+
         staticErrors = staticErrors.ToList();
         runtimeErrors = runtimeErrors.ToList();
 
@@ -130,7 +134,7 @@ public class ConformanceTest
         // act
         var analysis = compiler.Analyse(code);
         _output.WriteAnalysisErrors(analysis.Errors);
-        
+
         if (staticErrors.Any())
         {
             WithStaticError(analysis, staticErrors);

@@ -6,6 +6,7 @@ using Shouldly;
 
 namespace Compilateur.Tests.CrossCutting;
 
+[Trait("CrossCutting", "CrossCutting")]
 public class ExtensionsTest
 {
     #region Methods

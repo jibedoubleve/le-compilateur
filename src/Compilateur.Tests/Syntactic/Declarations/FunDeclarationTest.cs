@@ -2,10 +2,10 @@ using Compilateur.Core.Extensions;
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Declarations;
 
+[Trait("Syntactic", "Declaration")]
 public class FunDeclarationTest
 {
     #region Fields

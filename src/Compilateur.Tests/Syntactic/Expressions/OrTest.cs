@@ -1,10 +1,9 @@
 using Compilateur.Core.Syntactic.Parsers;
-using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Tests.Helpers;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Expressions;
 
+[Trait("Syntactic", "Expressions")]
 public class OrTest
 {
     #region Fields

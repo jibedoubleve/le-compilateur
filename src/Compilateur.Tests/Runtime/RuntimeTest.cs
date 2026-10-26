@@ -3,10 +3,10 @@ using Compilateur.Core;
 using Compilateur.Core.Errors;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Runtime;
 
+[Trait("Runtime", "Runtime")]
 public class RuntimeTest
 {
     #region Fields
