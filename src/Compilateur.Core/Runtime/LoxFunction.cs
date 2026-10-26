@@ -47,6 +47,7 @@ public class LoxFunction : ILoxCallable
                 );
             }
 
+            
             var result = RunFunction();
             return IsInitialiser
                 ? runtime.Environment.CurrentFrame.Get("this")

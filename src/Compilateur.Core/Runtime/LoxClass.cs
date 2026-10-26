@@ -77,15 +77,21 @@ public class LoxClass : ILoxCallable
         return instance;
     }
 
-    public LoxFunction? FindMethod(string name)
+    public LoxFunction? FindMethod(string name, Frame? frame = null)
     {
         var isCtor = name == "init";
         var method = Declaration.Functions.SingleOrDefault(f => f.Token.Lexeme == name);
 
+        var closure = frame is null
+            ? Closure
+            : new Frame(frame);
+        
         return method is not null
-            ? new LoxFunction(method, Closure, isCtor)
+            ? new LoxFunction(method, closure, isCtor)
             : FindMethod(this, name, isCtor);
     }
+
+    public override string ToString() => $"<class {Declaration.Token.Lexeme}>";
 
     #endregion
 }

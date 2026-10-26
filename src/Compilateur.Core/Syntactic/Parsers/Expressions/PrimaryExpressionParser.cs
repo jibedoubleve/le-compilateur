@@ -31,7 +31,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
     {
         if (!context.Cursor.IsPeekOfKind(TokenKind.Dot))
         {
-            context.AddError($"Expect '.' after 'super', found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError($"Expect '.' after 'super'.");
             return null;
         }
 
@@ -39,7 +39,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
 
         if (!context.Cursor.IsPeekOfKind(TokenKind.Identifier))
         {
-            context.AddError($"Expect superclass method name, found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError($"Expect superclass method name.");
             return null;
         }
 
