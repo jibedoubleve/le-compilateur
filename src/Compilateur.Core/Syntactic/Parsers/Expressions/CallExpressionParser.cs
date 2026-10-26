@@ -70,7 +70,7 @@ internal class CallExpressionParser : PrecedenceParser<PrimaryExpressionParser>
 
                 if (!context.Cursor.IsPeekOfKind(TokenKind.Identifier))
                 {
-                    context.AddError($"Expect property name after '.', found '{context.Cursor.Peek().Lexeme}'.");
+                    context.AddError($"Expect property name after '.'.");
                     return null;
                 }
 

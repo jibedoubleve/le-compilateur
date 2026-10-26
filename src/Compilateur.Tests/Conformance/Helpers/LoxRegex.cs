@@ -32,9 +32,8 @@ public static partial class LoxRegex
     ///     own line: <c>// [line 3] Error at 'x': message</c>.
     ///     Groups: 1 = line number, 2 = offending token, 3 = message.
     /// </summary>
-    [GeneratedRegex(@"// (?:\[line (?<line>\d+)\] )?Error at '(?<variable>.+)': (?<message>.*)")]
+    [GeneratedRegex(@"// (?:\[line (?<line>\d+)\] )?Error at (?:'(?<variable>.+)'|end): (?<message>.*)")]
     public static partial Regex StaticError();
-
 
     #endregion
 }

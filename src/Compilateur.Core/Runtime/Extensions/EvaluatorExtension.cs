@@ -20,7 +20,7 @@ public static class EvaluatorExtension
             var value = node.Accept(runtime);
             return value switch
             {
-                double d => 0 - d,
+                double d => -d,
                 _        => runtime.HandleUnsupportedType(node.Token, value)
             };
         }
