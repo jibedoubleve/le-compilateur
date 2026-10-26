@@ -119,7 +119,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             _                              => Fail()
         };
 
-        object Fail() => throw Errors.RuntimeException(node, $"Unsupported operator '{node.Token.Lexeme}'.");
+        object Fail() => throw Errors.RuntimeException(node, "Operands must be two numbers or two strings.");
 
         bool IsLogicalOp()
         {
