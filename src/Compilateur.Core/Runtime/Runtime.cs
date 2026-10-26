@@ -142,6 +142,7 @@ public class Runtime : ISyntaxNodeVisitor<object?>
             var arguments = node.Arguments
                                 .Select(a => a.Accept(this))
                                 .ToArray();
+
             return callable.Call(this, node, arguments);
         }
         catch (ReturnException ex) { return ex.ReturnValue; }
@@ -210,23 +211,24 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object Visit(SuperExpression node)
     {
+        Environment.TryGetValue("this", out var @this);
+        if (@this is not LoxInstance instance) { throw new UnreachableException(); }
+
         Environment.TryGetValue("super", out var super);
+
         if (super is not LoxClass superClass) { throw new UnreachableException(); }
 
-        var method = superClass.FindMethod(node.Method.Lexeme);
-        if (method is null)
-        {
-            throw Errors.RuntimeException(node, $"Method '{node.Method.Lexeme}' not found.");
-        }
+        var function = superClass.FindMethod(node.Method.Lexeme)
+                       ?? throw Errors.RuntimeException(node, $"Undefined property '{node.Method.Lexeme}'.");
 
-        return method;
+        return instance.Bind(function)
+               ?? throw new UnreachableException();
     }
 
-    public object Visit(ThisExpression node)
-    {
-        Environment.TryGetValue("this", out var value);
-        return value ?? throw new UnreachableException();
-    }
+    public object? Visit(ThisExpression node) =>
+        Environment.TryGetValue("this", out var value)
+            ? value
+            : throw new UnreachableException();
 
     public object? Visit(UnaryExpression node) =>
         node.Token.Lexeme switch

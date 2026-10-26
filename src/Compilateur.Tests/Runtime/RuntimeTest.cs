@@ -683,7 +683,7 @@ public class RuntimeTest
             """,
             """
             nil
-            
+
             """
         ];
         yield return
@@ -701,7 +701,20 @@ public class RuntimeTest
             """,
             """
             nil
-            
+
+            """
+        ];
+        yield return
+        [
+            """
+            var x = "global";
+            class Base { show() { print x; } }
+            class Derived < Base { show(x) { super.show(); } }
+            Derived().show("param");
+            """,
+            """
+            global
+
             """
         ];
     }
