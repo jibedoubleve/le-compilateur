@@ -4,10 +4,10 @@ using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
+[Trait("Lexical", "Lexical")]
 public class CodeTest : ScannerTestBase
 {
     #region Fields

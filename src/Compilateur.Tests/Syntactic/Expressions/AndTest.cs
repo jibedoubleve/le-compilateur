@@ -1,9 +1,9 @@
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Expressions;
 
+[Trait("Syntactic", "Expressions")]
 public class AndTest
 {
     #region Fields

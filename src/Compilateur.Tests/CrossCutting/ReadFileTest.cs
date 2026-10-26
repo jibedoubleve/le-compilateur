@@ -1,8 +1,9 @@
 using Compilateur.Tests.Conformance.Helpers;
 using Shouldly;
 
-namespace Compilateur.Tests.Conformance;
+namespace Compilateur.Tests.CrossCutting;
 
+[Trait("CrossCutting", "CrossCutting")]
 public class ReadFileTest
 {
     #region Methods

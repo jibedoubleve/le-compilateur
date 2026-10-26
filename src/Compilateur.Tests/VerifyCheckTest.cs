@@ -1,5 +1,6 @@
 namespace Compilateur.Tests;
 
+[Trait("Verify", "Verify")]
 public class VerifyCheckTest
 {
     #region Methods

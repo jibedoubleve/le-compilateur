@@ -3,10 +3,10 @@ using Compilateur.Core.Syntactic.Nodes.Expressions;
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Expressions;
 
+[Trait("Syntactic", "Expressions")]
 public class CallTest
 {
     #region Fields

@@ -2,10 +2,10 @@ using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Lexical.Tokens;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
+[Trait("Lexical", "Lexical")]
 public class CommentsTest : ScannerTestBase
 {
     #region Fields

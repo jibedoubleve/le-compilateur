@@ -4,6 +4,7 @@ using Shouldly;
 
 namespace Compilateur.Tests.Syntactic;
 
+[Trait("Syntactic", "Syntactic")]
 public class TokenCursorTest
 {
     #region Methods

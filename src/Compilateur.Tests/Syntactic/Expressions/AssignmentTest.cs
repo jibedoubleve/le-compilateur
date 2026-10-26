@@ -1,12 +1,11 @@
 using Compilateur.Core.Extensions;
-using Compilateur.Core.Syntactic;
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Expressions;
 
+[Trait("Syntactic", "Expressions")]
 public class AssignmentTest
 {
     #region Fields

@@ -1,7 +1,7 @@
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Lexical;
 
+[Trait("Lexical", "Lexical")]
 public class ScannerTestBase
 {
     #region Fields

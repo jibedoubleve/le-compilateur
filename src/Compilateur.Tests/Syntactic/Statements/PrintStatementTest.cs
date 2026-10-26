@@ -3,10 +3,10 @@ using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Core.Syntactic.Parsers.Statements;
 using Compilateur.Tests.Helpers;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace Compilateur.Tests.Syntactic.Statements;
 
+[Trait("Syntactic", "Statement")]
 public class PrintStatementTest
 {
     #region Fields
