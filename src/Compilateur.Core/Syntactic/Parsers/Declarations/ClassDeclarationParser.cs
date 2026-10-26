@@ -29,7 +29,7 @@ internal class ClassDeclarationParser : Parser<ClassDeclarationStatement>
             var current = context.Cursor.Peek();
             if (current.Kind != TokenKind.Identifier)
             {
-                context.AddError("Expected an identifier after '<'");
+                context.AddError("Expect superclass name.");
                 return null;
             }
 
