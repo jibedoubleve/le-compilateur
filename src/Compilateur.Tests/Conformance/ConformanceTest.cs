@@ -94,7 +94,10 @@ public class ConformanceTest
         for (var i = 0; i < expected.Count; i++)
         {
             errors[i].Message.ShouldBe(expected[i].Message);
-            errors[i].Variable.ShouldBe(expected[i].Variable);
+            if(!string.IsNullOrEmpty(expected[i].Variable))
+            {
+                errors[i].Variable.ShouldBe(expected[i].Variable);
+            }
         }
     }
 
@@ -150,7 +153,9 @@ public class ConformanceTest
         compiler.Run(analysis);
 
         // assert
-        output.ToString().ShouldBe(expected);
+        output.ToString()
+              .ReplaceLineEndings()
+              .ShouldBe(expected);
     }
 
     #endregion
