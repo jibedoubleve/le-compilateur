@@ -136,7 +136,7 @@ public class ConformanceTest
 
         // act
         var analysis = compiler.Analyse(code);
-        _output.WriteAnalysisErrors(analysis.Errors);
+        _output.WriteAnalysisContext(analysis);
 
         if (staticErrors.Any())
         {

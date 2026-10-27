@@ -15,7 +15,7 @@ internal class ClassDeclarationParser : Parser<ClassDeclarationStatement>
         var className = context.Cursor.Peek();
         if (className.Kind != TokenKind.Identifier)
         {
-            context.AddError("Expected an identifier after 'class'");
+            context.AddError("Expect identifier after 'class'");
             return null;
         }
 
@@ -39,7 +39,7 @@ internal class ClassDeclarationParser : Parser<ClassDeclarationStatement>
 
         if (!context.Cursor.IsPeekOfKind(TokenKind.OpenCurlyBracket))
         {
-            context.AddError($"Expected an opening bracket after 'class', found {className.Lexeme}'");
+            context.AddError($"Expect opening bracket after 'class', found {className.Lexeme}'");
             return null;
         }
 

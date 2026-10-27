@@ -29,7 +29,7 @@ public sealed record NumericRule : ITokenRule
         var first = cursor.Peek();
         if (!first.Char.HasValue || !char.IsAsciiDigit(first.Char.Value))
         {
-            errors?.Add(first, $"Expected number literal, found '{first.Char ?? '\0'}'.");
+            errors?.Add(first, $"Expect number literal, found '{first.Char ?? '\0'}'.");
             return null;
         }
 

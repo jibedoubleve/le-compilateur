@@ -59,6 +59,8 @@ public class TokenCursor : ICursor<Token>
             ? null
             : _tokens.ElementAt(_currentIndex + 1);
 
+    public void Synchronise() => Panic.Sync(this);
+
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -75,4 +77,46 @@ public class TokenCursor : ICursor<Token>
     }
 
     #endregion
+
+    private static class Panic
+    {
+        #region Fields
+
+        private static readonly IReadOnlyCollection<string> StatementStarters =
+            ["class", "fun", "var", "for", "if", "while", "print", "return"];
+
+        private const string StatementTerminator = ";";
+
+        #endregion
+
+        #region Methods
+
+        private static bool IsTerminator(Token? token) =>
+            string.CompareOrdinal(StatementTerminator, token?.Lexeme ?? string.Empty) == 0;
+
+        public static void Sync(TokenCursor cursor)
+        {
+            // Consume source of the error
+            if (cursor.TryConsume(out var c) && IsTerminator(c))
+            {
+                return;
+            }
+
+            while (!cursor.IsAtEnd)
+            {
+                var token = cursor.Peek();
+                if (StatementStarters.Contains(token.Lexeme)) { return; }
+
+                if (IsTerminator(token))
+                {
+                    cursor.Consume();
+                    return;
+                }
+
+                cursor.Consume();
+            }
+        }
+
+        #endregion
+    }
 }

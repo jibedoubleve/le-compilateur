@@ -22,7 +22,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
             case TokenKind.Nil:
                 return new LiteralExpression(token);
             default:
-                context.AddError($"Expect expression, found '{token.Lexeme}'.");
+                context.AddError($"Expect expression.");
                 return null;
         }
     }
@@ -98,7 +98,7 @@ internal class PrimaryExpressionParser : IParser<ExpressionNode>
 
         if (!context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis))
         {
-            context.AddError($"Expect ')' after expression but found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError($"Expect ')' after expression, found '{context.Cursor.Peek().Lexeme}'.");
             return null;
         }
 
