@@ -21,7 +21,7 @@ public class ForStatementParser : Parser<StatementNode>
         var @for = context.Cursor.Consume(); // consume the for
         if (!context.Cursor.IsPeekOfKind(TokenKind.OpenParenthesis))
         {
-            context.AddError($"Expected parenthesis but found '{context.Cursor.Peek().Lexeme}'");
+            context.AddError($"Expect parenthesis, found '{context.Cursor.Peek().Lexeme}'");
             return null;
         }
 

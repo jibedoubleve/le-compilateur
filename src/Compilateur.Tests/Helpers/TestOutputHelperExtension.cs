@@ -1,4 +1,5 @@
 using System.Text;
+using Compilateur.Core;
 using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
 using Compilateur.Core.Lexical;
@@ -11,115 +12,108 @@ namespace Compilateur.Tests.Helpers;
 
 public static class TestOutputHelperExtension
 {
-    extension(ITestOutputHelper outputHelper)
-    {
-        #region Methods
+    #region Methods
 
-        private void WriteCode(ParsingContext context)
-            => outputHelper.WriteLine($"""
-                                       Code:
-                                       ----- 
-                                       {context.Cursor}
-                                       """);
-
-        private void WriteSyntaxTree(SyntaxNode? node)
-        {
-            if (node is null)
-            {
-                outputHelper.WriteLine("Syntax tree: EMPTY.");
-                return;
-            }
-
-            outputHelper.WriteLine("Syntax tree:");
-            outputHelper.WriteLine("------------");
-            outputHelper.WriteLine(
-                node.FormatTree()
-            );
-        }
-
-        public void WriteErrors(ErrorCollection errors) =>
-            outputHelper.WriteLine($"""
-                                    Errors:
-                                    -------
-
-                                    {errors.Format()}
-                                    """);
-
-        public void WriteAnalysisErrors(ErrorCollection errors) =>
-            outputHelper.WriteLine($"""
-
-                                    Errors:
-                                    -------
-
-                                    {errors.Format()}
-
-                                    """
-            );
-
-        public void WriteLexerContext(string code, TokenizeResult tokenization)
-        {
-            outputHelper.WriteLine($"""
-                                    Code:
-                                    -----
-
-                                    {code}
-
-                                    Errors:
-                                    -------
-
-                                    {tokenization.Errors.Format()}
-
-                                    Tokens:
-                                    -------
-                                    """
-            );
-
-            outputHelper.WriteLine("""
-                                   | Lexeme | Kind               |
-                                   | ------ | ------------------ |
+    private static void WriteCode(this ITestOutputHelper outputHelper, ParsingContext context)
+        => outputHelper.WriteLine($"""
+                                   Code:
+                                   ----- 
+                                   {context.Cursor}
                                    """);
-            foreach (var token in tokenization.Tokens)
-            {
-                outputHelper.WriteLine($"| {token.Lexeme,6} | {token.Kind,-18} |");
-            }
-        }
 
-        public void WriteSemanticContext(Resolver resolver)
+    private static void WriteSyntaxTree(this ITestOutputHelper outputHelper, SyntaxNode? node)
+    {
+        if (node is null)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("""
-
-                          Distance map:
-                          -------------
-                          |          Variable          | Distance |
-                          | -------------------------- | -------- |
-
-                          """);
-            foreach (var local in resolver.ToLocals())
-            {
-                sb.AppendLine($"| {local.Name,26} | {local.Distance,8} |");
-            }
-
-            sb.AppendLine("""
-                          Errors:
-                          ------
-                          """);
-            sb.AppendLine(resolver.Errors.Format());
-
-            outputHelper.WriteLine(sb.ToString());
+            outputHelper.WriteLine("Syntax tree: EMPTY.");
+            return;
         }
 
-        public void WriteSyntaxContext(ParsingContext context, SyntaxNode? node = null)
-        {
-            outputHelper.WriteCode(context);
-            if (node != null) { outputHelper.WriteSyntaxTree(node); }
-            else { outputHelper.WriteLine("No syntax tree to output."); }
-
-            outputHelper.WriteLine(context.FormatErrors());
-        }
-
-        #endregion
+        outputHelper.WriteLine("Syntax tree:");
+        outputHelper.WriteLine("------------");
+        outputHelper.WriteLine(
+            node.FormatTree()
+        );
     }
+
+    public static void WriteAnalysisContext(this ITestOutputHelper outputHelper, Analysis analysis) =>
+        outputHelper.WriteErrors(analysis.Errors);
+
+    public static void WriteErrors(this ITestOutputHelper outputHelper, ErrorCollection errors) =>
+        outputHelper.WriteLine($"""
+
+                                Errors:
+                                -------
+
+                                {errors.Format()}
+                                """);
+
+    public static void WriteLexerContext(this ITestOutputHelper outputHelper, string code, TokenizeResult tokenization)
+    {
+        outputHelper.WriteLine($"""
+                                Code:
+                                -----
+
+                                {code}
+
+                                Errors:
+                                -------
+
+                                {tokenization.Errors.Format()}
+
+                                Tokens:
+                                -------
+                                """
+        );
+
+        outputHelper.WriteLine("""
+                               | Lexeme | Kind               |
+                               | ------ | ------------------ |
+                               """);
+        foreach (var token in tokenization.Tokens)
+        {
+            outputHelper.WriteLine($"| {token.Lexeme,6} | {token.Kind,-18} |");
+        }
+    }
+
+    public static void WriteSemanticContext(this ITestOutputHelper outputHelper, Resolver resolver)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("""
+
+                      Distance map:
+                      -------------
+                      |          Variable          | Distance |
+                      | -------------------------- | -------- |
+
+                      """);
+        foreach (var local in resolver.ToLocals())
+        {
+            sb.AppendLine($"| {local.Name,26} | {local.Distance,8} |");
+        }
+
+        sb.AppendLine("""
+                      Errors:
+                      ------
+                      """);
+        sb.AppendLine(resolver.Errors.Format());
+
+        outputHelper.WriteLine(sb.ToString());
+    }
+
+    public static void WriteSyntaxContext(
+        this ITestOutputHelper outputHelper, ParsingContext context, SyntaxNode? node = null)
+    {
+        outputHelper.WriteCode(context);
+        if (node != null) { outputHelper.WriteSyntaxTree(node); }
+        else { outputHelper.WriteLine("No syntax tree to output."); }
+
+        outputHelper.WriteLine(context.FormatErrors());
+    }
+
+    #endregion
+
+    extension(ITestOutputHelper outputHelper) { }
 }
 
 public record Local(string Name, uint Distance);

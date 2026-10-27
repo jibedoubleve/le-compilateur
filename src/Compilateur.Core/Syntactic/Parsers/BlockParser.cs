@@ -1,9 +1,8 @@
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Nodes.Statements;
-using Compilateur.Core.Syntactic.Parsers;
 
-namespace Compilateur.Core.Syntactic.Helpers;
+namespace Compilateur.Core.Syntactic.Parsers;
 
 public static class BlockParser
 {
@@ -23,10 +22,12 @@ public static class BlockParser
             context.Cursor.Consume(); // Consume the '{'
 
             var children = new List<StatementNode>();
-            while (true)
+            var hasCurlyBrace = false;
+            while (!context.Cursor.IsAtEnd)
             {
                 if (context.Cursor.IsPeekOfKind(TokenKind.CloseCurlyBracket))
                 {
+                    hasCurlyBrace = true;
                     context.Cursor.Consume();
                     break;
                 }
@@ -34,14 +35,21 @@ public static class BlockParser
                 if (!DeclarationParser.Matches(context))
                 {
                     context.AddError($"Expect a declaration or a statement, found {context.Cursor.Peek().Lexeme}.");
-                    return null;
+                    context.Cursor.Synchronise();
                 }
 
                 var node = DeclarationParser.Parse(context);
-                if (node == null) { return null; }
-
-                children.Add(node);
+                if (node is null)
+                {
+                    context.Cursor.Synchronise();
+                }
+                else
+                {
+                    children.Add(node);
+                }
             }
+
+            if (!hasCurlyBrace) { context.AddError("Expect '}' after block body."); }
 
             return new BlockStatement(firstToken, [.. children]);
         }

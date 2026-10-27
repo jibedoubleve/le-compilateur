@@ -158,10 +158,7 @@ public class FunctionParserTest
         _output.WriteSyntaxContext(context, node);
 
         // assert
-        Assert.Multiple(
-            () => context.Errors.Count().ShouldBeGreaterThan(0),
-            () => node.ShouldBeNull()
-        );
+        context.Errors.Count().ShouldBeGreaterThan(0);
     }
 
     [Fact]

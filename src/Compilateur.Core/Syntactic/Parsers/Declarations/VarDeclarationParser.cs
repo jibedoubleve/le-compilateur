@@ -39,7 +39,7 @@ internal class VarDeclarationParser : Parser<VarDeclarationStatement>
 
         if (!_expressionParser.Matches(context))
         {
-            context.AddError($"Expected an expression, found {context.Cursor.Peek().Lexeme}.");
+            context.AddError($"Expect expression.");
             return null;
         }
         var children = _expressionParser.Parse(context);

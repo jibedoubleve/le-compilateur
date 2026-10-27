@@ -1,5 +1,4 @@
 using Compilateur.Core.Syntactic.Nodes;
-using Compilateur.Core.Syntactic.Parsers.Declarations;
 
 namespace Compilateur.Core.Syntactic.Parsers;
 
@@ -17,7 +16,7 @@ public static class ProgramParser
     {
         if (context.Cursor.IsEmpty)
         {
-            context.AddError("Expected code, nothing to parse.");
+            context.AddError("Expect code, nothing to parse.");
             return null;
         }
 
@@ -25,13 +24,25 @@ public static class ProgramParser
         while (!context.Cursor.IsAtEnd)
         {
             var node = DeclarationParser.Parse(context);
-            if (node is null) { return null; }
+            if (node is null)
+            {
+                context.Cursor.Synchronise();
+            }
+
+            if (node is null) { continue; }
 
             children.Add(node);
         }
 
-        var current = context.Cursor.Peek();
-        return new ProgramNode(current, [.. children]);
+        return context.Errors.Any()
+            ? null
+            : BuildProgramNode();
+
+        ProgramNode BuildProgramNode()
+        {
+            var current = context.Cursor.Peek();
+            return new ProgramNode(current, [.. children]);
+        }
     }
 
     #endregion

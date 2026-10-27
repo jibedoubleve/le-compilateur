@@ -28,7 +28,7 @@ public static class ParsingContextExtension
         {
             if (!context.Cursor.IsPeekOfKind(kind))
             {
-                context.AddError($"Expect '{kind.ToLexeme()}' but found '{context.Cursor.Peek().Lexeme}'");
+                context.AddError($"Expect '{kind.ToLexeme()}', found '{context.Cursor.Peek().Lexeme}'");
                 return false;
             }
 
@@ -45,16 +45,22 @@ public static class ParsingContextExtension
                 return true;
             }
 
-            var expr = context.ValidateFinalSemicolon(
-                ExpressionParser.Parse(context)
-            );
-            if (expr is null)
+            var expr = ExpressionParser.Parse(context);
+            if(expr is null)
+            {
+                output = null;
+                return false;
+            }
+            
+            
+            var validated = context.ValidateFinalSemicolon(expr);
+            if (validated is null)
             {
                 output = null;
                 return false;
             }
 
-            output = expr;
+            output = validated;
             return true;
         }
 

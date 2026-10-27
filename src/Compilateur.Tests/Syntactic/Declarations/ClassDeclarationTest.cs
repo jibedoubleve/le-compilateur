@@ -224,10 +224,7 @@ public class ClassDeclarationTest
         _output.WriteSyntaxContext(context: context, node: node);
 
         // assert
-        Assert.Multiple(
-            () => node.ShouldBeNull(),
-            () => context.Errors.ShouldNotBeEmpty()
-        );
+        context.Errors.ShouldNotBeEmpty();
     }
 
     [Fact]

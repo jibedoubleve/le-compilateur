@@ -1,5 +1,6 @@
 using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic.Nodes.Declaration;
+using Compilateur.Core.Syntactic.Parsers;
 
 namespace Compilateur.Core.Syntactic.Helpers;
 
@@ -31,7 +32,7 @@ public static class FunctionParser
                     break;
                 default:
                     context.AddError(
-                        $"Expected identifier, found '{current.Lexeme}'."
+                        $"Expect identifier, found '{current.Lexeme}'."
                     );
                     return null;
             }
@@ -45,7 +46,7 @@ public static class FunctionParser
                     case TokenKind.Comma:
                         if (!context.Cursor.IsPeekOfKind(TokenKind.Identifier))
                         {
-                            context.AddError($"Expected identifier, found '{context.Cursor.Peek().Lexeme}'.");
+                            context.AddError($"Expect identifier, found '{context.Cursor.Peek().Lexeme}'.");
                             return null;
                         }
 
@@ -59,7 +60,7 @@ public static class FunctionParser
                         break;
                     default:
                         context.AddError(
-                            $"Expected identifier, found '{current.Lexeme}'."
+                            $"Expect identifier, found '{current.Lexeme}'."
                         );
                         return null;
                 }
@@ -99,7 +100,7 @@ public static class FunctionParser
         if (funcName.Kind != TokenKind.Identifier)
         {
             context.AddError(
-                $"Expected a function identifier, found '{funcName.Lexeme}' [{funcName.Kind}]"
+                $"Expect a function identifier, found '{funcName.Lexeme}' [{funcName.Kind}]"
             );
             return null;
         }

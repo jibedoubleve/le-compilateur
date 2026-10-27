@@ -19,7 +19,7 @@ public abstract record DoubleCharRule : ITokenRule
         if (lexeme.Length != 2)
         {
             throw new ArgumentOutOfRangeException(
-                $"The lexeme should have a length of 2 but length is {lexeme.Length}"
+                $" Expect length of 2, found length of {lexeme.Length}"
             );
         }
 

@@ -1,3 +1,4 @@
+using Compilateur.Core;
 using Compilateur.Core.Lexical;
 using Compilateur.Core.Semantic;
 using Compilateur.Core.Syntactic;
@@ -230,6 +231,16 @@ public class SemanticTest
         ];
     }
 
+    [Fact]
+    public void To_Be_Deleted()
+    {
+        var code = "{ ) print 1; }";
+        var analysis = new Compiler().Analyse(code);
+        
+        _output.WriteAnalysisContext(analysis);
+        analysis.Errors.ShouldNotBeEmpty();
+    }
+    
     [Theory]
     [MemberData(nameof(BuildInvalidCode))]
     public void When_Binding_Invalid_Code_Then_Expected_Error_Raised(string code)
