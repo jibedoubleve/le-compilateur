@@ -22,7 +22,7 @@ internal class VarDeclarationParser : Parser<VarDeclarationStatement>
 
         if (varName.Kind != TokenKind.Identifier)
         {
-            context.AddError($"Expected an identifier after 'var', found '{varName.Lexeme}'.");
+            context.AddError("Expect variable name.");
             return null;
         }
 

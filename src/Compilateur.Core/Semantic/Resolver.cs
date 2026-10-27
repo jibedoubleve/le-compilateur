@@ -51,10 +51,14 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
         {
             _scopes.Push(scope => {
                 // declare parameters
-                foreach (var parameter in node.Parameters.Select(x => x.Lexeme))
+                foreach (var param in node.Parameters)
                 {
-                    scope.Declare(parameter);
-                    scope.Define(parameter);
+                    if (scope.IsDeclared(param.Lexeme))
+                    {
+                        Errors.Add(param, "Already a variable with this name in this scope.");
+                    }
+                    scope.Declare(param.Lexeme);
+                    scope.Define(param.Lexeme);
                 }
 
                 // declare body
@@ -134,7 +138,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
         _scopes.OnCurrent(scope => {
             if (scope.IsDeclared(name))
             {
-                Errors.Add(node.Token, $"Already a variable named '{name}' in this scope.");
+                Errors.Add(node.Token, "Already a variable with this name in this scope.");
             }
 
             scope.Declare(name);
@@ -199,7 +203,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
             if (scope.IsDeclared(node.Token.Lexeme) &&
                 !scope.IsDefined(node.Token.Lexeme))
             {
-                Errors.Add(node.Token, $"Can't read local variable '{node.Token.Lexeme}' in its own initializer.");
+                Errors.Add(node.Token, "Can't read local variable in its own initializer.");
             }
         });
 
