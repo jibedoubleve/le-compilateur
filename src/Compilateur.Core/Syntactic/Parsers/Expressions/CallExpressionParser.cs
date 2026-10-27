@@ -39,7 +39,7 @@ internal class CallExpressionParser : PrecedenceParser<PrimaryExpressionParser>
 
         if (!context.Cursor.IsPeekOfKind(TokenKind.CloseParenthesis))
         {
-            context.AddError($"Expect ')' after arguments, found '{context.Cursor.Peek().Lexeme}'.");
+            context.AddError($"Expect ')' after arguments.");
             return null;
         }
 

@@ -56,7 +56,7 @@ public class Scanner
         var codeChar = cursor.Consume();
         errors.Add(
             codeChar,
-            $"Character '{codeChar.Char}' is not supported"
+            "Unexpected character."
         );
     }
 
