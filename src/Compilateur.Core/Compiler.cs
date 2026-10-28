@@ -45,7 +45,7 @@ public class Compiler
         // and returns if any
         return context.Errors.Any()
             ? Analysis.Error(context.Errors)
-            : Analysis.Success(ast);
+            : Analysis.Success(ast, resolver.DistanceMap);
     }
 #pragma warning restore S2325
 
@@ -56,8 +56,7 @@ public class Compiler
             throw new ArgumentException("Invalid analysis", nameof(analysis));
         }
 
-        var interpreter = new Interpreter(analysis.Errors, _output);
-        interpreter.Interpret(analysis.Ast!);
+        new Interpreter(_output).Interpret(analysis);
     }
 
     #endregion

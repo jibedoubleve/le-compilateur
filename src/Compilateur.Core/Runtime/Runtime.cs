@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Compilateur.Core.Errors;
 using Compilateur.Core.Extensions;
@@ -21,11 +22,12 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     #region Constructors
 
-    public Runtime(ErrorCollection errors) : this(errors, Console.Out) { }
+    public Runtime(Analysis analysis) : this(analysis, Console.Out) { }
 
-    public Runtime(ErrorCollection errors, TextWriter textWriter)
+    public Runtime(Analysis analysis, TextWriter textWriter)
     {
-        Errors = errors;
+        Errors = analysis.Errors;
+        DistanceMap = analysis.DistanceMap ?? throw new UnreachableException();
         _textWriter = textWriter;
         Environment.CurrentFrame.Define("clock", new ClockFunction());
     }
@@ -34,9 +36,11 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     #region Properties
 
+    public ReadOnlyDictionary<SyntaxNode, uint> DistanceMap { get; init; }
+
     public Environment Environment { get; } = new();
 
-    public ErrorCollection Errors { get; }
+    public ErrorCollection Errors { get; init; }
 
     #endregion
 
@@ -80,7 +84,8 @@ public class Runtime : ISyntaxNodeVisitor<object?>
         var target = node.Target.Token;
         var value = node.Value.Accept(this);
 
-        var success = Environment.TryAssign(target, value);
+        uint? jmp = DistanceMap.TryGetValue(node.Target, out var j) ? j : null;
+        var success = Environment.TryAssign(jmp, target.Lexeme, value);
 
         return success
             ? value
@@ -167,12 +172,11 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object? Visit(IdentifierExpression node)
     {
-        if (Environment.TryGetValue(node.Token, out var value))
-        {
-            return value;
-        }
+        uint? jump = DistanceMap.TryGetValue(node, out var j) ? j : null;
 
-        throw Errors.RuntimeException(node, $"Undefined variable '{node.Token.Lexeme}'.");
+        return Environment.TryGetValue(jump, node.Token.Lexeme, out var value)
+            ? value
+            : throw Errors.RuntimeException(node, $"Undefined variable '{node.Token.Lexeme}'.");
     }
 
     public object? Visit(LiteralExpression node) => node.Token.Value;
@@ -211,10 +215,11 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object Visit(SuperExpression node)
     {
-        Environment.TryGetValue("this", out var @this);
+        var jmp = DistanceMap[node];
+        Environment.TryGetValue(jmp - 1, "this", out var @this);
         if (@this is not LoxInstance instance) { throw new UnreachableException(); }
 
-        Environment.TryGetValue("super", out var super);
+        Environment.TryGetValue(jmp, "super", out var super);
 
         if (super is not LoxClass superClass) { throw new UnreachableException(); }
 
@@ -225,10 +230,13 @@ public class Runtime : ISyntaxNodeVisitor<object?>
                ?? throw new UnreachableException();
     }
 
-    public object? Visit(ThisExpression node) =>
-        Environment.TryGetValue("this", out var value)
+    public object? Visit(ThisExpression node)
+    {
+        var jmp = DistanceMap[node];
+        return Environment.TryGetValue(jmp, "this", out var value)
             ? value
             : throw new UnreachableException();
+    }
 
     public object? Visit(UnaryExpression node) =>
         node.Token.Lexeme switch

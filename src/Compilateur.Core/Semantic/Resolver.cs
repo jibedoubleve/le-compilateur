@@ -57,6 +57,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
                     {
                         Errors.Add(param, "Already a variable with this name in this scope.");
                     }
+
                     scope.Declare(param.Lexeme);
                     scope.Define(param.Lexeme);
                 }
@@ -113,7 +114,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
 
                     foreach (var function in node.Functions)
                     {
-                        VisitFunctionBody(function, isMethod: true);
+                        VisitFunctionBody(function, true);
                     }
                 });
             }
@@ -175,7 +176,7 @@ public class Resolver : ISyntaxNodeVisitor<Unit>
                 $"Can't have more than {Maximum.Args} arguments."
             );
         }
-        
+
         foreach (var argument in node.Arguments)
         {
             argument.Accept(this);

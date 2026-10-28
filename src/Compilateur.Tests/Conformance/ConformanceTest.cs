@@ -27,20 +27,20 @@ public class ConformanceTest
     {
         _output.WriteLine($"""
                            ======== Testing file '{fileName}' ========
-                           
+
                            """
         );
         _output.WriteLine("""
                           CODE
                           ====
-                          
+
                           """);
         _output.WriteLine(code);
 
         if (!string.IsNullOrWhiteSpace(output))
         {
             _output.WriteLine("""
-                              
+
                               Expected output:
                               ================
                               """);
@@ -50,7 +50,7 @@ public class ConformanceTest
         if (!string.IsNullOrWhiteSpace(staticErrors))
         {
             _output.WriteLine("""
-                              
+
                               Expected errors:
                               ================
                               """);
@@ -61,7 +61,7 @@ public class ConformanceTest
         if (!string.IsNullOrWhiteSpace(runtimeError))
         {
             _output.WriteLine("""
-                              
+
                               Expected runtime errors:
                               ========================
                               """);
@@ -83,7 +83,7 @@ public class ConformanceTest
             () => ex.Message.ShouldBe(err)
         );
     }
-    
+
     private static void WithStaticError(Analysis analysis, IEnumerable<StaticError> expectedErrors)
     {
         var expected = expectedErrors.ToList();
@@ -94,7 +94,7 @@ public class ConformanceTest
         for (var i = 0; i < expected.Count; i++)
         {
             errors[i].Message.ShouldBe(expected[i].Message);
-            if(!string.IsNullOrEmpty(expected[i].Variable))
+            if (!string.IsNullOrEmpty(expected[i].Variable))
             {
                 errors[i].Variable.ShouldBe(expected[i].Variable);
             }
@@ -107,7 +107,10 @@ public class ConformanceTest
         foreach (var file in Directory.GetFiles(path, "*.lox", SearchOption.AllDirectories))
         {
             var dataRow = new TheoryDataRow(file);
-            dataRow.WithTrait(nameof(ConformanceTest),Path.GetFileName(Path.GetDirectoryName(file)));
+            dataRow.WithTrait(
+                nameof(ConformanceTest),
+                Path.GetFileName(Path.GetDirectoryName(file) ?? "<EMPTY>")
+            );
             yield return dataRow;
         }
     }

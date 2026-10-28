@@ -13,32 +13,23 @@ public class Interpreter
 
     #region Constructors
 
-    public Interpreter(ErrorCollection errors)
-    {
-        _textWriter = Console.Out;
-        Errors = errors;
-    }
+    public Interpreter() : this(Console.Out) { }
 
-    public Interpreter(ErrorCollection errors, TextWriter textWriter)
-    {
-        _textWriter = textWriter;
-        Errors = errors;
-    }
-
-    #endregion
-
-    #region Properties
-
-    public ErrorCollection Errors { get; }
+    public Interpreter(TextWriter textWriter) => _textWriter = textWriter;
 
     #endregion
 
     #region Methods
 
-    public ErrorCollection Interpret(ProgramNode program)
+    public ErrorCollection Interpret(Analysis analysis)
     {
-        var evaluator = new Runtime(Errors, _textWriter);
-        program.Accept(evaluator);
+        if (analysis.HasErrors || analysis.Ast is null)
+        {
+            throw new ArgumentException("Invalid analysis", nameof(analysis));
+        }
+        
+        var evaluator = new Runtime(analysis, _textWriter);
+        analysis.Ast.Accept(evaluator);
         return evaluator.Errors;
     }
 

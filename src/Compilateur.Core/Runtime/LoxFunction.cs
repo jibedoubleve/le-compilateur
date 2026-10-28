@@ -58,7 +58,12 @@ public class LoxFunction : ILoxCallable
         {
             try
             {
-                return Declaration.Body.Accept(runtime);
+                foreach (var stmt in Declaration.Body.Statements)
+                {
+                    stmt.Accept(runtime);
+                }
+
+                return null;
             }
             catch (ReturnException ex)
             {

@@ -1,16 +1,35 @@
-using Compilateur.Core.Lexical.Tokens;
+using System.Diagnostics;
 
 namespace Compilateur.Core.Runtime;
 
 public class Environment
 {
+    #region Constructors
+
+    public Environment() => CurrentFrame = GlobalFrame = new Frame();
+
+    #endregion
+
     #region Properties
 
-    public Frame CurrentFrame { get; private set; } = new();
+    private Frame GlobalFrame { get; }
+
+    public Frame CurrentFrame { get; private set; }
 
     #endregion
 
     #region Methods
+
+    private Frame GetFrame(uint jmp)
+    {
+        var frame = CurrentFrame;
+        for (var i = 0; i < jmp; i++)
+        {
+            frame = frame?.Parent;
+        }
+
+        return frame ?? throw new UnreachableException();
+    }
 
     private void PopFrame(Frame? previousFrame) =>
         CurrentFrame = previousFrame
@@ -21,48 +40,21 @@ public class Environment
 
     private void PushFrame(Frame frame) => CurrentFrame = new Frame(frame);
 
-    private static bool TryGetValue(string lexeme, Frame frame, out object? result)
-    {
-        while (true)
-        {
-            if (frame.Contains(lexeme))
-            {
-                result = frame.Get(lexeme);
-                return true;
-            }
-
-            if (frame.Parent is null)
-            {
-                result = null;
-                return false;
-            }
-
-            frame = frame.Parent;
-        }
-    }
-
     public IDisposable EnterFrame(Frame closure) => new FrameLifecycle(this, closure, CurrentFrame);
 
     public IDisposable EnterFrame() => new FrameLifecycle(this);
 
-    public bool TryAssign(Token token, object? value)
-    {
-        var frame = CurrentFrame;
-        while (frame is not null)
-        {
-            var found = frame.Update(token.Lexeme, value);
-            if (!found) { frame = frame.Parent; }
-            else { return true; }
-        }
-
-        return false;
-    }
+    public bool TryAssign(uint? jmp, string lexeme, object? value) =>
+        jmp is null
+            ? GlobalFrame.TryUpdate(lexeme, value)
+            : GetFrame(jmp.Value).TryUpdate(lexeme, value);
 
     public bool TryDefine(string name, object? value) => CurrentFrame.Define(name, value);
 
-    public bool TryGetValue(Token token, out object? result) => TryGetValue(token.Lexeme, out result);
-
-    public bool TryGetValue(string lexeme, out object? result) => TryGetValue(lexeme, CurrentFrame, out result);
+    public bool TryGetValue(uint? jmp, string lexeme, out object? value) =>
+        jmp is null
+            ? GlobalFrame.TryGet(lexeme, out value)
+            : GetFrame(jmp.Value).TryGet(lexeme, out value);
 
     #endregion
 

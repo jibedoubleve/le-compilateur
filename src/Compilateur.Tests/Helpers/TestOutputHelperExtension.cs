@@ -112,8 +112,6 @@ public static class TestOutputHelperExtension
     }
 
     #endregion
-
-    extension(ITestOutputHelper outputHelper) { }
 }
 
 public record Local(string Name, uint Distance);
