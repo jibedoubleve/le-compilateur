@@ -38,22 +38,30 @@ public class Frame
 
     public object? Get(string name)
     {
+        TryGet(name, out var result);
+        return result;
+    }
+
+    public bool TryGet(string name, out object? val)
+    {
         var frame = this;
 
         while (frame is not null)
         {
             if (frame?._bindings.TryGetValue(name, out var value) ?? false)
             {
-                return value;
+                val = value;
+                return true;
             }
 
             frame = frame?.Parent;
         }
 
-        return null;
+        val = null;
+        return false;
     }
 
-    public bool Update(string name, object? value)
+    public bool TryUpdate(string name, object? value)
     {
         if (!_bindings.ContainsKey(name)) { return false; }
 
