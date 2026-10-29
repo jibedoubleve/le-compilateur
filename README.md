@@ -4,7 +4,8 @@ A [Lox](https://craftinginterpreters.com/) interpreter written in C#, built as a
 
 The goal is less the interpreter itself than the mental models behind it: knowing when a problem calls for lexing, parsing, tree traversal or scope resolution, and applying those techniques to DSLs, query languages, configuration systems and static analysis tools.
 
-The project is also an experiment in **using an AI assistant as a tutor rather than a code generator**.
+> [!IMPORTANT]
+> This project is also an experiment in **using an AI assistant as a tutor rather than a code generator**. All compiler code is written by hand; the AI asks questions, reviews and explains theory. See [AI as a tutor, not a code generator](#ai-as-a-tutor-not-a-code-generator).
 
 ## Progress
 
@@ -13,7 +14,7 @@ The project is also an experiment in **using an AI assistant as a tutor rather t
 | Lexical analysis (tokens, maximal munch, literals, comments) | ✅ Done |
 | Syntax analysis (recursive descent, precedence climbing, AST) | ✅ Done |
 | Semantic analysis (resolver, scopes, variable binding) | ✅ Done |
-| Interpretation (environments, closures, classes, inheritance) | 🚧 Feature-complete, being validated against the *Crafting Interpreters* test suite |
+| Interpretation (environments, closures, classes, inheritance) | ✅ Done, passes the *Crafting Interpreters* test suite |
 
 ## AI as a tutor, not a code generator
 
@@ -35,7 +36,7 @@ The rules in `CLAUDE.md` separate the kinds of questions a learner asks, because
 
 When two rules conflict, an explicit precedence order in `CLAUDE.md` decides, so the outcome does not depend on the model's interpretation. Replies also follow a cognitive-load format: verdict first, one idea per message, extras only on request.
 
-The configuration also pitches explanations at an experienced engineer encountering compiler theory for the first time, and links each concept to production compilers (Roslyn, LLVM, V8) and to everyday engineering.
+The configuration also pitches explanations at an experienced engineer encountering compiler theory for the first time. On request, it links a concept to production compilers (Roslyn, LLVM, V8) and to everyday engineering.
 
 ### Metacognitive feedback loop
 
@@ -80,14 +81,17 @@ src/
 │   ├── Semantic/     # resolver: static scope resolution, distance map
 │   ├── Runtime/      # tree-walk interpreter: frames, functions, classes, instances
 │   ├── Errors/
+│   ├── Extensions/
 │   └── Compiler.cs   # entry point: Analyse(code) then Run(analysis)
+├── Compilateur.Cli/         # `lox` command: exec a file, or start a REPL
 ├── Compilateur.Generators/  # source generator for the AST visitor
 └── Compilateur.Tests/
     ├── Lexical/
     ├── Syntactic/
     ├── Semantic/
     ├── Runtime/
-    └── Integration/
+    ├── CrossCutting/
+    └── Conformance/  # the Crafting Interpreters .lox test suite
 ```
 
 Pipeline: `source → Lexer → tokens → Parser → AST → Resolver → Analysis → Interpreter`.
@@ -101,6 +105,15 @@ Requires the .NET 10 SDK.
 ```bash
 dotnet build
 dotnet test
+```
+
+## Run
+
+The CLI is packaged as a .NET tool named `lox`:
+
+```bash
+dotnet run --project src/Compilateur.Cli -- exec path/to/script.lox
+dotnet run --project src/Compilateur.Cli -- repl
 ```
 
 ## References
