@@ -8,22 +8,6 @@ internal class EqualityExpressionParser : PrecedenceParser<ComparisonExpressionP
 {
     #region Methods
 
-    private ExpressionNode? Parse(ParsingContext context, ExpressionNode accumulator)
-    {
-        if (!MatchesCurrent(context)) { return accumulator; }
-
-        var operation = context.Cursor.Consume();
-        var right = InnerExpression.Parse(context);
-        if (right is null) { return null; }
-
-        return Parse(context,
-            new BinaryExpression(
-                operation,
-                accumulator,
-                right
-            ));
-    }
-
     protected override bool MatchesCurrent(ParsingContext context)
     {
         var token = context.Cursor.Peek();
@@ -37,8 +21,19 @@ internal class EqualityExpressionParser : PrecedenceParser<ComparisonExpressionP
 
     public override ExpressionNode? Parse(ParsingContext context)
     {
-        var accumulator = InnerExpression.Parse(context);
-        return accumulator is null ? null : Parse(context, accumulator);
+        var left = InnerExpression.Parse(context);
+        if (left == null) { return null; }
+
+        while (MatchesCurrent(context))
+        {
+            var operation = context.Cursor.Consume();
+            var right = InnerExpression.Parse(context);
+            if (right is null) { return null; }
+
+            left = new BinaryExpression(operation, left, right);
+        }
+
+        return left;
     }
 
     #endregion
