@@ -1,5 +1,7 @@
 # le-compilateur
 
+[![CI](https://github.com/jibedoubleve/le-compilateur/actions/workflows/ci.yml/badge.svg)](https://github.com/jibedoubleve/le-compilateur/actions/workflows/ci.yml)
+
 A [Lox](https://craftinginterpreters.com/) interpreter written in C#, built as a deliberate learning project in compiler construction.
 
 The goal is less the interpreter itself than the mental models behind it: knowing when a problem calls for lexing, parsing, tree traversal or scope resolution, and applying those techniques to DSLs, query languages, configuration systems and static analysis tools.
