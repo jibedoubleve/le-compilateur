@@ -22,12 +22,8 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     #region Constructors
 
-    public Runtime(Analysis analysis) : this(analysis, Console.Out) { }
-
-    public Runtime(Analysis analysis, TextWriter textWriter)
+    public Runtime(TextWriter textWriter)
     {
-        Errors = analysis.Errors;
-        DistanceMap = analysis.DistanceMap ?? throw new UnreachableException();
         _textWriter = textWriter;
         Environment.CurrentFrame.Define("clock", new ClockFunction());
     }
@@ -36,15 +32,23 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     #region Properties
 
-    public ReadOnlyDictionary<SyntaxNode, uint> DistanceMap { get; init; }
+    private ReadOnlyDictionary<SyntaxNode, uint> DistanceMap { get; set; } = new(new Dictionary<SyntaxNode, uint>());
 
     public Environment Environment { get; } = new();
 
-    public ErrorCollection Errors { get; init; }
+    public ErrorCollection Errors { get; private set; } = new();
 
     #endregion
 
     #region Methods
+
+    public void Reset(Analysis analysis)
+    {
+        Errors = analysis.Errors;
+        DistanceMap = DistanceMap.Concat(analysis.DistanceMap ?? throw new UnreachableException())
+                                 .ToDictionary()
+                                 .AsReadOnly();
+    }
 
     public object? Visit(ClassDeclarationStatement node)
     {
