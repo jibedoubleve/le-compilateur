@@ -135,22 +135,18 @@ public class Runtime : ISyntaxNodeVisitor<object?>
 
     public object? Visit(CallExpression node)
     {
-        try
+        var callee = node.Callee.Accept(this);
+
+        if (callee is not ILoxCallable callable)
         {
-            var callee = node.Callee.Accept(this);
-
-            if (callee is not ILoxCallable callable)
-            {
-                throw Errors.RuntimeException(node, "Can only call functions and classes.");
-            }
-
-            var arguments = node.Arguments
-                                .Select(a => a.Accept(this))
-                                .ToArray();
-
-            return callable.Call(this, node, arguments);
+            throw Errors.RuntimeException(node, "Can only call functions and classes.");
         }
-        catch (ReturnException ex) { return ex.ReturnValue; }
+
+        var arguments = node.Arguments
+                            .Select(a => a.Accept(this))
+                            .ToArray();
+
+        return callable.Call(this, node, arguments);
     }
 
     public object? Visit(GetExpression node)

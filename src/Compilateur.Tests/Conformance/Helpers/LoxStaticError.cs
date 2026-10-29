@@ -4,18 +4,18 @@ public record StaticError
 {
     #region Constructors
 
-    public StaticError(string message, string variable, int? lineNr)
+    public StaticError(string message, string variable, int? line)
     {
         Message = message;
         Variable = variable;
-        LineNr = lineNr;
+        Line = line;
     }
 
     #endregion
 
     #region Properties
 
-    public int? LineNr { get; }
+    public int? Line { get; }
     public string Message { get; }
     public string? Variable { get; }
 

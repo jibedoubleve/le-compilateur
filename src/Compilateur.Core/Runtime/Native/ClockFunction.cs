@@ -13,7 +13,7 @@ public class ClockFunction : ILoxCallable
     #region Methods
 
     public object? Call(Runtime runtime, ExpressionNode node, object?[] args)
-        => DateTime.Now.ToString("HH:ss");
+        => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
 
     public override string ToString() => "<native fn>";
 

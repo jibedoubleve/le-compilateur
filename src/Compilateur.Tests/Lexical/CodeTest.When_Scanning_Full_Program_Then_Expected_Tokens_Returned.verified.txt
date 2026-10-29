@@ -453,6 +453,6 @@
     Column: 1,
     Kind: Eof,
     Lexeme: $,
-    Line: 24
+    Line: 23
   }
 ]
