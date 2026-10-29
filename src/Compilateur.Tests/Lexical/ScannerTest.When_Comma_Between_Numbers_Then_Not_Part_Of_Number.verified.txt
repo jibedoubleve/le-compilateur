@@ -42,6 +42,6 @@
     Column: 1,
     Kind: Eof,
     Lexeme: $,
-    Line: 2
+    Line: 1
   }
 ]

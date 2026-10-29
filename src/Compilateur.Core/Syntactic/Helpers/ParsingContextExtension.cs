@@ -3,7 +3,6 @@ using Compilateur.Core.Lexical.Tokens;
 using Compilateur.Core.Syntactic.Nodes;
 using Compilateur.Core.Syntactic.Parsers;
 using Compilateur.Core.Syntactic.Parsers.Declarations;
-using Compilateur.Core.Syntactic.Parsers.Expressions;
 using Compilateur.Core.Syntactic.Parsers.Statements;
 
 namespace Compilateur.Core.Syntactic.Helpers;

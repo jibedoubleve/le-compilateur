@@ -27,7 +27,7 @@ public class ParsingContext
 
     public void AddError(string message)
         => Errors.Add(
-            Cursor.IsEmpty || Cursor.IsAtEnd
+            Cursor.IsEmpty
                 ? new CompilationError(message)
                 : new CompilationError(Cursor.Peek(), message)
         );

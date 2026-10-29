@@ -70,14 +70,13 @@ public class ConformanceTest
         }
     }
 
-    private static void WithRuntimeError(Compiler compiler, string code, IEnumerable<string> staticError)
+    private static void WithRuntimeError(Compiler compiler, Analysis analysis, IEnumerable<string> runtimeErrors)
     {
         // act
-        var analysis = compiler.Analyse(code);
         var ex = Assert.Throws<RuntimeException>(() => compiler.Run(analysis));
 
         // assert
-        var err = staticError.LastOrDefault();
+        var err = runtimeErrors.LastOrDefault();
         Assert.Multiple(
             () => err.ShouldNotBeNull(),
             () => ex.Message.ShouldBe(err)
@@ -89,16 +88,16 @@ public class ConformanceTest
         var expected = expectedErrors.ToList();
         var errors = analysis.Errors.ToList();
 
-        analysis.Errors.Count().ShouldBe(expected.Count);
+        errors.Count.ShouldBe(expected.Count);
 
-        for (var i = 0; i < expected.Count; i++)
-        {
-            errors[i].Message.ShouldBe(expected[i].Message);
-            if (!string.IsNullOrEmpty(expected[i].Variable))
-            {
-                errors[i].Variable.ShouldBe(expected[i].Variable);
-            }
-        }
+        var actual = expected.Zip(errors,
+            (e, a) => (
+                a.Message,
+                Line: e.Line is null ? null : (int?)a.Line,
+                Variable: string.IsNullOrEmpty(e.Variable) ? e.Variable : a.Variable
+            ));
+
+        actual.ShouldBe(expected.Select(ex => (ex.Message, ex.Line, ex.Variable))!);
     }
 
     public static IEnumerable<TheoryDataRow> RetrieveTests()
@@ -130,8 +129,8 @@ public class ConformanceTest
             fileName,
             code,
             expected,
-            string.Join(Environment.NewLine, runtimeErrors),
-            staticErrors.LastOrDefault()?.Message
+            staticErrors.LastOrDefault()?.Message,
+            string.Join(Environment.NewLine, runtimeErrors)
         );
 
         var output = new StringWriter();
@@ -149,7 +148,7 @@ public class ConformanceTest
 
         if (runtimeErrors.Any())
         {
-            WithRuntimeError(compiler, code, runtimeErrors);
+            WithRuntimeError(compiler, analysis, runtimeErrors);
             return;
         }
 

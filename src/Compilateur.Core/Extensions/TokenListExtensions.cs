@@ -9,7 +9,7 @@ public static class TokenListExtensions
     public static void AppendEof(this IList<Token> tokens)
     {
         var lineNumber = tokens.Any()
-            ? tokens.Last().Line + 1
+            ? tokens.Last().Line
             : 1;
 
         tokens.Add(new Token
