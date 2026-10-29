@@ -10,15 +10,15 @@ public class Compiler
 {
     #region Fields
 
-    private readonly TextWriter _output;
+    private readonly Interpreter _interpreter;
 
     #endregion
 
     #region Constructors
 
-    public Compiler(TextWriter output) => _output = output;
+    public Compiler(TextWriter output) => _interpreter = new Interpreter(output);
 
-    public Compiler() => _output = Console.Out;
+    public Compiler() : this(Console.Out) { }
 
     #endregion
 
@@ -56,7 +56,7 @@ public class Compiler
             throw new ArgumentException("Invalid analysis", nameof(analysis));
         }
 
-        new Interpreter(_output).Interpret(analysis);
+        _interpreter.Interpret(analysis);
     }
 
     #endregion

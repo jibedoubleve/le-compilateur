@@ -1,36 +1,30 @@
-using Compilateur.Core.Errors;
-using Compilateur.Core.Syntactic.Nodes;
-
 namespace Compilateur.Core.Runtime;
 
 public class Interpreter
 {
     #region Fields
 
-    private readonly TextWriter _textWriter;
+    private readonly Runtime _runtime;
 
     #endregion
 
     #region Constructors
 
-    public Interpreter() : this(Console.Out) { }
-
-    public Interpreter(TextWriter textWriter) => _textWriter = textWriter;
+    public Interpreter(TextWriter textWriter) => _runtime = new Runtime(textWriter);
 
     #endregion
 
     #region Methods
 
-    public ErrorCollection Interpret(Analysis analysis)
+    public void Interpret(Analysis analysis)
     {
         if (analysis.HasErrors || analysis.Ast is null)
         {
             throw new ArgumentException("Invalid analysis", nameof(analysis));
         }
-        
-        var evaluator = new Runtime(analysis, _textWriter);
-        analysis.Ast.Accept(evaluator);
-        return evaluator.Errors;
+
+        _runtime.Reset(analysis);
+        analysis.Ast.Accept(_runtime);
     }
 
     #endregion
