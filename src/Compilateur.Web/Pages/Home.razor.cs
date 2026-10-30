@@ -30,7 +30,7 @@ public partial class Home
     #region Properties
 
     [Inject]
-    public JSRuntime JSRuntime { get; set; } = null!;
+    public IJSRuntime JSRuntime { get; set; } = null!;
 
     #endregion
 
