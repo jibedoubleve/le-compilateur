@@ -1,0 +1,141 @@
+﻿@page "/"
+@using BlazorMonaco.Editor
+@using Compilateur.Core.Errors
+@using Compilateur.Core.Extensions
+@inject IJSRuntime JS
+
+<PageTitle>Le Compilateur</PageTitle>
+
+<div class="d-flex flex-column vh-100">
+    <header class="d-flex justify-content-between align-items-center border-bottom px-3 py-2">
+        <div>
+            <h1 class="h5 mb-0">Le Compilateur</h1>
+            <div class="small text-body-secondary">A Lox interpreter written in C#, running in your browser</div>
+        </div>
+        <a class="link-body-emphasis fs-4" title="Source code on GitHub" aria-label="Source code on GitHub"
+           href="https://github.com/jibedoubleve/le-compilateur" target="_blank" rel="noopener">
+            <i class="bi bi-github"></i>
+        </a>
+    </header>
+
+    <div class="d-flex flex-grow-1 overflow-hidden">
+        <aside class="border-end d-flex flex-column flex-shrink-0" style="width: 16rem">
+            <div class="d-flex justify-content-between align-items-center bg-body-tertiary border-bottom px-3 py-1 small text-uppercase">
+                Lox tests
+                <span class="badge text-bg-secondary">@Examples.Length</span>
+            </div>
+
+            <div class="border-bottom px-3 py-2 small text-body-secondary">
+                Conformance suite from <a href="https://github.com/munificent/craftinginterpreters" target="_blank" rel="noopener">Crafting Interpreters</a>.
+                Pick a file to load it.
+            </div>
+
+            <div class="flex-grow-1 overflow-auto p-2 small">
+                @foreach (var folder in Examples.GroupBy(FolderOf))
+                {
+                    <details>
+                        <summary class="tree-item">
+                            <i class="bi bi-folder2 text-warning folder-closed"></i>
+                            <i class="bi bi-folder2-open text-warning folder-open"></i>
+                            @folder.Key
+                        </summary>
+                        @foreach (var file in folder)
+                        {
+                            <button class="tree-item tree-file" @onclick="() => LoadExample(file)">
+                                <i class="bi bi-file-earmark-code text-info"></i>
+                                @FileOf(file)
+                            </button>
+                        }
+                    </details>
+                }
+            </div>
+        </aside>
+
+        <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+            <div class="d-flex justify-content-between align-items-center bg-body-tertiary border-bottom px-3 py-1">
+                <span class="small">@_fileName</span>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" title="Empty script" @onclick="NewFile">
+                        <i class="bi bi-file-earmark-plus"></i> Empty script
+                    </button>
+                    <button class="btn btn-success btn-sm" title="Run" @onclick="Run">&#9654;&#xFE0E; Run</button>
+                </div>
+            </div>
+
+            <div class="flex-grow-1 overflow-hidden">
+                <StandaloneCodeEditor ConstructionOptions="EditorOptions"
+                                      @ref="_editor"
+                                      OnDidInit="ApplyTheme"/>
+            </div>
+
+            <section class="h-25 d-flex flex-column border-top">
+                <div class="bg-body-tertiary border-bottom px-3 py-1 small text-uppercase">Output</div>
+                <pre class="flex-grow-1 overflow-auto m-0 p-3">@_output</pre>
+            </section>
+        </div>
+    </div>
+</div>
+
+@code {
+    private StandaloneCodeEditor _editor = null!;
+    private StandaloneEditorConstructionOptions EditorOptions(StandaloneCodeEditor editor) { return new StandaloneEditorConstructionOptions { AutomaticLayout = true }; }
+
+    private async Task ApplyTheme()
+    {
+        await JS.InvokeVoidAsync("registerLox");
+        await JS.InvokeVoidAsync("applyTheme");
+    }
+
+    private static readonly string[] Examples = typeof(Home).Assembly
+        .GetManifestResourceNames()
+        .Where(name => name.EndsWith(".lox"))
+        .Order()
+        .ToArray();
+
+    private static string FolderOf(string name)
+    {
+        var index = name.LastIndexOfAny(['/', '\\']);
+        return index < 0 ? "general" : name[..index];
+    }
+
+    private static string FileOf(string name) { return name[(name.LastIndexOfAny(['/', '\\']) + 1)..]; }
+
+    private async Task LoadExample(string name)
+    {
+        await using var stream = typeof(Home).Assembly.GetManifestResourceStream(name)!;
+        using var reader = new StreamReader(stream);
+        await _editor.SetValue(await reader.ReadToEndAsync());
+        _fileName = FileOf(name);
+    }
+
+    private async Task NewFile()
+    {
+        await _editor.SetValue("");
+        _fileName = "no file";
+        _output = "";
+    }
+
+    private string _fileName = "no file";
+    private string _output = "";
+
+    private async Task Run()
+    {
+        var writer = new StringWriter();
+        var compiler = new Compiler(writer);
+        var analysis = compiler.Analyse(await _editor.GetValue());
+
+        if (analysis.HasErrors)
+        {
+            _output = analysis.Errors.Format();
+            return;
+        }
+
+        try
+        {
+            compiler.Run(analysis);
+            _output = writer.ToString();
+        }
+        catch (RuntimeException ex) { _output = writer + ex.Errors.Format(); }
+    }
+
+}
