@@ -771,7 +771,7 @@ public class RuntimeTest
             // assert
             Assert.Multiple(
                 () => analysis.Errors.ShouldBeEmpty(),
-                () => textWriter.ToString().ShouldBe("1.5\r\n")
+                () => textWriter.ToString().ShouldBe($"1.5{Environment.NewLine}")
             );
         }
         finally
@@ -798,7 +798,7 @@ public class RuntimeTest
         // assert
         Assert.Multiple(
             () => analysis.Errors.ShouldBeEmpty(),
-            () => textWriter.ToString().ShouldBe($"{value}\r\n")
+            () => textWriter.ToString().ShouldBe($"{value}{Environment.NewLine}")
         );
     }
 
