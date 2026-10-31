@@ -10,6 +10,13 @@ namespace Compilateur.Web.Pages;
 
 public partial class Home
 {
+    #region Properties
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; } = null!;
+
+    #endregion
+
     #region Fields
 
     private static readonly string[] Examples =
@@ -24,13 +31,6 @@ public partial class Home
 
     private string _fileName = "no file";
     private string _output = "";
-
-    #endregion
-
-    #region Properties
-
-    [Inject]
-    public IJSRuntime JSRuntime { get; set; } = null!;
 
     #endregion
 
