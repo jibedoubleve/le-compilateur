@@ -22,13 +22,13 @@
 <script src="js/lox-language.js"></script>
 
 <script>
-    const sombre = matchMedia('(prefers-color-scheme: dark)');
+    const dark = matchMedia('(prefers-color-scheme: dark)');
     window.applyTheme = () => {
-        document.documentElement.dataset.bsTheme = sombre.matches ? 'dark' : 'light';
-        window.monaco?.editor.setTheme(sombre.matches ? 'vs-dark' : 'vs');
+        document.documentElement.dataset.bsTheme = dark.matches ? 'dark' : 'light';
+        window.monaco?.editor.setTheme(dark.matches ? 'vs-dark' : 'vs');
     };
     applyTheme();
-    sombre.addEventListener('change', applyTheme);
+    dark.addEventListener('change', applyTheme);
 </script>
 
 
@@ -45,7 +45,10 @@
     <a class="reload" href=".">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-<script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+<script src="_framework/blazor.webassembly#[.{fingerprint}].js" autostart="false"></script>
+<script>
+    require(['vs/editor/editor.main'], () => Blazor.start());
+</script>
 </body>
 
 </html>
